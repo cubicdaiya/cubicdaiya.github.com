@@ -1,0 +1,31 @@
+
+body {
+    background-color: #ffffff;
+}
+
+div.header {
+    text-align:center;
+}
+
+div.footer {
+    text-align:right;
+}
+
+div.entry {
+    
+}
+
+#page_title {
+    font-size: 30px;
+    font-style: italic;
+}
+
+.entry_title {
+    font-size: 20px;
+    font-style: italic;
+    text-decoration: underline;
+}
+
+pre.code {
+    background-color: #99ccff;
+}
