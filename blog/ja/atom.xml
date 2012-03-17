@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[bokko bokkoにしてやんよ]]></title>
+  <link href="http://cubicdaiya.github.com/blog/ja/atom.xml" rel="self"/>
+  <link href="http://cubicdaiya.github.com/blog/ja/"/>
+  <updated>2012-03-17T16:51:27+09:00</updated>
+  <id>http://cubicdaiya.github.com/blog/ja/</id>
+  <author>
+    <name><![CDATA[Tatsuhiko Kubo]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA['テスト']]></title>
+    <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/03/17/tesuto/"/>
+    <updated>2012-03-17T16:50:00+09:00</updated>
+    <id>http://cubicdaiya.github.com/blog/ja/blog/2012/03/17/tesuto</id>
+    <content type="html"><![CDATA[
+]]></content>
+  </entry>
+  
+</feed>
