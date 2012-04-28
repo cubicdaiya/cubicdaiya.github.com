@@ -102,11 +102,11 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget http://typesafe.artifactoryonline.com/typesafe/ivy-releases/org.scala-tools.sbt/sbt-launch/0.11.2/sbt-launch.jar
-</span><span class='line'><span class="nv">$ </span>mv sbt-launch.jar ~/bin/ <span class="c"># パスの通ったディレクトリに移動</span>
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/bin/
-</span><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">&quot;java -Xms512M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=384M -jar ~/bin/sbt-launchl.jar&quot;</span> &gt; sbt
-</span><span class='line'><span class="nv">$ </span>chmod u+x sbt
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>wget http://typesafe.artifactoryonline.com/typesafe/ivy-releases/org.scala-tools.sbt/sbt-launch/0.11.2/sbt-launch.jar
+</span><span class='line'>mv sbt-launch.jar ~/bin/ <span class="c"># パスの通ったディレクトリに移動</span>
+</span><span class='line'><span class="nb">cd</span> ~/bin/
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;java -Xms512M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=384M -jar ~/bin/sbt-launchl.jar&quot;</span> &gt; sbt
+</span><span class='line'>chmod u+x sbt
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -115,11 +115,9 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>hello
-</span><span class='line'><span class="nv">$ </span>ls
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">cd </span>hello
+</span><span class='line'>ls
 </span><span class='line'>hi.scala
-</span><span class='line'><span class="err">$</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -149,7 +147,7 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sbt
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sbt
 </span><span class='line'><span class="o">[</span>info<span class="o">]</span> Set current project to default-3911ac <span class="o">(</span>in build file:/home/bokko/programming/scala/hello/<span class="o">)</span>
 </span><span class='line'>&gt; run
 </span><span class='line'><span class="o">[</span>info<span class="o">]</span> Updating <span class="o">{</span>file:/home/bokko/programming/scala/hello/<span class="o">}</span>default-3911ac...
