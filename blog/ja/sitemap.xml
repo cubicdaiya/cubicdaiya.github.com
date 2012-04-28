@@ -2,14 +2,18 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://cubicdaiya.github.com/blog/ja/blog/2012/04/25/springhead/</loc>
-        <lastmod>2012-04-25T04:25:21+09:00</lastmod>
+        <lastmod>2012-04-28T21:10:00+09:00</lastmod>
+    </url>
+    <url>
+        <loc>http://cubicdaiya.github.com/blog/ja/blog/2012/04/28/scala-sbt/</loc>
+        <lastmod>2012-04-28T21:32:57+09:00</lastmod>
     </url>
     <url>
         <loc>http://cubicdaiya.github.com/blog/ja/blog/archives/</loc>
-        <lastmod>2012-04-25T04:25:21+09:00</lastmod>
+        <lastmod>2012-04-28T21:32:57+09:00</lastmod>
     </url>
     <url>
         <loc>http://cubicdaiya.github.com/blog/ja/</loc>
-        <lastmod>2012-04-25T04:25:21+09:00</lastmod>
+        <lastmod>2012-04-28T21:32:57+09:00</lastmod>
     </url>
 </urlset>

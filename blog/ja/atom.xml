@@ -4,7 +4,7 @@
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
   <link href="http://cubicdaiya.github.com/blog/ja/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/ja/"/>
-  <updated>2012-04-25T04:30:06+09:00</updated>
+  <updated>2012-04-28T21:34:00+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -12,6 +12,157 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA['Scalaとsbt']]></title>
+    <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/04/28/scala-sbt/"/>
+    <updated>2012-04-28T20:38:00+09:00</updated>
+    <id>http://cubicdaiya.github.com/blog/ja/blog/2012/04/28/scala-sbt</id>
+    <content type="html"><![CDATA[<p>最近Scalaの勉強をしているのだが、インタプリタだと「Hello, World!」を表示するだけのプログラムでも
+JVMの起動が遅くて実行するのに2〜3秒かかったり、コンパイルが遅いのでどうしたものかと思ってたら<a href="https://github.com/harrah/xsbt">sbt</a>というのを使うといいらしい。
+sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。長らくJava方面からは遠ざかっていたのでAntやMavenはもうさっぱり忘れてしまったが、
+これはなかなかいい。というわけでまずはインストールおよび設定。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget http://typesafe.artifactoryonline.com/typesafe/ivy-releases/org.scala-tools.sbt/sbt-launch/0.11.2/sbt-launch.jar
+</span><span class='line'><span class="nv">$ </span>mv sbt-launch.jar ~/bin/ <span class="c"># パスの通ったディレクトリに移動</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/bin/
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">&quot;java -Xms512M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=384M -jar ~/bin/sbt-launchl.jar&quot;</span> &gt; sbt
+</span><span class='line'><span class="nv">$ </span>chmod u+x sbt
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>次にプロジェクトディレクトリ(ここではhello)を作ってプログラムファイルを配置する。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>hello
+</span><span class='line'><span class="nv">$ </span>ls
+</span><span class='line'>hi.scala
+</span><span class='line'><span class="err">$</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>hi.scalaはこんな感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="c1">// hi.scala</span>
+</span><span class='line'><span class="k">object</span> <span class="nc">Hi</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="k">=</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Hello, World!&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>さきほど作成したsbtを実行する。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sbt
+</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Set current project to default-3911ac <span class="o">(</span>in build file:/home/bokko/programming/scala/hello/<span class="o">)</span>
+</span><span class='line'>&gt; run
+</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Updating <span class="o">{</span>file:/home/bokko/programming/scala/hello/<span class="o">}</span>default-3911ac...
+</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Resolving org.scala-lang#scala-library;2.9.1 ...
+</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Done updating.
+</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Compiling 1 Scala <span class="nb">source </span>to /home/bokko/programming/scala/hello/target/scala-2.9.1/classes...
+</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Running Hi
+</span><span class='line'>Hello, World!
+</span><span class='line'><span class="o">[</span>success<span class="o">]</span> Total <span class="nb">time</span>: 3 s, completed 2012/04/28 21:13:07
+</span><span class='line'>&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このようにsbtは実行したディレクトリをスキャンしてScalaのプログラムをかき集めてコンパイル・実行することができる。
+また、ファイルの変更も検知してくれるので、以下のように変更を加えて、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="c1">// hi.scala</span>
+</span><span class='line'><span class="k">object</span> <span class="nc">Hi</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="k">=</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Hello, World, bokko!&quot;</span><span class="o">)</span> <span class="c1">// bokkoを追加</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>もう一度実行すると自動的に差分コンパイルしてから実行される。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&gt; run
+</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Compiling 1 Scala <span class="nb">source </span>to /home/bokko/programming/scala/hello/target/scala-2.9.1/classes...
+</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Running Hi
+</span><span class='line'>Hello, World, bokko!
+</span><span class='line'><span class="o">[</span>success<span class="o">]</span> Total <span class="nb">time</span>: 1 s, completed 2012/04/28 21:15:43
+</span><span class='line'>&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この他にもsbtはOMakeのような継続ビルド・テストの機能があって、コマンドの頭に「~」をつけるとファイルの変更を検知して
+その都度ビルドやテストを走らせてくれる。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&gt; ~ compile
+</span><span class='line'><span class="o">[</span>success<span class="o">]</span> Total <span class="nb">time</span>: 0 s, completed 2012/04/28 21:23:15
+</span><span class='line'>1. Waiting <span class="k">for </span><span class="nb">source </span>changes... <span class="o">(</span>press enter to interrupt<span class="o">)</span>
+</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Compiling 1 Scala <span class="nb">source </span>to /home/bokko/programming/scala/hello/target/scala-2.9.1/classes...
+</span><span class='line'><span class="o">[</span>success<span class="o">]</span> Total <span class="nb">time</span>: 2 s, completed 2012/04/28 21:23:23
+</span><span class='line'>2. Waiting <span class="k">for </span><span class="nb">source </span>changes... <span class="o">(</span>press enter to interrupt<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>また、sbtからscalaインタプリタを起動することもできる。(便利なのに何故かこのコマンドはhelpを実行しても表示されない)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&gt; console
+</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Starting scala interpreter...
+</span><span class='line'><span class="o">[</span>info<span class="o">]</span>
+</span><span class='line'>Welcome to Scala version 2.9.1.final <span class="o">(</span>OpenJDK 64-Bit Server VM, Java 1.6.0_24<span class="o">)</span>.
+</span><span class='line'>Type in expressions to have them evaluated.
+</span><span class='line'>Type :help <span class="k">for </span>more information.
+</span><span class='line'>
+</span><span class='line'>scala&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ScalaはJavaと同じくEclipseみたいなIDEないときついよなぁと思ってたのですが、案外そうでもなくscala-modeとensimeがあれば
+結構サクサク書けるので私みたいにターミナルに棲息しているようなプログラマでもとっつきやすく現時点でもかなり気に入ってます。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA['原点']]></title>
@@ -44,8 +195,9 @@
 ほぼ毎年の展示物に関することを書いていたのだけど、今見るとコード断片がテキトーに貼りつけてあってそれについて軽く説明しているだけの非常に手抜きな文章だった。
 しかし、この経験は後にブログや技術雑誌(WEB+DB PRESSやSoftware Design)の原稿を執筆する上で非常に役に立ったし、
 プログラマが敬遠しがちなドキュメンテーション作業に対する苦手意識をいとも簡単に克服できるようにしてくれた。
-また、原稿には仮の締切と本当の締切があるということも教えてくれた。というのも大抵の人は原稿の締切を守らないので、編集長はまず仮の締切を掲示する。
-そしてまだできてませんと泣きついてくる部員たちに今週いっぱいまでなら大丈夫ですよと(<strong>表面上</strong>)優しく微笑みかけるのだ。</p>
+また、原稿には<strong>仮の締切</strong>と<strong>本当の締切</strong>があるということも教えてくれた。というのも大抵の人は最初に知らされた締切を守らないので、
+編集長はまず仮の締切を掲示する。そしてまだできてませんと泣きついてくる部員たちに今週いっぱいまでなら大丈夫ですよと(<strong>表面上</strong>)優しく微笑みかけるのだ。
+最初から<strong>本当の締切</strong>を掲示してはいけない。それに間に合わなかったら起動修正が効かない上にそもそも間に合ったとしても編集作業をやる時間がない。</p>
 
 <h1>過去・現在・未来</h1>
 

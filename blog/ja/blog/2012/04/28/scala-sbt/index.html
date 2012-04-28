@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>bokko bokkoにしてやんよ</title>
+  <title>'Scalaとsbt' - bokko bokkoにしてやんよ</title>
   <meta name="author" content="Tatsuhiko Kubo">
 
   
@@ -20,7 +20,7 @@ sbtはSimple-Build- &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://cubicdaiya.github.com/blog/ja">
+  <link rel="canonical" href="http://cubicdaiya.github.com/blog/ja/blog/2012/04/28/scala-sbt">
   <link href="/blog/ja/favicon.png" rel="icon">
   <link href="/blog/ja/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/blog/ja/javascripts/modernizr-2.0.js"></script>
@@ -64,15 +64,12 @@ sbtはSimple-Build- &hellip;">
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/ja/blog/2012/04/28/scala-sbt/">&#8216;Scalaとsbt&#8217;</a></h1>
+      <h1 class="entry-title">'Scalaとsbt'</h1>
     
     
       <p class="meta">
@@ -95,7 +92,7 @@ sbtはSimple-Build- &hellip;">
   </header>
 
 
-  <div class="entry-content"><p>最近Scalaの勉強をしているのだが、インタプリタだと「Hello, World!」を表示するだけのプログラムでも
+<div class="entry-content"><p>最近Scalaの勉強をしているのだが、インタプリタだと「Hello, World!」を表示するだけのプログラムでも
 JVMの起動が遅くて実行するのに2〜3秒かかったり、コンパイルが遅いのでどうしたものかと思ってたら<a href="https://github.com/harrah/xsbt">sbt</a>というのを使うといいらしい。
 sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。長らくJava方面からは遠ざかっていたのでAntやMavenはもうさっぱり忘れてしまったが、
 これはなかなかいい。というわけでまずはインストールおよび設定。</p>
@@ -239,22 +236,16 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
 <p>ScalaはJavaと同じくEclipseみたいなIDEないときついよなぁと思ってたのですが、案外そうでもなくscala-modeとensimeがあれば
 結構サクサク書けるので私みたいにターミナルに棲息しているようなプログラマでもとっつきやすく現時点でもかなり気に入ってます。</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/ja/blog/2012/04/25/springhead/">&#8216;原点&#8217;</a></h1>
-    
-    
-      <p class="meta">
-        
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tatsuhiko Kubo</span></span>
+
+      
 
 
 
@@ -266,66 +257,34 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
   
 
 
-<time datetime="2012-04-25T03:12:00+09:00" pubdate data-updated="true">Apr 25<span>th</span>, 2012</time>
-        
-      </p>
+<time datetime="2012-04-28T20:38:00+09:00" pubdate data-updated="true">Apr 28<span>th</span>, 2012</time>
+      
+
+
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><p>今引越しの準備で部屋を整理している。本棚にあった技術書はあらかた会社の机(とその下)に移動したし、その他の本も大体処分する予定。
-そんな中、大学時代に所属していたサークルの会誌が出てきた。</p>
-
-<h1>大学時代のサークル</h1>
-
-<p>そのサークルでは毎年秋の学祭に展示と模擬店をやっていて、部員が作ったゲームプログラムや電子工作物を展示したり、
-たこチャーハンやおしるこを出したりしていた。(模擬店の内容は毎年<del>揉める</del>変わる)
-みんな基本的に追い込まれないとヤル気が出ないので学祭の一週間前とかになると展示のために徹夜でプログラムを書いていた。</p>
-
-<p>1回生の時は1週間ぶっとおしでSTGを作っていたが、今やれって言われたら多分無理だ。そのSTGはs.cというファイル名で
-行数は2000行くらいだが、mainループが数百行あってオブジェクトの当たり判定関数が何故か登場キャラの数だけ存在していたり、
-何もしない関数(!)があったり、そのほかにも何かいろいろ摩訶不思議なコードがあったりで他の人が見れたものではなかった。
-「これは何故ちゃんと動いているんだ？」と驚愕している人さえいて、今でもたまにネタにされている。
-プログラミング歴半年以下の学生が書いたコードなんだから少しは多めに見て欲しかったが、それを考慮してもひどかったらしい。</p>
-
-<h1>会誌</h1>
-
-<p>そしてそれとはまた別にひとりの部員につきひとつの記事をその会誌に寄稿し、展示会場で配布するということが行われていた。
-内容は自由で、自分が書きたいことを書けば良い。ただほとんどの人は技術的な何かを書いていたと思う。
-展示物のプログラムや電子工作について熱く語る人もいれば、文芸的プログラミングならぬ工芸的プログラミングと題して
-情報工学を哲学的に語る(テキトーなこと言ってます)人もいた。</p>
-
-<p>とても懐かしかったので作業を中断し、手に取って読んでみた。当時僕は「iアプリをつくろう」とか「Wikiパーサをつくろう」とか
-ほぼ毎年の展示物に関することを書いていたのだけど、今見るとコード断片がテキトーに貼りつけてあってそれについて軽く説明しているだけの非常に手抜きな文章だった。
-しかし、この経験は後にブログや技術雑誌(WEB+DB PRESSやSoftware Design)の原稿を執筆する上で非常に役に立ったし、
-プログラマが敬遠しがちなドキュメンテーション作業に対する苦手意識をいとも簡単に克服できるようにしてくれた。
-また、原稿には<strong>仮の締切</strong>と<strong>本当の締切</strong>があるということも教えてくれた。というのも大抵の人は最初に知らされた締切を守らないので、
-編集長はまず仮の締切を掲示する。そしてまだできてませんと泣きついてくる部員たちに今週いっぱいまでなら大丈夫ですよと(<strong>表面上</strong>)優しく微笑みかけるのだ。
-最初から<strong>本当の締切</strong>を掲示してはいけない。それに間に合わなかったら起動修正が効かない上にそもそも間に合ったとしても編集作業をやる時間がない。</p>
-
-<h1>過去・現在・未来</h1>
-
-<p>自分や同期、また偉大な先輩達の記事を読み返していると、当時の自分が持っていて今の自分が持っていないあるいは忘れてしまったものを思い出せたような気がした。
-というか就職してから今まで僕は何をやっていたのだろう。当時の僕はもっと野心的で何事にも積極的だったはずなんだが、
-今はずいぶんと保守的なおっさんになってしまったように思える。これじゃ駄目だ。気持ちを切り替えねば。</p>
-
-<p>卒業してから5年。自分の顔を知っている後輩もほとんど卒業してしまったので、もう学祭に行くことは多分ないだろう。
-でもこの会誌は捨てずに持っておこうと思う。これは僕の原点であり、大切な想い出だ。</p>
-
-<p>そして必要な時だけ眺めるのだ。でも、いつも見てる必要はない。</p>
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.com/blog/ja/blog/2012/04/28/scala-sbt/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.com/blog/ja/blog/2012/04/28/scala-sbt/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
 </div>
-  
-  
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/ja/blog/2012/04/25/springhead/" title="Previous Post: '原点'">&laquo; '原点'</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/ja/blog/archives">Blog Archives</a>
-    
-  </div>
 </div>
+
 <aside class="sidebar">
   
     <section>
@@ -333,11 +292,11 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/ja/blog/2012/04/28/scala-sbt/">&#8216;Scalaとsbt&#8217;</a>
+        <a href="/blog/ja/blog/2012/04/28/scala-sbt/">'Scalaとsbt'</a>
       </li>
     
       <li class="post">
-        <a href="/blog/ja/blog/2012/04/25/springhead/">&#8216;原点&#8217;</a>
+        <a href="/blog/ja/blog/2012/04/25/springhead/">'原点'</a>
       </li>
     
   </ul>
@@ -346,7 +305,7 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/cubicdaiya">@cubicdaiya</a> on GitHub
@@ -376,7 +335,7 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){
@@ -395,6 +354,7 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
 
   
 </aside>
+
 
     </div>
   </div>
