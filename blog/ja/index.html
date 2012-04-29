@@ -9,9 +9,9 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="最近Scalaの勉強をしているのだが、インタプリタだと「Hello, World!」を表示するだけのプログラムでも
-JVMの起動が遅くて実行するのに2〜3秒かかったり、コンパイルが遅いのでどうしたものかと思ってたらsbtというのを使うといいらしい。
-sbtはSimple-Build- &hellip;">
+  <meta name="description" content="新しい言語を勉強する際、技術書のサンプルを読んだり写経したりするだけだとしっくりこないことが多いので
+自分の好きなアルゴリズムを実装してみるということをよくやる。僕の場合、とりあえずdiffを実装している。
+ただ、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,214 @@ sbtはSimple-Build- &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ja/blog/2012/04/30/scala-onp/">&#8216;An O(NP) Sequence Comparison Algorithm With Scala&#8217;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-30T03:10:00+09:00" pubdate data-updated="true">Apr 30<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>新しい言語を勉強する際、技術書のサンプルを読んだり写経したりするだけだとしっくりこないことが多いので
+自分の好きなアルゴリズムを実装してみるということをよくやる。僕の場合、とりあえずdiffを実装している。
+ただ、LCSやSESを真面目に計算するのは少々面倒なのでいつも編集距離だけ求めるプログラムを書くことにしている(たまに気が変わってLCSやSESを求めるところまで行くこともあるが、今のところそこまで行ったのはC++/Lua/Javascriptだけだ)。
+以下のページに各種言語によるdiff(An O(NP) Sequence Comparison Algorithm)の実装が置いてある。</p>
+
+<p><a href="https://github.com/cubicdaiya/onp">https://github.com/cubicdaiya/onp</a></p>
+
+<p>で、近頃はScalaを勉強しているので今回もそれにならうことにした。</p>
+
+<p><a href="https://github.com/cubicdaiya/onp/blob/master/scala/onp.scala">https://github.com/cubicdaiya/onp/blob/master/scala/onp.scala</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="c1">// The algorithm implemented here is based on &quot;An O(NP) Sequence Comparison Algorithm&quot;</span>
+</span><span class='line'><span class="c1">// by described by Sun Wu, Udi Manber and Gene Myers</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">package</span> <span class="nn">onp</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Diff</span><span class="o">[</span><span class="kt">T</span><span class="o">](</span><span class="nc">_a</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">T</span><span class="o">],</span> <span class="nc">_b</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">T</span><span class="o">])</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">private</span> <span class="k">var</span> <span class="n">a</span> <span class="k">=</span> <span class="nc">_a</span>
+</span><span class='line'>  <span class="k">private</span> <span class="k">var</span> <span class="n">b</span> <span class="k">=</span> <span class="nc">_b</span>
+</span><span class='line'>  <span class="k">private</span> <span class="k">var</span> <span class="n">m</span> <span class="k">=</span> <span class="nc">_a</span><span class="o">.</span><span class="n">length</span>
+</span><span class='line'>  <span class="k">private</span> <span class="k">var</span> <span class="n">n</span> <span class="k">=</span> <span class="nc">_b</span><span class="o">.</span><span class="n">length</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="n">editdistance</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">m</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">val</span> <span class="n">t1</span> <span class="k">=</span> <span class="n">a</span>
+</span><span class='line'>      <span class="k">val</span> <span class="n">t2</span> <span class="k">=</span> <span class="n">m</span>
+</span><span class='line'>      <span class="n">a</span> <span class="k">=</span> <span class="n">b</span>
+</span><span class='line'>      <span class="n">b</span> <span class="k">=</span> <span class="n">t1</span>
+</span><span class='line'>      <span class="n">m</span> <span class="k">=</span> <span class="n">n</span>
+</span><span class='line'>      <span class="n">n</span> <span class="k">=</span> <span class="n">t2</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">val</span> <span class="n">offset</span><span class="k">:</span>      <span class="kt">Int</span> <span class="o">=</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">delta</span><span class="k">:</span>       <span class="kt">Int</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">m</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">size</span><span class="k">:</span>        <span class="kt">Int</span> <span class="o">=</span> <span class="n">m</span> <span class="o">+</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">3</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">fp</span><span class="k">:</span>   <span class="kt">Array</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Array</span><span class="o">(</span><span class="n">size</span><span class="o">)</span>
+</span><span class='line'>    <span class="k">var</span> <span class="n">p</span><span class="k">:</span>           <span class="kt">Int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</span><span class='line'>    <span class="n">fp</span><span class="o">.</span><span class="n">map</span><span class="o">{</span><span class="n">x</span> <span class="k">=&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="o">}</span>
+</span><span class='line'>    <span class="k">do</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">p</span> <span class="k">=</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span class='line'>      <span class="k">for</span> <span class="o">(</span><span class="n">k</span> <span class="k">&lt;-</span> <span class="o">(-</span><span class="n">p</span> <span class="n">to</span> <span class="n">delta</span><span class="o">)</span> <span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="k">=</span> <span class="n">snake</span><span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">))</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>      <span class="k">for</span> <span class="o">(</span><span class="n">k</span> <span class="k">&lt;-</span> <span class="o">(</span><span class="n">delta</span> <span class="o">+</span> <span class="n">p</span> <span class="n">to</span> <span class="n">delta</span><span class="o">).</span><span class="n">reverse</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="k">=</span> <span class="n">snake</span><span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">))</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>      <span class="n">fp</span><span class="o">(</span><span class="n">delta</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="k">=</span> <span class="n">snake</span><span class="o">(</span><span class="n">delta</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">delta</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">delta</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">))</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">while</span><span class="o">(</span><span class="n">fp</span><span class="o">(</span><span class="n">delta</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">)</span>
+</span><span class='line'>    <span class="n">delta</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">p</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="n">snake</span><span class="o">(</span><span class="n">k</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">p</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">pp</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span><span class="kt">Int</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">var</span> <span class="n">y</span> <span class="k">=</span> <span class="n">scala</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">max</span><span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">pp</span><span class="o">)</span>
+</span><span class='line'>    <span class="k">var</span> <span class="n">x</span> <span class="k">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">k</span>
+</span><span class='line'>    <span class="k">while</span> <span class="o">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">m</span> <span class="o">&amp;&amp;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="o">(</span><span class="n">x</span><span class="o">)</span> <span class="o">==</span> <span class="n">b</span><span class="o">(</span><span class="n">y</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">x</span> <span class="k">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span class='line'>      <span class="n">y</span> <span class="k">=</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">y</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>使い方はこんな感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">onp.Diff</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">object</span> <span class="nc">main</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">diff</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Diff</span><span class="o">[</span><span class="kt">Char</span><span class="o">](</span><span class="n">args</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="n">toCharArray</span><span class="o">(),</span> <span class="n">args</span><span class="o">(</span><span class="mi">1</span><span class="o">).</span><span class="n">toCharArray</span><span class="o">())</span>
+</span><span class='line'>    <span class="n">println</span><span class="o">(</span><span class="s">&quot;editdistance: &quot;</span> <span class="o">+</span> <span class="n">diff</span><span class="o">.</span><span class="n">editdistance</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実行してみる。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sbt
+</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Set current project to default-a136e9 <span class="o">(</span>in build file:/home/bokko/workspace/onp/scala/<span class="o">)</span>
+</span><span class='line'>&gt; run abc abd
+</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Running main abc abd
+</span><span class='line'>editdistance: 2
+</span><span class='line'><span class="o">[</span>success<span class="o">]</span> Total <span class="nb">time</span>: 0 s, completed 2012/04/30 3:17:18
+</span><span class='line'>&gt; run abcdef dacfea
+</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Running main abcdef dacfea
+</span><span class='line'>editdistance: 6
+</span><span class='line'><span class="o">[</span>success<span class="o">]</span> Total <span class="nb">time</span>: 0 s, completed 2012/04/30 3:17:40
+</span><span class='line'>&gt; run acbdeacbed acebdabbabed
+</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Running main acbdeacbed acebdabbabed
+</span><span class='line'>editdistance: 6
+</span><span class='line'><span class="o">[</span>success<span class="o">]</span> Total <span class="nb">time</span>: 0 s, completed 2012/04/30 3:17:42
+</span><span class='line'>&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>まぁ、いろんな言語で実装してみてはいるもののどの言語でも書き方が大体一緒なので、なんか言語の特徴活かした書き方があればそういう風に書き直したいなぁ。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -329,6 +537,10 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2012/04/30/scala-onp/">&#8216;An O(NP) Sequence Comparison Algorithm with Scala&#8217;</a>
+      </li>
     
       <li class="post">
         <a href="/blog/ja/blog/2012/04/28/scala-sbt/">&#8216;Scalaとsbt&#8217;</a>
