@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Utility &mdash; neoagent 0.4.5 documentation</title>
+    <title>Utility &mdash; neoagent 0.4.6 documentation</title>
     
     <link rel="stylesheet" href="static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.4.5',
+        VERSION:     '0.4.6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,14 +25,14 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="neoagent 0.4.5 documentation" href="index.html" />
+    <link rel="top" title="neoagent 0.4.6 documentation" href="index.html" />
     <link rel="prev" title="JSON configuration" href="jsonconf.html" /> 
   </head>
   <body>
     <div class="header-wrapper">
       <div class="header">
         <div class="headertitle"><a
-          href="index.html">neoagent 0.4.5 documentation</a></div>
+          href="index.html">neoagent 0.4.6 documentation</a></div>
         <div class="rel">
           <a href="jsonconf.html" title="JSON configuration"
              accesskey="P">previous</a>
@@ -58,37 +58,39 @@ neostat localhost 30011
 </pre></div>
 </div>
 <p>30011 is the parameter of &#8216;stport&#8217; in &#8216;config.json&#8217;.</p>
-<div class="highlight-sh"><div class="highlight"><pre>datetime: 2012-02-16 04:11:47
+<div class="highlight-sh"><div class="highlight"><pre>datetime: 2012-05-25 19:37:42
 name: neoagent
-version: 0.3.2
-host: localhost
-port: 30011
-environment_name: env_name
-start_time: 2012-02-16 04:11:36
-up_time: 00:00:11
-fsfd: 3
+version: 0.4.5
+host: 127.0.0.1
+port: /tmp/neoagent_st.sock
+environment_name: test1
+event_model: auto
+start_time: 2012-05-25 19:34:53
+up_time: 00:02:49
 fsport: 30001
 fssockpath: /tmp/neoagent.sock
-target_host: 192.168.0.11
+target_host: 127.0.0.1
 target_port: 11212
-backup_host: 192.168.0.12
+backup_host: 127.0.0.1
 backup_port: 11213
-current_target_host: 192.168.0.11
+current_target_host: 127.0.0.1
 current_target_port: 11212
 error_count: 0
-error_count_max: 50
-conn_max: 100
-connpool_max: 10
+error_count_max: 1000
+conn_max: 1000
+connpool_max: 20
 is_connpool_only: <span class="nb">false</span>
 is_refused_active: <span class="nb">false</span>
-request_bufsize: 524288
+request_bufsize: 1024
 request_bufsize_max: 1048576
-response_bufsize: 524288
+request_bufsize_current_max: 54305
+response_bufsize: 1024
 response_bufsize_max: 1048576
-current_conn: 4
-available_conn: 6
-current_conn_max: 10
-connpool_map: 1 1 1 0 1 0 0 0 0 0
+response_bufsize_current_max: 31900
+current_conn: 0
+available_conn: 20
+current_conn_max: 1
+connpool_map: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 </pre></div>
 </div>
 <p>The meaning of Each entry is following.</p>
@@ -167,12 +169,18 @@ connpool_map: 1 1 1 0 1 0 0 0 0 0
 <p><strong>request_bufsize_max</strong></p>
 <blockquote>
 <div>maximum buffer size of each client&#8217;s request</div></blockquote>
+<p><strong>request_bufsize_current_max</strong></p>
+<blockquote>
+<div>recorded maximum buffer size of each client&#8217;s request</div></blockquote>
 <p><strong>reponse_bufsize</strong></p>
 <blockquote>
 <div>starting buffer size of response from server</div></blockquote>
 <p><strong>response_bufsize_max</strong></p>
 <blockquote>
 <div>maximum buffer size of response from server</div></blockquote>
+<p><strong>response_bufsize_current_max</strong></p>
+<blockquote>
+<div>recoreded maximum buffer size of response from server</div></blockquote>
 <p><strong>current_conn</strong></p>
 <blockquote>
 <div>current count of connection</div></blockquote>
