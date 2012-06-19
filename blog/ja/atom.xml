@@ -4,7 +4,7 @@
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
   <link href="http://cubicdaiya.github.com/blog/ja/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/ja/"/>
-  <updated>2012-06-20T01:51:50+09:00</updated>
+  <updated>2012-06-20T01:56:04+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -18,7 +18,7 @@
     <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/06/20/octopress-not-found-github-repos/"/>
     <updated>2012-06-20T01:12:00+09:00</updated>
     <id>http://cubicdaiya.github.com/blog/ja/blog/2012/06/20/octopress-not-found-github-repos</id>
-    <content type="html"><![CDATA[<p>githubの古いAPIが使えなくなったのが原因であっちこっちのOctopressのサイドバーがずっと「Status updating…」になるという問題が発生している模様。
+    <content type="html"><![CDATA[<p>githubの古いAPIが使えなくなったのが原因であっちこっちのOctopressのサイドバーで表示されているgithubのリポジトリ一覧がずっと「Status updating…」になるという問題が発生している模様。
 本家にもIssue(<a href="https://github.com/imathis/octopress/issues/620">#620</a>)として上がっていて以下のパッチがGistで提供されている。</p>
 
 <div><script src='https://gist.github.com/2925425.js?file=github.js.diff'></script>
