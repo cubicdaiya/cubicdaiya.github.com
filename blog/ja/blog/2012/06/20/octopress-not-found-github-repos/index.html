@@ -1,0 +1,329 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>'Octopressでサイドバーにgithubのリポジトリ一覧が表示されない件' - bokko bokkoにしてやんよ</title>
+  <meta name="author" content="Tatsuhiko Kubo">
+
+  
+  <meta name="description" content="githubの古いAPIが使えなくなったのが原因であっちこっちのOctopressのサイドバーがずっと「Status updating…」になるという問題が発生している模様。
+本家にもIssue(#620)として上がっていて以下のパッチがGistで提供されている。 diff --git a/ &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://cubicdaiya.github.com/blog/ja/blog/2012/06/20/octopress-not-found-github-repos">
+  <link href="/blog/ja/favicon.png" rel="icon">
+  <link href="/blog/ja/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/blog/ja/javascripts/modernizr-2.0.js"></script>
+  <script src="/blog/ja/javascripts/ender.js"></script>
+  <script src="/blog/ja/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/blog/ja/atom.xml" rel="alternate" title="bokko bokkoにしてやんよ" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/blog/ja/">bokko bokkoにしてやんよ</a></h1>
+  
+    <h2>A infrastructure and software engineer's blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/blog/ja/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:cubicdaiya.github.com/blog/ja" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/ja/">Blog</a></li>
+  <li><a href="/blog/ja/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">'Octopressでサイドバーにgithubのリポジトリ一覧が表示されない件'</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-20T01:12:00+09:00" pubdate data-updated="true">Jun 20<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>githubの古いAPIが使えなくなったのが原因であっちこっちのOctopressのサイドバーがずっと「Status updating…」になるという問題が発生している模様。
+本家にもIssue(<a href="https://github.com/imathis/octopress/issues/620">#620</a>)として上がっていて以下のパッチがGistで提供されている。</p>
+
+<div><script src='https://gist.github.com/2925425.js?file=github.js.diff'></script>
+<noscript><pre><code>diff --git a/source/javascripts/github.js b/source/javascripts/github.js
+index 678775a..8b79dad 100644
+--- a/source/javascripts/github.js
++++ b/source/javascripts/github.js
+@@ -10,15 +10,15 @@ var github = (function(){
+   return {
+     showRepos: function(options){
+       $.ajax({
+-          url: &quot;http://github.com/api/v2/json/repos/show/&quot;+options.user+&quot;?callback=?&quot;
++          url: &quot;https://api.github.com/users/&quot;+options.user+&quot;/repos?callback=?&quot;
+         , type: 'jsonp'
+         , error: function (err) { $(options.target + ' li.loading').addClass('error').text(&quot;Error loading feed&quot;); }
+         , success: function(data) {
+           var repos = [];
+-          if (!data || !data.repositories) { return; }
+-          for (var i = 0; i &lt; data.repositories.length; i++) {
+-            if (options.skip_forks &amp;&amp; data.repositories[i].fork) { continue; }
+-            repos.push(data.repositories[i]);
++          if (!data || !data.data) { return; }
++          for (var i = 0; i &lt; data.data.length; i++) {
++            if (options.skip_forks &amp;&amp; data.data[i].fork) { continue; }
++            repos.push(data.data[i]);
+           }
+           repos.sort(function(a, b) {
+             var aDate = new Date(a.pushed_at).valueOf(),</code></pre></noscript></div>
+
+
+<p>しかし、このパッチだと各リポジトリのリンク先へ飛ぶとJSON(APIのレスポンス)が表示されてしまう。普通は各リポジトリのページへ飛ばしたいはずなのでこうする。(20行目に注目)</p>
+
+<div><script src='https://gist.github.com/2955189.js?file=github.js.patch'></script>
+<noscript><pre><code>--- a/source/javascripts/github.js        2012-06-20 01:31:15.536783517 +0900
++++ b/source/javascripts/github.js  2012-06-20 01:23:20.044800861 +0900
+@@ -10,15 +10,16 @@
+   return {
+     showRepos: function(options){
+       $.ajax({
+-          url: &quot;http://github.com/api/v2/json/repos/show/&quot;+options.user+&quot;?callback=?&quot;
++          url: &quot;https://api.github.com/users/&quot;+options.user+&quot;/repos?callback=?&quot;
+         , type: 'jsonp'
+         , error: function (err) { $(options.target + ' li.loading').addClass('error').text(&quot;Error loading feed&quot;); }
+         , success: function(data) {
+           var repos = [];
+-          if (!data || !data.repositories) { return; }
+-          for (var i = 0; i &lt; data.repositories.length; i++) {
+-            if (options.skip_forks &amp;&amp; data.repositories[i].fork) { continue; }
+-            repos.push(data.repositories[i]);
++          if (!data || !data.data) { return; }
++          for (var i = 0; i &lt; data.data.length; i++) {
++            if (options.skip_forks &amp;&amp; data.data[i].fork) { continue; }
++            data.data[i].url = data.data[i].svn_url;
++            repos.push(data.data[i]);
+           }
+           repos.sort(function(a, b) {
+             var aDate = new Date(a.pushed_at).valueOf(),
+</code></pre></noscript></div>
+
+
+<p>これで今まで通りOctopressのサイドバーでgithubのリポジトリ一覧を表示できるようになった。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tatsuhiko Kubo</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-20T01:12:00+09:00" pubdate data-updated="true">Jun 20<span>th</span>, 2012</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.com/blog/ja/blog/2012/06/20/octopress-not-found-github-repos/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.com/blog/ja/blog/2012/06/20/octopress-not-found-github-repos/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/ja/blog/2012/06/13/ngx-small-light/" title="Previous Post: 'mod_small_lightのNginx版ngx_small_lightをつくってみた'">&laquo; 'mod_small_lightのNginx版ngx_small_lightをつくってみた'</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2012/06/20/octopress-not-found-github-repos/">'Octopressでサイドバーにgithubのリポジトリ一覧が表示されない件'</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2012/06/13/ngx-small-light/">'mod_small_lightのNginx版ngx_small_lightをつくってみた'</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2012/04/30/scala-onp/">'An O(NP) Sequence Comparison Algorithm with Scala'</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2012/04/28/scala-sbt/">'Scalaとsbt'</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2012/04/25/springhead/">'原点'</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/cubicdaiya">@cubicdaiya</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'cubicdaiya',
+            count: 5,
+            skip_forks: false,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/blog/ja/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("cubicdaiya", 4, false);
+    });
+  </script>
+  <script src="/blog/ja/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/cubicdaiya" class="twitter-follow-button" data-show-count="false">Follow @cubicdaiya</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Tatsuhiko Kubo -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

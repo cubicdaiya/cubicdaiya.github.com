@@ -292,6 +292,10 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/ja/blog/2012/06/20/octopress-not-found-github-repos/">'Octopressでサイドバーにgithubのリポジトリ一覧が表示されない件'</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/ja/blog/2012/06/13/ngx-small-light/">'mod_small_lightのNginx版ngx_small_lightをつくってみた'</a>
       </li>
     
@@ -330,8 +334,8 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
 
         github.showRepos({
             user: 'cubicdaiya',
-            count: 0,
-            skip_forks: true,
+            count: 5,
+            skip_forks: false,
             target: '#gh_repos'
         });
     });

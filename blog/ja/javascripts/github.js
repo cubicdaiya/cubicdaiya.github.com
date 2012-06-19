@@ -18,6 +18,7 @@ var github = (function(){
           if (!data || !data.data) { return; }
           for (var i = 0; i < data.data.length; i++) {
             if (options.skip_forks && data.data[i].fork) { continue; }
+            data.data[i].url = data.data[i].svn_url;
             repos.push(data.data[i]);
           }
           repos.sort(function(a, b) {
