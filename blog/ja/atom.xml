@@ -4,7 +4,7 @@
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
   <link href="http://cubicdaiya.github.com/blog/ja/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/ja/"/>
-  <updated>2012-06-20T01:56:04+09:00</updated>
+  <updated>2012-06-29T01:26:30+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -12,6 +12,66 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[node-dtl v0.1.0リリース]]></title>
+    <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/06/29/xin-siibaziyonfalsenode-dot-jsdenode-dtlgarequiredekinaijian/"/>
+    <updated>2012-06-29T01:10:00+09:00</updated>
+    <id>http://cubicdaiya.github.com/blog/ja/blog/2012/06/29/xin-siibaziyonfalsenode-dot-jsdenode-dtlgarequiredekinaijian</id>
+    <content type="html"><![CDATA[<p>npmに登録してあるnode-dtlをバージョンアップ(v0.0.9 -> v0.1.0)した。</p>
+
+<p>特に機能追加とかしたわけではなくて、どうも比較的最近のNode.jsだとアドオンのビルド済みファイルを置くディレクトリが変更されたせいで
+npmでnode-dtlをインストールしても肝心のnode-dtlをrequireできなくなっていたのを直した感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='diff'><span class='line'><span class="gd">--- a/wscript</span>
+</span><span class='line'><span class="gi">+++ b/wscript</span>
+</span><span class='line'><span class="gu">@@ -32,3 +32,5 @@ def shutdown():</span>
+</span><span class='line'>   else:
+</span><span class='line'>     if os.path.exists(&#39;build/default/dtl.node&#39;) and not os.path.lexists(&#39;dtl.node&#39;):
+</span><span class='line'>       os.symlink(&#39;build/default/dtl.node&#39;, &#39;dtl.node&#39;)
+</span><span class='line'><span class="gi">+    if os.path.exists(&#39;build/Release/dtl.node&#39;) and not os.path.lexists(&#39;dtl.node&#39;):</span>
+</span><span class='line'><span class="gi">+      os.symlink(&#39;build/Release/dtl.node&#39;, &#39;dtl.node&#39;)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>という具合に昔はインストールすると{$package}/build/default/にビルド済みアドオンファイルが配置されていたのに、
+いつのまにか{$package}/build/Releaseに配置されるようになっていた。個人的には正直これはどうなのよ？って感じな変更なんだけど、
+node-ncursesの作者も同じようなことを思ってるらしく、wscriptには同じような処理と共に僕の今の気持ちを代弁してくれているようなコメントが書かれていた。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">shutdown</span><span class="p">():</span>
+</span><span class='line'>  <span class="c"># HACK to get ncurses_addon.node out of build directory.</span>
+</span><span class='line'>  <span class="c"># better way to do this?</span>
+</span><span class='line'>  <span class="k">if</span> <span class="n">Options</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="s">&#39;clean&#39;</span><span class="p">]:</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">exists</span><span class="p">(</span><span class="s">&#39;ncurses_addon.node&#39;</span><span class="p">):</span> <span class="n">unlink</span><span class="p">(</span><span class="s">&#39;ncurses_addon.node&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">exists</span><span class="p">(</span><span class="s">&#39;build/Release/ncurses_addon.node&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">(</span><span class="s">&#39;ncurses_addon.node&#39;</span><span class="p">):</span>
+</span><span class='line'>      <span class="n">symlink</span><span class="p">(</span><span class="s">&#39;build/Release/ncurses_addon.node&#39;</span><span class="p">,</span> <span class="s">&#39;ncurses_addon.node&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">exists</span><span class="p">(</span><span class="s">&#39;build/default/ncurses_addon.node&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">(</span><span class="s">&#39;ncurses_addon.node&#39;</span><span class="p">):</span>
+</span><span class='line'>      <span class="n">symlink</span><span class="p">(</span><span class="s">&#39;build/default/ncurses_addon.node&#39;</span><span class="p">,</span> <span class="s">&#39;ncurses_addon.node&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>いやホントにさ、もっといい方法ないの？</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA['Octopressでサイドバーにgithubのリポジトリ一覧が表示されない件']]></title>

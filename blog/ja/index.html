@@ -9,8 +9,8 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="githubの古いAPIが使えなくなったのが原因であっちこっちのOctopressのサイドバーで表示されているgithubのリポジトリ一覧がずっと「Status updating…」になるという問題が発生している模様。
-本家にもIssue(#620) &hellip;">
+  <meta name="description" content="npmに登録してあるnode-dtlをバージョンアップ(v0.0.9 -> v0.1.0)した。 特に機能追加とかしたわけではなくて、どうも比較的最近のNode.jsだとアドオンのビルド済みファイルを置くディレクトリが変更されたせいで
+npmでnode-dtlをインストールしても肝心のnode- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,11 +20,11 @@
 
   
   <link rel="canonical" href="http://cubicdaiya.github.com/blog/ja">
-  <link href="/blog/ja/favicon.png" rel="icon">
-  <link href="/blog/ja/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/blog/ja/javascripts/modernizr-2.0.js"></script>
-  <script src="/blog/ja/javascripts/ender.js"></script>
-  <script src="/blog/ja/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/blog/ja/atom.xml" rel="alternate" title="bokko bokkoにしてやんよ" type="application/atom+xml">
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -36,7 +36,7 @@
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/blog/ja/">bokko bokkoにしてやんよ</a></h1>
+  <h1><a href="/">bokko bokkoにしてやんよ</a></h1>
   
     <h2>A infrastructure and software engineer's blog</h2>
   
@@ -56,8 +56,8 @@
 </form>
   
 <ul class="main-navigation">
-  <li><a href="/blog/ja/">Blog</a></li>
-  <li><a href="/blog/ja/blog/archives">Archives</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
 </ul>
 
 </nav>
@@ -71,7 +71,94 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/ja/blog/2012/06/20/octopress-not-found-github-repos/">&#8216;Octopressでサイドバーにgithubのリポジトリ一覧が表示されない件&#8217;</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/06/29/xin-siibaziyonfalsenode-dot-jsdenode-dtlgarequiredekinaijian/">node-dtl v0.1.0リリース</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-29T01:10:00+09:00" pubdate data-updated="true">Jun 29<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>npmに登録してあるnode-dtlをバージョンアップ(v0.0.9 -> v0.1.0)した。</p>
+
+<p>特に機能追加とかしたわけではなくて、どうも比較的最近のNode.jsだとアドオンのビルド済みファイルを置くディレクトリが変更されたせいで
+npmでnode-dtlをインストールしても肝心のnode-dtlをrequireできなくなっていたのを直した感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='diff'><span class='line'><span class="gd">--- a/wscript</span>
+</span><span class='line'><span class="gi">+++ b/wscript</span>
+</span><span class='line'><span class="gu">@@ -32,3 +32,5 @@ def shutdown():</span>
+</span><span class='line'>   else:
+</span><span class='line'>     if os.path.exists(&#39;build/default/dtl.node&#39;) and not os.path.lexists(&#39;dtl.node&#39;):
+</span><span class='line'>       os.symlink(&#39;build/default/dtl.node&#39;, &#39;dtl.node&#39;)
+</span><span class='line'><span class="gi">+    if os.path.exists(&#39;build/Release/dtl.node&#39;) and not os.path.lexists(&#39;dtl.node&#39;):</span>
+</span><span class='line'><span class="gi">+      os.symlink(&#39;build/Release/dtl.node&#39;, &#39;dtl.node&#39;)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>という具合に昔はインストールすると{$package}/build/default/にビルド済みアドオンファイルが配置されていたのに、
+いつのまにか{$package}/build/Releaseに配置されるようになっていた。個人的には正直これはどうなのよ？って感じな変更なんだけど、
+node-ncursesの作者も同じようなことを思ってるらしく、wscriptには同じような処理と共に僕の今の気持ちを代弁してくれているようなコメントが書かれていた。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">shutdown</span><span class="p">():</span>
+</span><span class='line'>  <span class="c"># HACK to get ncurses_addon.node out of build directory.</span>
+</span><span class='line'>  <span class="c"># better way to do this?</span>
+</span><span class='line'>  <span class="k">if</span> <span class="n">Options</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="s">&#39;clean&#39;</span><span class="p">]:</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">exists</span><span class="p">(</span><span class="s">&#39;ncurses_addon.node&#39;</span><span class="p">):</span> <span class="n">unlink</span><span class="p">(</span><span class="s">&#39;ncurses_addon.node&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">exists</span><span class="p">(</span><span class="s">&#39;build/Release/ncurses_addon.node&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">(</span><span class="s">&#39;ncurses_addon.node&#39;</span><span class="p">):</span>
+</span><span class='line'>      <span class="n">symlink</span><span class="p">(</span><span class="s">&#39;build/Release/ncurses_addon.node&#39;</span><span class="p">,</span> <span class="s">&#39;ncurses_addon.node&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">exists</span><span class="p">(</span><span class="s">&#39;build/default/ncurses_addon.node&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">(</span><span class="s">&#39;ncurses_addon.node&#39;</span><span class="p">):</span>
+</span><span class='line'>      <span class="n">symlink</span><span class="p">(</span><span class="s">&#39;build/default/ncurses_addon.node&#39;</span><span class="p">,</span> <span class="s">&#39;ncurses_addon.node&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>いやホントにさ、もっといい方法ないの？</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/20/octopress-not-found-github-repos/">&#8216;Octopressでサイドバーにgithubのリポジトリ一覧が表示されない件&#8217;</a></h1>
     
     
       <p class="meta">
@@ -168,7 +255,7 @@ index 678775a..8b79dad 100644
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/ja/blog/2012/06/13/ngx-small-light/">&#8216;mod_small_lightのNginx版ngx_small_lightをつくってみた&#8217;</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/06/13/ngx-small-light/">&#8216;mod_small_lightのNginx版ngx_small_lightをつくってみた&#8217;</a></h1>
     
     
       <p class="meta">
@@ -373,7 +460,7 @@ Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポ�
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/ja/blog/2012/04/30/scala-onp/">&#8216;An O(NP) Sequence Comparison Algorithm With Scala&#8217;</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/04/30/scala-onp/">&#8216;An O(NP) Sequence Comparison Algorithm with Scala&#8217;</a></h1>
     
     
       <p class="meta">
@@ -581,7 +668,7 @@ Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポ�
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/ja/blog/2012/04/28/scala-sbt/">&#8216;Scalaとsbt&#8217;</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/04/28/scala-sbt/">&#8216;Scalaとsbt&#8217;</a></h1>
     
     
       <p class="meta">
@@ -757,7 +844,7 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/ja/blog/2012/04/25/springhead/">&#8216;原点&#8217;</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/04/25/springhead/">&#8216;原点&#8217;</a></h1>
     
     
       <p class="meta">
@@ -829,7 +916,7 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
   
   <div class="pagination">
     
-    <a href="/blog/ja/blog/archives">Blog Archives</a>
+    <a href="/blog/archives">Blog Archives</a>
     
   </div>
 </div>
@@ -840,23 +927,23 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/ja/blog/2012/06/20/octopress-not-found-github-repos/">&#8216;Octopressでサイドバーにgithubのリポジトリ一覧が表示されない件&#8217;</a>
+        <a href="/blog/2012/06/29/xin-siibaziyonfalsenode-dot-jsdenode-dtlgarequiredekinaijian/">node-dtl v0.1.0リリース</a>
       </li>
     
       <li class="post">
-        <a href="/blog/ja/blog/2012/06/13/ngx-small-light/">&#8216;mod_small_lightのNginx版ngx_small_lightをつくってみた&#8217;</a>
+        <a href="/blog/2012/06/20/octopress-not-found-github-repos/">&#8216;Octopressでサイドバーにgithubのリポジトリ一覧が表示されない件&#8217;</a>
       </li>
     
       <li class="post">
-        <a href="/blog/ja/blog/2012/04/30/scala-onp/">&#8216;An O(NP) Sequence Comparison Algorithm with Scala&#8217;</a>
+        <a href="/blog/2012/06/13/ngx-small-light/">&#8216;mod_small_lightのNginx版ngx_small_lightをつくってみた&#8217;</a>
       </li>
     
       <li class="post">
-        <a href="/blog/ja/blog/2012/04/28/scala-sbt/">&#8216;Scalaとsbt&#8217;</a>
+        <a href="/blog/2012/04/30/scala-onp/">&#8216;An O(NP) Sequence Comparison Algorithm with Scala&#8217;</a>
       </li>
     
       <li class="post">
-        <a href="/blog/ja/blog/2012/04/25/springhead/">&#8216;原点&#8217;</a>
+        <a href="/blog/2012/04/28/scala-sbt/">&#8216;Scalaとsbt&#8217;</a>
       </li>
     
   </ul>
@@ -888,7 +975,7 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
         });
     });
   </script>
-  <script src="/blog/ja/javascripts/github.js" type="text/javascript"> </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
 </section>
 
 
@@ -902,7 +989,7 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
       getTwitterFeed("cubicdaiya", 4, false);
     });
   </script>
-  <script src="/blog/ja/javascripts/twitter.js" type="text/javascript"> </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
   
     <a href="http://twitter.com/cubicdaiya" class="twitter-follow-button" data-show-count="false">Follow @cubicdaiya</a>
   
