@@ -4,7 +4,7 @@
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
   <link href="http://cubicdaiya.github.com/blog/ja/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/ja/"/>
-  <updated>2012-06-29T01:27:59+09:00</updated>
+  <updated>2012-06-29T01:32:15+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -44,7 +44,7 @@ npmでnode-dtlをインストールしても肝心のnode-dtlをrequireできな
 
 <p>という具合に昔はインストールすると{$package}/build/default/にビルド済みアドオンファイルが配置されていたのに、
 いつのまにか{$package}/build/Releaseに配置されるようになっていた。個人的には正直これはどうなのよ？って感じな変更なんだけど、
-node-ncursesの作者も同じようなことを思ってるらしく、wscriptには同じような処理と共に僕の今の気持ちを代弁してくれているようなコメントが書かれていた。</p>
+<a href="http://bit.ly/MVIh6m">node-ncurses</a>の作者も同じようなことを思ってるらしく、wscriptには同じような処理と共に僕の今の気持ちを代弁してくれているようなコメントが書かれていた。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
