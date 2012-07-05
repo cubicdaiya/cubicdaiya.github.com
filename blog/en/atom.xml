@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Thinking and Writing a Software!]]></title>
+  <title><![CDATA[Thinking and Writing Software!]]></title>
   <link href="http://cubicdaiya.github.com/blog/en/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/en/"/>
-  <updated>2012-07-06T00:33:05+09:00</updated>
+  <updated>2012-07-06T00:34:06+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/en/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
