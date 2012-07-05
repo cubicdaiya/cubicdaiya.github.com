@@ -4,7 +4,7 @@
   <title><![CDATA[Thinking and Writing a Software!]]></title>
   <link href="http://cubicdaiya.github.com/blog/en/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/en/"/>
-  <updated>2012-07-04T22:37:17+09:00</updated>
+  <updated>2012-07-06T00:33:05+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/en/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -12,6 +12,49 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[exercise for programmers]]></title>
+    <link href="http://cubicdaiya.github.com/blog/en/blog/2012/07/05/implement-simple-algoritms/"/>
+    <updated>2012-07-05T23:25:00+09:00</updated>
+    <id>http://cubicdaiya.github.com/blog/en/blog/2012/07/05/implement-simple-algoritms</id>
+    <content type="html"><![CDATA[<p>I think that day-to-day programming makes programmers improved technically.
+But as time went on, programmers get to avoid programming. Especially more they belong to same organization&#8230;</p>
+
+<h3>Why?</h3>
+
+<p>Though depending on a company, a programmer might become a manager with age. This is one of the reasons for it.
+But a programmer might get to avoid programming even if they are not.</p>
+
+<p>Someone said following(If I&#8217;m not mistaken Brooks wrote the similar thing in &#8216;The Mythical Man-Month&#8217;)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>the best way to make no bug is non-programming.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Programmers must work out something quickly at work. So programmers reutilize written codes in old days if there are already necessary codes.
+If there are( or was) superior programmers in your company, their codes would be useful in-house software library.</p>
+
+<p>Even if in-house library is useful or not, programmers will work out with it. Because it is quicker than re-implementing from now.
+Of course, re-implementing might be more appropriate than using an existing library. But it is a rare case.</p>
+
+<p>If that happens, programmers get to write programs like building lego-blocks.
+So-called lego-block-programming makes productivity of programmers improved. It&#8217;s wonderful!
+But as they would do only easy works, their tecnical skills would be break down.
+Furthermore, a lot of programmers get to think that someone else do difficult things.
+This is not a serious problem. However it is a serious problem that they get less able to solve technically-complicated problems.</p>
+
+<h3>What I&#8217;m practicing</h3>
+
+<p>I will say previous term again. I think that day-to-day programming makes programmers improved technically.
+So I&#8217;m programming day-to-day. But you might not have themes of programming at all times.
+In that case, you may implement primary data structures and algorithms.(I often implement them in my favorite languages)</p>
+
+<p>They are stack, queue, heap, binary-search, and so on.
+Of course their implements are not superior to exsiting libraries.
+But programmers will grow up by day-to-day programming even if they are re-implements.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ngx_small_light]]></title>
