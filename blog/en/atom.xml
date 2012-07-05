@@ -4,7 +4,7 @@
   <title><![CDATA[Thinking and Writing Software!]]></title>
   <link href="http://cubicdaiya.github.com/blog/en/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/en/"/>
-  <updated>2012-07-06T00:34:06+09:00</updated>
+  <updated>2012-07-06T00:35:46+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/en/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -32,7 +32,7 @@ But a programmer might get to avoid programming even if they are not.</p>
 </pre></td><td class='code'><pre><code class=''><span class='line'>the best way to make no bug is non-programming.</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Programmers must work out something quickly at work. So programmers reutilize written codes in old days if there are already necessary codes.
+<p>Programmers must work out something quickly at work. So programmers reutilize written codes in old days if there are already necessary codes in them.
 If there are( or was) superior programmers in your company, their codes would be useful in-house software library.</p>
 
 <p>Even if in-house library is useful or not, programmers will work out with it. Because it is quicker than re-implementing from now.
