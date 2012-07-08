@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>exercise for programmers - Thinking and Writing Software!</title>
+  <title>ngx_small_light v0.1.0 released! - Thinking and Writing Software!</title>
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="I think that day-to-day programming makes programmers improved technically.
-But as time went on, programmers get to avoid programming. Especially &hellip;">
+  <meta name="description" content="https://github.com/cubicdaiya/ngx_small_light I released ngx_small_light v0.1.0. This release includes the function of embedding a icon image in a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@ But as time went on, programmers get to avoid programming. Especially &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://cubicdaiya.github.com/blog/en/blog/2012/07/05/implement-simple-algoritms">
+  <link rel="canonical" href="http://cubicdaiya.github.com/blog/en/blog/2012/07/09/ngx-small-light-v0-dot-1-0">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -68,7 +67,7 @@ But as time went on, programmers get to avoid programming. Especially &hellip;">
   
   <header>
     
-      <h1 class="entry-title">exercise for programmers</h1>
+      <h1 class="entry-title">ngx_small_light v0.1.0 released!</h1>
     
     
       <p class="meta">
@@ -84,48 +83,31 @@ But as time went on, programmers get to avoid programming. Especially &hellip;">
   
 
 
-<time datetime="2012-07-05T23:25:00+09:00" pubdate data-updated="true">Jul 5<span>th</span>, 2012</time>
+<time datetime="2012-07-09T00:41:00+09:00" pubdate data-updated="true">Jul 9<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I think that day-to-day programming makes programmers improved technically.
-But as time went on, programmers get to avoid programming. Especially more they belong to same organization&#8230;</p>
+<div class="entry-content"><p><a href="https://github.com/cubicdaiya/ngx_small_light">https://github.com/cubicdaiya/ngx_small_light</a></p>
 
-<h3>Why?</h3>
+<p>I released ngx_small_light v0.1.0. This release includes the function of embedding a icon image in a image.
+It is necessary for using this function to assign a directory to the directive &#8216;small_light_material_dir&#8217;.</p>
 
-<p>Though depending on a company, a programmer might become a manager with age. This is one of the reasons for it.
-But a programmer might get to avoid programming even if they are not.</p>
-
-<p>Someone said following(If I&#8217;m not mistaken Brooks wrote the similar thing in &#8216;The Mythical Man-Month&#8217;)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>the best way to make no bug is non-programming.</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="k">small_light_material_dir</span> <span class="s">/tmp/materials</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Programmers must work out something quickly at work. So programmers reutilize written codes in old days if there are already necessary codes in them.
-If there are( or was) superior programmers in your company, their codes would be useful in-house software library.</p>
+<p>And assign a file-name in &#8216;small_light_material_dir&#8217; to the parameter &#8216;embedicon&#8217;.</p>
 
-<p>Even if in-house library is useful or not, programmers will work out with it. Because it is quicker than re-implementing from now.
-Of course, re-implementing might be more appropriate than using an existing library. But it is a rare case.</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="k">small_light_pattern_define</span> <span class="s">embedimage</span> <span class="s">embedicon=icon.jpg,ix=5,iy=5</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>If that happens, programmers get to write programs like building lego-blocks.
-So-called lego-block-programming makes productivity of programmers improved. It&#8217;s wonderful!
-But as they would do only easy works, their tecnical skills would be break down.
-Furthermore, a lot of programmers get to think that someone else do difficult things.
-This is not a serious problem. However it is a serious problem that they get less able to solve technically-complicated problems.</p>
 
-<h3>What I&#8217;m practicing</h3>
-
-<p>I will say previous term again. I think that day-to-day programming makes programmers improved technically.
-So I&#8217;m programming day-to-day. But you might not have themes of programming at all times.
-In that case, you may implement primary data structures and algorithms.(I often implement them in my favorite languages)</p>
-
-<p>They are stack, queue, heap, binary-search, and so on.
-Of course their implements are not superior to exsiting libraries.
-But programmers will grow up by day-to-day programming even if they are re-implements.</p>
+<p>Moreover I created the <a href="https://github.com/cubicdaiya/ngx_small_light/wiki">document</a> of ngx_small_light with the wiki in github.</p>
 </div>
 
 
@@ -148,7 +130,7 @@ But programmers will grow up by day-to-day programming even if they are re-imple
   
 
 
-<time datetime="2012-07-05T23:25:00+09:00" pubdate data-updated="true">Jul 5<span>th</span>, 2012</time>
+<time datetime="2012-07-09T00:41:00+09:00" pubdate data-updated="true">Jul 9<span>th</span>, 2012</time>
       
 
 
@@ -156,7 +138,7 @@ But programmers will grow up by day-to-day programming even if they are re-imple
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.com/blog/en/blog/2012/07/05/implement-simple-algoritms/" data-via="bokkko" data-counturl="http://cubicdaiya.github.com/blog/en/blog/2012/07/05/implement-simple-algoritms/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.com/blog/en/blog/2012/07/09/ngx-small-light-v0-dot-1-0/" data-via="bokkko" data-counturl="http://cubicdaiya.github.com/blog/en/blog/2012/07/09/ngx-small-light-v0-dot-1-0/" >Tweet</a>
   
   
   
@@ -167,10 +149,8 @@ But programmers will grow up by day-to-day programming even if they are re-imple
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/07/04/ngx-small-light/" title="Previous Post: ngx_small_light">&laquo; ngx_small_light</a>
+        <a class="basic-alignment left" href="/blog/2012/07/05/implement-simple-algoritms/" title="Previous Post: exercise for programmers">&laquo; exercise for programmers</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/07/09/ngx-small-light-v0-dot-1-0/" title="Next Post: ngx_small_light v0.1.0 released!">ngx_small_light v0.1.0 released! &raquo;</a>
       
     </p>
   </footer>

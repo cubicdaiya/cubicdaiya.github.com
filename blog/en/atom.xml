@@ -4,7 +4,7 @@
   <title><![CDATA[Thinking and Writing Software!]]></title>
   <link href="http://cubicdaiya.github.com/blog/en/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/en/"/>
-  <updated>2012-07-06T00:35:46+09:00</updated>
+  <updated>2012-07-09T01:02:45+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/en/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -12,6 +12,32 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ngx_small_light v0.1.0 released!]]></title>
+    <link href="http://cubicdaiya.github.com/blog/en/blog/2012/07/09/ngx-small-light-v0-dot-1-0/"/>
+    <updated>2012-07-09T00:41:00+09:00</updated>
+    <id>http://cubicdaiya.github.com/blog/en/blog/2012/07/09/ngx-small-light-v0-dot-1-0</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/cubicdaiya/ngx_small_light">https://github.com/cubicdaiya/ngx_small_light</a></p>
+
+<p>I released ngx_small_light v0.1.0. This release includes the function of embedding a icon image in a image.
+It is necessary for using this function to assign a directory to the directive &#8216;small_light_material_dir&#8217;.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="k">small_light_material_dir</span> <span class="s">/tmp/materials</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And assign a file-name in &#8216;small_light_material_dir&#8217; to the parameter &#8216;embedicon&#8217;.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="k">small_light_pattern_define</span> <span class="s">embedimage</span> <span class="s">embedicon=icon.jpg,ix=5,iy=5</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Moreover I created the <a href="https://github.com/cubicdaiya/ngx_small_light/wiki">document</a> of ngx_small_light with the wiki in github.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[exercise for programmers]]></title>
@@ -84,6 +110,15 @@ and what we have to do with customization of mod_small_light is only adding the 
 <p>As count of Nginx user is increasing in recent years, I thought dynamic image transformation module for Nginx is in demand.
 Already Nginx has standard image transformation module as name as HttpImageFilterModule. But HttpImageFilterModule provides little functions and
 expects complex configurations.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA['first']]></title>
+    <link href="http://cubicdaiya.github.com/blog/en/blog/2012/03/17/first/"/>
+    <updated>2012-03-17T16:34:00+09:00</updated>
+    <id>http://cubicdaiya.github.com/blog/en/blog/2012/03/17/first</id>
+    <content type="html"><![CDATA[
 ]]></content>
   </entry>
   

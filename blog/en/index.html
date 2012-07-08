@@ -9,8 +9,7 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="I think that day-to-day programming makes programmers improved technically.
-But as time went on, programmers get to avoid programming. Especially &hellip;">
+  <meta name="description" content="https://github.com/cubicdaiya/ngx_small_light I released ngx_small_light v0.1.0. This release includes the function of embedding a icon image in a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,11 +19,11 @@ But as time went on, programmers get to avoid programming. Especially &hellip;">
 
   
   <link rel="canonical" href="http://cubicdaiya.github.com/blog/en">
-  <link href="/blog/en/favicon.png" rel="icon">
-  <link href="/blog/en/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/blog/en/javascripts/modernizr-2.0.js"></script>
-  <script src="/blog/en/javascripts/ender.js"></script>
-  <script src="/blog/en/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/blog/en/atom.xml" rel="alternate" title="Thinking and Writing Software!" type="application/atom+xml">
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -36,7 +35,7 @@ But as time went on, programmers get to avoid programming. Especially &hellip;">
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/blog/en/">Thinking and Writing Software!</a></h1>
+  <h1><a href="/">Thinking and Writing Software!</a></h1>
   
     <h2>A infrastructure and software engineer's blog</h2>
   
@@ -56,8 +55,8 @@ But as time went on, programmers get to avoid programming. Especially &hellip;">
 </form>
   
 <ul class="main-navigation">
-  <li><a href="/blog/en/">Blog</a></li>
-  <li><a href="/blog/en/blog/archives">Archives</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
 </ul>
 
 </nav>
@@ -71,7 +70,60 @@ But as time went on, programmers get to avoid programming. Especially &hellip;">
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/en/blog/2012/07/05/implement-simple-algoritms/">exercise for programmers</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/07/09/ngx-small-light-v0-dot-1-0/">ngx_small_light v0.1.0 released!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-09T00:41:00+09:00" pubdate data-updated="true">Jul 9<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/cubicdaiya/ngx_small_light">https://github.com/cubicdaiya/ngx_small_light</a></p>
+
+<p>I released ngx_small_light v0.1.0. This release includes the function of embedding a icon image in a image.
+It is necessary for using this function to assign a directory to the directive &#8216;small_light_material_dir&#8217;.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="k">small_light_material_dir</span> <span class="s">/tmp/materials</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And assign a file-name in &#8216;small_light_material_dir&#8217; to the parameter &#8216;embedicon&#8217;.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="k">small_light_pattern_define</span> <span class="s">embedimage</span> <span class="s">embedicon=icon.jpg,ix=5,iy=5</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Moreover I created the <a href="https://github.com/cubicdaiya/ngx_small_light/wiki">document</a> of ngx_small_light with the wiki in github.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/05/implement-simple-algoritms/">exercise for programmers</a></h1>
     
     
       <p class="meta">
@@ -141,7 +193,7 @@ But programmers will grow up by day-to-day programming even if they are re-imple
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/en/blog/2012/07/04/ngx-small-light/">ngx_small_light</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/07/04/ngx-small-light/">ngx_small_light</a></h1>
     
     
       <p class="meta">
@@ -194,9 +246,45 @@ expects complex configurations.</p>
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/17/first/">&#8216;first&#8217;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-17T16:34:00+09:00" pubdate data-updated="true">Mar 17<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
-    <a href="/blog/en/blog/archives">Blog Archives</a>
+    <a href="/blog/archives">Blog Archives</a>
     
   </div>
 </div>
@@ -207,11 +295,19 @@ expects complex configurations.</p>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/en/blog/2012/07/05/implement-simple-algoritms/">exercise for programmers</a>
+        <a href="/blog/2012/07/09/ngx-small-light-v0-dot-1-0/">ngx_small_light v0.1.0 released!</a>
       </li>
     
       <li class="post">
-        <a href="/blog/en/blog/2012/07/04/ngx-small-light/">ngx_small_light</a>
+        <a href="/blog/2012/07/05/implement-simple-algoritms/">exercise for programmers</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/04/ngx-small-light/">ngx_small_light</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/17/first/">&#8216;first&#8217;</a>
       </li>
     
   </ul>
@@ -243,7 +339,7 @@ expects complex configurations.</p>
         });
     });
   </script>
-  <script src="/blog/en/javascripts/github.js" type="text/javascript"> </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
 </section>
 
 
@@ -257,7 +353,7 @@ expects complex configurations.</p>
       getTwitterFeed("bokkko", 4, false);
     });
   </script>
-  <script src="/blog/en/javascripts/twitter.js" type="text/javascript"> </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
   
     <a href="http://twitter.com/bokkko" class="twitter-follow-button" data-show-count="false">Follow @bokkko</a>
   
