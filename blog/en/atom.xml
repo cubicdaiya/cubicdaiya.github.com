@@ -4,7 +4,7 @@
   <title><![CDATA[Thinking and Writing Software!]]></title>
   <link href="http://cubicdaiya.github.com/blog/en/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/en/"/>
-  <updated>2012-07-09T01:03:47+09:00</updated>
+  <updated>2012-07-09T01:09:15+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/en/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -110,15 +110,6 @@ and what we have to do with customization of mod_small_light is only adding the 
 <p>As count of Nginx user is increasing in recent years, I thought dynamic image transformation module for Nginx is in demand.
 Already Nginx has standard image transformation module as name as HttpImageFilterModule. But HttpImageFilterModule provides little functions and
 expects complex configurations.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA['first']]></title>
-    <link href="http://cubicdaiya.github.com/blog/en/blog/2012/03/17/first/"/>
-    <updated>2012-03-17T16:34:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/en/blog/2012/03/17/first</id>
-    <content type="html"><![CDATA[
 ]]></content>
   </entry>
   
