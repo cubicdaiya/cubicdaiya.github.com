@@ -4,7 +4,7 @@
   <title><![CDATA[Thinking and Writing Software!]]></title>
   <link href="http://cubicdaiya.github.com/blog/en/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/en/"/>
-  <updated>2012-07-09T01:09:15+09:00</updated>
+  <updated>2012-07-17T02:18:56+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/en/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[New iPad]]></title>
+    <link href="http://cubicdaiya.github.com/blog/en/blog/2012/07/17/new-ipad/"/>
+    <updated>2012-07-17T01:50:00+09:00</updated>
+    <id>http://cubicdaiya.github.com/blog/en/blog/2012/07/17/new-ipad</id>
+    <content type="html"><![CDATA[<p><img class="left" src="http://cubicdaiya.github.com/blog/en/images/posts/ipad3.jpg"></p>
+
+<p>I bought a new iPad. I&#8217;m enjoying to browse <a href="http://touch.pixiv.net/">my working site</a> with it.
+Illusts on a new iPad with Retina display are very beautiful.</p>
+
+<p>At the same time I feel that it needs to make thumbnails&#8217; size bigger than before.
+Because Retina dislay&#8217;s resolution is far higher quality than before.
+Though making thumbnails&#8217; size bigger is the technically-difficult challenge, it is also the very technically-interesting challenge at the same time.
+I should work this challenge.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ngx_small_light v0.1.0 released!]]></title>
