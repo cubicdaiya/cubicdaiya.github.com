@@ -5,12 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>'原点' - bokko bokkoにしてやんよ</title>
+  <title>ddの途中経過を表示する - bokko bokkoにしてやんよ</title>
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="今引越しの準備で部屋を整理している。本棚にあった技術書はあらかた会社の机(とその下)に移動したし、その他の本も大体処分する予定。
-そんな中、大学時代に所属していたサークルの会誌が出てきた。 大学時代のサークル そのサークルでは毎年秋の学祭に展示と模擬店をやっていて、 &hellip;">
+  <meta name="description" content="同じ容量のHDDやSSDをマルっとコピーする際はddを使うと効果的だ。 1
+dd if=/dev/sda1 of=/dev/sdb ディスクによっては以下のようにブロックサイズを大きめに指定すると劇的に速くなる場合がある。(デフォルトは512バイト) 1
+dd if=/dev/sda1 of=/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://cubicdaiya.github.com/blog/ja/blog/2012/04/25/springhead">
+  <link rel="canonical" href="http://cubicdaiya.github.com/blog/ja/blog/2012/07/18/ddfalsetu-zhong-jing-guo-wobiao-shi-suru">
   <link href="/blog/ja/favicon.png" rel="icon">
   <link href="/blog/ja/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/blog/ja/javascripts/modernizr-2.0.js"></script>
@@ -68,7 +69,7 @@
   
   <header>
     
-      <h1 class="entry-title">'原点'</h1>
+      <h1 class="entry-title">ddの途中経過を表示する</h1>
     
     
       <p class="meta">
@@ -84,53 +85,43 @@
   
 
 
-<time datetime="2012-04-25T03:12:00+09:00" pubdate data-updated="true">Apr 25<span>th</span>, 2012</time>
+<time datetime="2012-07-18T22:43:00+09:00" pubdate data-updated="true">Jul 18<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>今引越しの準備で部屋を整理している。本棚にあった技術書はあらかた会社の机(とその下)に移動したし、その他の本も大体処分する予定。
-そんな中、大学時代に所属していたサークルの会誌が出てきた。</p>
+<div class="entry-content"><p>同じ容量のHDDやSSDをマルっとコピーする際はddを使うと効果的だ。</p>
 
-<h1>大学時代のサークル</h1>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>dd <span class="k">if</span><span class="o">=</span>/dev/sda1 <span class="nv">of</span><span class="o">=</span>/dev/sdb
+</span></code></pre></td></tr></table></div></figure>
 
-<p>そのサークルでは毎年秋の学祭に展示と模擬店をやっていて、部員が作ったゲームプログラムや電子工作物を展示したり、
-たこチャーハンやおしるこを出したりしていた。(模擬店の内容は毎年<del>揉める</del>変わる)
-みんな基本的に追い込まれないとヤル気が出ないので学祭の一週間前とかになると展示のために徹夜でプログラムを書いていた。</p>
 
-<p>1回生の時は1週間ぶっとおしでSTGを作っていたが、今やれって言われたら多分無理だ。そのSTGはs.cというファイル名で
-行数は2000行くらいだが、mainループが数百行あってオブジェクトの当たり判定関数が何故か登場キャラの数だけ存在していたり、
-何もしない関数(!)があったり、そのほかにも何かいろいろ摩訶不思議なコードがあったりで他の人が見れたものではなかった。
-「これは何故ちゃんと動いているんだ？」と驚愕している人さえいて、今でもたまにネタにされている。
-プログラミング歴半年以下の学生が書いたコードなんだから少しは多めに見て欲しかったが、それを考慮してもひどかったらしい。</p>
+<p>ディスクによっては以下のようにブロックサイズを大きめに指定すると劇的に速くなる場合がある。(デフォルトは512バイト)</p>
 
-<h1>会誌</h1>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>dd <span class="k">if</span><span class="o">=</span>/dev/sda1 <span class="nv">of</span><span class="o">=</span>/dev/sdb <span class="nv">bs</span><span class="o">=</span>4096
+</span></code></pre></td></tr></table></div></figure>
 
-<p>そしてそれとはまた別にひとりの部員につきひとつの記事をその会誌に寄稿し、展示会場で配布するということが行われていた。
-内容は自由で、自分が書きたいことを書けば良い。ただほとんどの人は技術的な何かを書いていたと思う。
-展示物のプログラムや電子工作について熱く語る人もいれば、文芸的プログラミングならぬ工芸的プログラミングと題して
-情報工学を哲学的に語る(テキトーなこと言ってます)人もいた。</p>
 
-<p>とても懐かしかったので作業を中断し、手に取って読んでみた。当時僕は「iアプリをつくろう」とか「Wikiパーサをつくろう」とか
-ほぼ毎年の展示物に関することを書いていたのだけど、今見るとコード断片がテキトーに貼りつけてあってそれについて軽く説明しているだけの非常に手抜きな文章だった。
-しかし、この経験は後にブログや技術雑誌(WEB+DB PRESSやSoftware Design)の原稿を執筆する上で非常に役に立ったし、
-プログラマが敬遠しがちなドキュメンテーション作業に対する苦手意識をいとも簡単に克服できるようにしてくれた。
-また、原稿には<strong>仮の締切</strong>と<strong>本当の締切</strong>があるということも教えてくれた。というのも大抵の人は最初に知らされた締切を守らないので、
-編集長はまず仮の締切を掲示する。そしてまだできてませんと泣きついてくる部員たちに今週いっぱいまでなら大丈夫ですよと(<strong>表面上</strong>)優しく微笑みかけるのだ。
-最初から<strong>本当の締切</strong>を掲示してはいけない。それに間に合わなかったら起動修正が効かない上にそもそも間に合ったとしても編集作業をやる時間がない。</p>
+<p>これはブロック単位ではなくページ単位でデータを読み書きするSSDの場合で特に顕著。
+また、試したことはないけど何年か前にWestern Digitalが従来の512バイトよりも大きいセクタサイズが4KBのHDDを出してるので、
+この手のHDDもbsパラメータの値を大きめにするとかなり速くなるんじゃないかと思う。(実際の速度は自分で確かめてみてね)</p>
 
-<h1>過去・現在・未来</h1>
+<h2>ddの途中経過を表示</h2>
 
-<p>自分や同期、また偉大な先輩達の記事を読み返していると、当時の自分が持っていて今の自分が持っていないあるいは忘れてしまったものを思い出せたような気がした。
-というか就職してから今まで僕は何をやっていたのだろう。当時の僕はもっと野心的で何事にも積極的だったはずなんだが、
-今はずいぶんと保守的なおっさんになってしまったように思える。これじゃ駄目だ。気持ちを切り替えねば。</p>
+<p>で、本題。ddはそのままだと入力先から出力先まで全部のデータを流し終わるまで何も表示しない。
+イマドキのHDDならSATAでもランダムアクセスはともかくシーケンシャルアクセスはそれなりに速くて
+シーケンシャルリード/ライトともに100MB/sec以上は余裕で出るので、3TBのHDD同士のコピーでも半日もかからずに完了するが、
+やっぱり人間なので現在のコピーの進捗と速度は知っておきたいところだ。ddには途中経過を表示するようなコマンドラインオプションは用意されていないが、
+実はddのプロセスはUSR1シグナルを受け取ると現在のコピーの進捗と速度(MB/sec)を標準エラー出力に出力する。</p>
 
-<p>卒業してから5年。自分の顔を知っている後輩もほとんど卒業してしまったので、もう学祭に行くことは多分ないだろう。
-でもこの会誌は捨てずに持っておこうと思う。これは僕の原点であり、大切な想い出だ。</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>pidof dd | xargs <span class="nb">kill</span> -USR1
+</span></code></pre></td></tr></table></div></figure>
 
-<p>そして必要な時だけ眺めるのだ。でも、いつも見てる必要はない。</p>
 </div>
 
 
@@ -153,7 +144,7 @@
   
 
 
-<time datetime="2012-04-25T03:12:00+09:00" pubdate data-updated="true">Apr 25<span>th</span>, 2012</time>
+<time datetime="2012-07-18T22:43:00+09:00" pubdate data-updated="true">Jul 18<span>th</span>, 2012</time>
       
 
 
@@ -161,7 +152,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.com/blog/ja/blog/2012/04/25/springhead/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.com/blog/ja/blog/2012/04/25/springhead/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.com/blog/ja/blog/2012/07/18/ddfalsetu-zhong-jing-guo-wobiao-shi-suru/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.com/blog/ja/blog/2012/07/18/ddfalsetu-zhong-jing-guo-wobiao-shi-suru/" >Tweet</a>
   
   
   
@@ -172,8 +163,8 @@
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/blog/ja/blog/2012/06/29/xin-siibaziyonfalsenode-dot-jsdenode-dtlgarequiredekinaijian/" title="Previous Post: node-dtl v0.1.0リリース">&laquo; node-dtl v0.1.0リリース</a>
       
-        <a class="basic-alignment right" href="/blog/ja/blog/2012/04/28/scala-sbt/" title="Next Post: 'Scalaとsbt'">'Scalaとsbt' &raquo;</a>
       
     </p>
   </footer>

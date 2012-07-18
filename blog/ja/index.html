@@ -9,8 +9,9 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="npmに登録してあるnode-dtlをバージョンアップ(v0.0.9 -> v0.1.0)した。 特に機能追加とかしたわけではなくて、どうも比較的最近のNode.jsだとアドオンのビルド済みファイルを置くディレクトリが変更されたせいで
-npmでnode-dtlをインストールしても肝心のnode- &hellip;">
+  <meta name="description" content="同じ容量のHDDやSSDをマルっとコピーする際はddを使うと効果的だ。 1
+dd if=/dev/sda1 of=/dev/sdb ディスクによっては以下のようにブロックサイズを大きめに指定すると劇的に速くなる場合がある。(デフォルトは512バイト) 1
+dd if=/dev/sda1 of=/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +66,71 @@ npmでnode-dtlをインストールしても肝心のnode- &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ja/blog/2012/07/18/ddfalsetu-zhong-jing-guo-wobiao-shi-suru/">ddの途中経過を表示する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-18T22:43:00+09:00" pubdate data-updated="true">Jul 18<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>同じ容量のHDDやSSDをマルっとコピーする際はddを使うと効果的だ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>dd <span class="k">if</span><span class="o">=</span>/dev/sda1 <span class="nv">of</span><span class="o">=</span>/dev/sdb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ディスクによっては以下のようにブロックサイズを大きめに指定すると劇的に速くなる場合がある。(デフォルトは512バイト)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>dd <span class="k">if</span><span class="o">=</span>/dev/sda1 <span class="nv">of</span><span class="o">=</span>/dev/sdb <span class="nv">bs</span><span class="o">=</span>4096
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これはブロック単位ではなくページ単位でデータを読み書きするSSDの場合で特に顕著。
+また、試したことはないけど何年か前にWestern Digitalが従来の512バイトよりも大きいセクタサイズが4KBのHDDを出してるので、
+この手のHDDもbsパラメータの値を大きめにするとかなり速くなるんじゃないかと思う。(実際の速度は自分で確かめてみてね)</p>
+
+<h2>ddの途中経過を表示</h2>
+
+<p>で、本題。ddはそのままだと入力先から出力先まで全部のデータを流し終わるまで何も表示しない。
+イマドキのHDDならSATAでもランダムアクセスはともかくシーケンシャルアクセスはそれなりに速くて
+シーケンシャルリード/ライトともに100MB/sec以上は余裕で出るので、3TBのHDD同士のコピーでも半日もかからずに完了するが、
+やっぱり人間なので現在のコピーの進捗と速度は知っておきたいところだ。ddには途中経過を表示するようなコマンドラインオプションは用意されていないが、
+実はddのプロセスはUSR1シグナルを受け取ると現在のコピーの進捗と速度(MB/sec)を標準エラー出力に出力する。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>pidof dd | xargs <span class="nb">kill</span> -USR1
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -927,6 +993,10 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/ja/blog/2012/07/18/ddfalsetu-zhong-jing-guo-wobiao-shi-suru/">ddの途中経過を表示する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/ja/blog/2012/06/29/xin-siibaziyonfalsenode-dot-jsdenode-dtlgarequiredekinaijian/">node-dtl v0.1.0リリース</a>
       </li>
     
@@ -940,10 +1010,6 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
     
       <li class="post">
         <a href="/blog/ja/blog/2012/04/30/scala-onp/">&#8216;An O(NP) Sequence Comparison Algorithm with Scala&#8217;</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/ja/blog/2012/04/28/scala-sbt/">&#8216;Scalaとsbt&#8217;</a>
       </li>
     
   </ul>
