@@ -68,6 +68,7 @@
             <span class="s2">&quot;access_mask&quot;</span><span class="o">:</span> <span class="s2">&quot;0666&quot;</span><span class="p">,</span>
             <span class="s2">&quot;target_server&quot;</span><span class="o">:</span> <span class="s2">&quot;127.0.0.1:11211&quot;</span><span class="p">,</span>
             <span class="s2">&quot;backup_server&quot;</span><span class="o">:</span> <span class="s2">&quot;127.0.0.1:11212&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;worker_max&quot;</span><span class="o">:</span><span class="mi">4</span>
             <span class="s2">&quot;conn_max&quot;</span><span class="o">:</span><span class="mi">1000</span><span class="p">,</span>
             <span class="s2">&quot;connpool_max&quot;</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span>
             <span class="s2">&quot;connpool_use_max&quot;</span><span class="o">:</span> <span class="mi">10000</span><span class="p">,</span>
@@ -110,6 +111,9 @@
 <p><strong>backup_server</strong></p>
 <blockquote>
 <div>target memcached server with port number</div></blockquote>
+<p><strong>worker_max</strong></p>
+<blockquote>
+<div>max of event worker</div></blockquote>
 <p><strong>conn_max</strong></p>
 <blockquote>
 <div>max of connection from client to target server</div></blockquote>
@@ -192,7 +196,7 @@
           
     <div class="footer">
         &copy; Copyright 2012 Tatsuhiko Kubo &lt;cubicdaiya@gmail.com&gt;.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
         </div>
         <div class="clearer"></div>
