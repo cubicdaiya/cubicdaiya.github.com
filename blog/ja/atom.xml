@@ -4,7 +4,7 @@
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
   <link href="http://cubicdaiya.github.com/blog/ja/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/ja/"/>
-  <updated>2012-07-18T23:23:22+09:00</updated>
+  <updated>2012-09-30T08:15:01+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -12,6 +12,57 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[YAPC::Asia Tokyo 2012で発表してきました]]></title>
+    <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/09/30/yapc-asia-tokyo-2012/"/>
+    <updated>2012-09-30T06:21:00+09:00</updated>
+    <id>http://cubicdaiya.github.com/blog/ja/blog/2012/09/30/yapc-asia-tokyo-2012</id>
+    <content type="html"><![CDATA[<p><a href="http://yapcasia.org/2012/">YAPC::Asia Tokyo 2012</a> 1日目に本編トークとLTをしてきました。去年傍聴者として参加したとき、「やっぱり自分もなんか発表したいなぁ」と感じていたので
+今回は思い切ってはじめて発表者として参加してみることにしました。かなり緊張しましたが、無事終えることができてホッとしています。
+発表外の時間や懇親会でも他社のエンジニアの方といろいろと話ができてとても楽しかったです。</p>
+
+<p>発表資料は以下になります。</p>
+
+<h2>本編トーク：<a href="http://www.slideshare.net/cubicdaiya/pixiv-thumbnails">pixiv thumbnails</a></h2>
+
+<iframe src="http://www.slideshare.net/slideshow/embed_code/14497793" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>
+
+
+
+
+<br />
+
+
+<br />
+
+
+<p>pixivにおける画像サムネイルのアップロードや生成方法について解説しました。
+pixivに限らず大量の画像を扱うようなWebサービスでは何かある度に新しいサムネイルを用意するのは大変ですし、
+画像を保存するのに必要なストレージのコストもバカになりません。こういった問題に対して動的サムネイルは非常に有効な手段となります。</p>
+
+<p>また、資料内では触れていませんがpixivでは静的・動的にかかわらず画像サムネイルはNginxとApache Traffic Serverで構成された前段の画像キャッシュクラスタにキャッシュされます。
+動的サムネイルはその性質上ディスク容量を消費しないかわりにCPUリソースを大量に消費するので、参照される際に活用するリソースが静的サムネイルよりも多くなります。</p>
+
+<p>そのため、動的サムネイルを実際に導入するような場合はそのサムネイルの参照頻度を考慮したり、上述のようにキャッシュを活用してサムネイルを動的に生成するリクエストの絶対数を減らす工夫が求められるでしょう。</p>
+
+<h2>LT：<a href="http://www.slideshare.net/cubicdaiya/ngxsmalllight-yapcasia2012">ngx_small_lightで動的サムネイル生成</a></h2>
+
+<iframe src="http://www.slideshare.net/slideshow/embed_code/14503943" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>
+
+
+
+
+<br />
+
+
+<br />
+
+
+<p><a href="https://github.com/cubicdaiya/ngx_small_light">ngx_small_light</a>自体は単に僕の趣味で作ったものですが、
+実用的な機能はひと通り揃ってるのでそれなりに使えるかと思います。まぁ、今のところ採用実績はないので大手を振ってオススメだよ！とまで言うのは難しいですが。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ddの途中経過を表示する]]></title>
