@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>YAPC::Asia Tokyo 2012で発表してきました - bokko bokkoにしてやんよ</title>
+  <title>WEB+DB PRESS vol.72 - bokko bokkoにしてやんよ</title>
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="YAPC::Asia Tokyo 2012 1日目に本編トークとLTをしてきました。去年傍聴者として参加したとき、「やっぱり自分もなんか発表したいなぁ」と感じていたので
-今回は思い切ってはじめて発表者として参加してみることにしました。かなり緊張しましたが、無事終えることができてホッとしています。 &hellip;">
+  <meta name="description" content="一週間ほど前にWEB+DB PRESS vol.73が発売なりましたが、同僚二人(うち一人は元)とnginxの特集記事を執筆しました。
+僕がnginxを最初に触ったのは3年くらい前の2009年でその頃はまだバージョンも古く、0.6.xか0.8xあたりを使っていたと思います。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://cubicdaiya.github.com/blog/ja/blog/2012/09/30/yapc-asia-tokyo-2012">
+  <link rel="canonical" href="http://cubicdaiya.github.com/blog/ja/blog/2012/12/30/nginx72">
   <link href="/blog/ja/favicon.png" rel="icon">
   <link href="/blog/ja/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/blog/ja/javascripts/modernizr-2.0.js"></script>
@@ -68,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">YAPC::Asia Tokyo 2012で発表してきました</h1>
+      <h1 class="entry-title">WEB+DB PRESS vol.72</h1>
     
     
       <p class="meta">
@@ -84,56 +84,29 @@
   
 
 
-<time datetime="2012-09-30T06:21:00+09:00" pubdate data-updated="true">Sep 30<span>th</span>, 2012</time>
+<time datetime="2012-12-30T17:07:00+09:00" pubdate data-updated="true">Dec 30<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a href="http://yapcasia.org/2012/">YAPC::Asia Tokyo 2012</a> 1日目に本編トークとLTをしてきました。去年傍聴者として参加したとき、「やっぱり自分もなんか発表したいなぁ」と感じていたので
-今回は思い切ってはじめて発表者として参加してみることにしました。かなり緊張しましたが、無事終えることができてホッとしています。
-発表外の時間や懇親会でも他社のエンジニアの方といろいろと話ができてとても楽しかったです。</p>
+<div class="entry-content"><p><a href="http://gihyo.jp/magazine/wdpress/archive/2013/vol72"><img src="/blog/ja/images/nginx72.jpg" width="300" height="300"></a></p>
 
-<p>発表資料は以下になります。</p>
+<p>一週間ほど前にWEB+DB PRESS vol.73が発売なりましたが、同僚二人(うち一人は元)とnginxの特集記事を執筆しました。
+僕がnginxを最初に触ったのは3年くらい前の2009年でその頃はまだバージョンも古く、0.6.xか0.8xあたりを使っていたと思います。
+その頃に当時在籍していた会社の技術ブログに書いたnginxの紹介記事が<a href="http://unoh.github.com/2009/08/18/tips_for_nginx.html">こちら</a>(アーカイブです)。</p>
 
-<h2>本編トーク：<a href="http://www.slideshare.net/cubicdaiya/pixiv-thumbnails">pixiv thumbnails</a></h2>
+<p>その後、組み込み系の会社に移って1年後ぐらいに再びWeb屋さんの世界に戻るべく、pixivに入社しました。
+それから約2年が経ち、pixivで元々Apacheで構築されていたコンポーネントはほぼnginxに置き換えられています。
+本特集には実運用の経験から得られたTipsがふんだんに盛り込まれているので、非常にオススメできる内容になっていると思いますので、
+興味のあることはご覧ください。</p>
 
-<iframe src="http://www.slideshare.net/slideshow/embed_code/14497793" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>
+<h2>その他の話題</h2>
 
-
-
-
-<br />
-
-
-<br />
-
-
-<p>pixivにおける画像サムネイルのアップロードや生成方法について解説しました。
-pixivに限らず大量の画像を扱うようなWebサービスでは何かある度に新しいサムネイルを用意するのは大変ですし、
-画像を保存するのに必要なストレージのコストもバカになりません。こういった問題に対して動的サムネイルは非常に有効な手段となります。</p>
-
-<p>また、資料内では触れていませんがpixivでは静的・動的にかかわらず画像サムネイルはNginxとApache Traffic Serverで構成された前段の画像キャッシュクラスタにキャッシュされます。
-動的サムネイルはその性質上ディスク容量を消費しないかわりにCPUリソースを大量に消費するので、参照される際に活用するリソースが静的サムネイルよりも多くなります。</p>
-
-<p>そのため、動的サムネイルを実際に導入するような場合はそのサムネイルの参照頻度を考慮したり、上述のようにキャッシュを活用してサムネイルを動的に生成するリクエストの絶対数を減らす工夫が求められるでしょう。</p>
-
-<h2>LT：<a href="http://www.slideshare.net/cubicdaiya/ngxsmalllight-yapcasia2012">ngx_small_lightで動的サムネイル生成</a></h2>
-
-<iframe src="http://www.slideshare.net/slideshow/embed_code/14503943" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>
-
-
-
-
-<br />
-
-
-<br />
-
-
-<p><a href="https://github.com/cubicdaiya/ngx_small_light">ngx_small_light</a>自体は単に僕の趣味で作ったものですが、
-実用的な機能はひと通り揃ってるのでそれなりに使えるかと思います。まぁ、今のところ採用実績はないので大手を振ってオススメだよ！とまで言うのは難しいですが。</p>
+<p>個人的に今月号で参考になったのはやはりコードレビュー特集でしょうか。
+僕自身今年に入ってからコードレビューを依頼されたり、する必要に迫られる場面が非常に増えたので
+どうやったら効率的にできるか模索しています。とりあえずツールの導入から始めたいですね。</p>
 </div>
 
 
@@ -156,7 +129,7 @@ pixivに限らず大量の画像を扱うようなWebサービスでは何かあ
   
 
 
-<time datetime="2012-09-30T06:21:00+09:00" pubdate data-updated="true">Sep 30<span>th</span>, 2012</time>
+<time datetime="2012-12-30T17:07:00+09:00" pubdate data-updated="true">Dec 30<span>th</span>, 2012</time>
       
 
 
@@ -164,7 +137,7 @@ pixivに限らず大量の画像を扱うようなWebサービスでは何かあ
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.com/blog/ja/blog/2012/09/30/yapc-asia-tokyo-2012/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.com/blog/ja/blog/2012/09/30/yapc-asia-tokyo-2012/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.com/blog/ja/blog/2012/12/30/nginx72/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.com/blog/ja/blog/2012/12/30/nginx72/" >Tweet</a>
   
   
   
@@ -175,10 +148,8 @@ pixivに限らず大量の画像を扱うようなWebサービスでは何かあ
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/ja/blog/2012/07/18/ddfalsetu-zhong-jing-guo-wobiao-shi-suru/" title="Previous Post: ddの途中経過を表示する">&laquo; ddの途中経過を表示する</a>
+        <a class="basic-alignment left" href="/blog/ja/blog/2012/11/06/unoh-days/" title="Previous Post: 新卒(?)入社した会社の話">&laquo; 新卒(?)入社した会社の話</a>
       
-      
-        <a class="basic-alignment right" href="/blog/ja/blog/2012/11/05/isucon-number-2nican-jia-sitekita/" title="Next Post: isucon#2に参加してきた">isucon#2に参加してきた &raquo;</a>
       
     </p>
   </footer>

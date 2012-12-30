@@ -4,7 +4,7 @@
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
   <link href="http://cubicdaiya.github.com/blog/ja/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/ja/"/>
-  <updated>2012-11-10T11:59:03+09:00</updated>
+  <updated>2012-12-30T17:40:22+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -12,6 +12,30 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[WEB+DB PRESS vol.72]]></title>
+    <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/12/30/nginx72/"/>
+    <updated>2012-12-30T17:07:00+09:00</updated>
+    <id>http://cubicdaiya.github.com/blog/ja/blog/2012/12/30/nginx72</id>
+    <content type="html"><![CDATA[<p><a href="http://gihyo.jp/magazine/wdpress/archive/2013/vol72"><img src="http://cubicdaiya.github.com/blog/ja/images/nginx72.jpg" width="300" height="300"></a></p>
+
+<p>一週間ほど前にWEB+DB PRESS vol.73が発売なりましたが、同僚二人(うち一人は元)とnginxの特集記事を執筆しました。
+僕がnginxを最初に触ったのは3年くらい前の2009年でその頃はまだバージョンも古く、0.6.xか0.8xあたりを使っていたと思います。
+その頃に当時在籍していた会社の技術ブログに書いたnginxの紹介記事が<a href="http://unoh.github.com/2009/08/18/tips_for_nginx.html">こちら</a>(アーカイブです)。</p>
+
+<p>その後、組み込み系の会社に移って1年後ぐらいに再びWeb屋さんの世界に戻るべく、pixivに入社しました。
+それから約2年が経ち、pixivで元々Apacheで構築されていたコンポーネントはほぼnginxに置き換えられています。
+本特集には実運用の経験から得られたTipsがふんだんに盛り込まれているので、非常にオススメできる内容になっていると思いますので、
+興味のあることはご覧ください。</p>
+
+<h2>その他の話題</h2>
+
+<p>個人的に今月号で参考になったのはやはりコードレビュー特集でしょうか。
+僕自身今年に入ってからコードレビューを依頼されたり、する必要に迫られる場面が非常に増えたので
+どうやったら効率的にできるか模索しています。とりあえずツールの導入から始めたいですね。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[新卒(?)入社した会社の話]]></title>
