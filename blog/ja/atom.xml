@@ -4,7 +4,7 @@
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
   <link href="http://cubicdaiya.github.com/blog/ja/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/ja/"/>
-  <updated>2012-12-30T17:40:22+09:00</updated>
+  <updated>2013-01-05T21:31:45+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -12,6 +12,124 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[libngxcore〜nginxのコアAPIをライブラリ化する〜]]></title>
+    <link href="http://cubicdaiya.github.com/blog/ja/blog/2013/01/05/libngxcore/"/>
+    <updated>2013-01-05T21:06:00+09:00</updated>
+    <id>http://cubicdaiya.github.com/blog/ja/blog/2013/01/05/libngxcore</id>
+    <content type="html"><![CDATA[<p>nginxの拡張モジュールを作ってると必然的にnginx内部のコアAPIを使ってプログラムを書くことになるのですが、
+各APIの挙動を確認したりする際に毎回nginxと一緒にビルドしなければいけなくてこれが中々面倒です。</p>
+
+<p>ApacheだとAPIがAPR(Apache Portable Runtime)というライブラリにまとめられてApache本体とは切り離されているので、
+Apache以外のプログラムでもApacheのAPIを使って開発することができます。Subversionなんかはこれの良い例です。</p>
+
+<p>そこでnginxのコアAPIもnginx以外のプログラムでも使えるようにしてメモリプールや文字列APIまわりの挙動をサクっと確認したいなぁと思ってやってみました。</p>
+
+<p><a href="https://github.com/cubicdaiya/libngxcore">libngxcore</a>〜libngxcore is the library builded from nginx core APIs.〜</p>
+
+<p>あくまでAPIの挙動確認が主な目的なのでこのライブラリをnginxの外でも広く使っていこうというわけではありません。
+というのもAPIの充実度で言うとnginxよりもApacheというかAPRの方に分があるからです。</p>
+
+<h1>Let&#8217;s try libngxcore</h1>
+
+<p>nginxの文字列関連のAPIはこんな感じで呼び出せます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'><span class="cp"> </span>
+</span><span class='line'><span class="cp">#include &lt;ngx_core.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;ngx_string.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span> <span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">ngx_str_t</span> <span class="n">s</span> <span class="o">=</span> <span class="n">ngx_string</span><span class="p">(</span><span class="s">&quot;bokko&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;s            :%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>  <span class="n">s</span><span class="p">.</span><span class="n">data</span><span class="p">);</span>             <span class="c1">// bokko</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;ngx_strlen(s):%ld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ngx_strlen</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">data</span><span class="p">));</span> <span class="c1">// 5</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>メモリプールはこんな感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;ngx_core.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;ngx_palloc.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;ngx_string.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span> <span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">ngx_str_t</span> <span class="n">s</span> <span class="o">=</span> <span class="n">ngx_string</span><span class="p">(</span><span class="s">&quot;bokko&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="o">*</span><span class="n">sp</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">ngx_pool_t</span> <span class="o">*</span><span class="n">pool</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">size_t</span> <span class="n">len</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">pool</span> <span class="o">=</span> <span class="n">ngx_create_pool</span><span class="p">(</span><span class="mi">4096</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">len</span>  <span class="o">=</span> <span class="n">ngx_strlen</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">data</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">sp</span> <span class="o">=</span> <span class="n">ngx_palloc</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">sp</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;alloc failed</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">NGX_ERROR</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">ngx_cpystrn</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">s</span><span class="p">.</span><span class="n">data</span><span class="p">,</span> <span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;sp            :%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>  <span class="n">sp</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;ngx_strlen(sp):%ld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ngx_strlen</span><span class="p">(</span><span class="n">sp</span><span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">ngx_destroy_pool</span><span class="p">(</span><span class="n">pool</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[WEB+DB PRESS vol.72]]></title>
