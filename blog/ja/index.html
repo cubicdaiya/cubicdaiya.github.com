@@ -9,8 +9,7 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="nginxの拡張モジュールを作ってると必然的にnginx内部のコアAPIを使ってプログラムを書くことになるのですが、
-各APIの挙動を確認したりする際に毎回nginxと一緒にビルドしなければいけなくてこれが中々面倒です。 ApacheだとAPIがAPR(Apache Portable &hellip;">
+  <meta name="description" content="ここのところ、よくnginxのモジュールを開発してたりするので個人的なメモも兼ねてnginxの開発方法や勘所的なものを紹介していこうかと思います。 で、まずは定番のHello, Worldから。ソースコードはgithubにあります。 ngx_http_hello_world〜Hello, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +64,143 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ja/blog/2013/01/08/nginx1/">nginx moduleをつくろう その0〜Hello, World〜</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-08T01:49:00+09:00" pubdate data-updated="true">Jan 8<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ここのところ、よくnginxのモジュールを開発してたりするので個人的なメモも兼ねてnginxの開発方法や勘所的なものを紹介していこうかと思います。</p>
+
+<p>で、まずは定番のHello, Worldから。ソースコードはgithubにあります。</p>
+
+<p><a href="https://github.com/cubicdaiya/ngx_http_hello_world">ngx_http_hello_world</a>〜Hello, World with nginx〜</p>
+
+<p>今回はとりあえず最初ということもあるので内部動作の解説は特にせず、単に以下のように「Hello, World!」を出力する上記のモジュールを
+ビルド &amp; 動作確認する方法について解説します。ディレクティブの定義とかは次回以降に。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>curl -l <span class="s2">&quot;http://127.0.0.1:80/hello_world&quot;</span>
+</span><span class='line'>&lt;!DOCTYPE html&gt;
+</span><span class='line'>&lt;html&gt;
+</span><span class='line'>&lt;head&gt;
+</span><span class='line'>&lt;title&gt;Hello, World with nginx!&lt;/title&gt;
+</span><span class='line'>&lt;/head&gt;
+</span><span class='line'>&lt;body&gt;
+</span><span class='line'>&lt;p&gt;Hello, World!&lt;/p&gt;&lt;/body&gt;
+</span><span class='line'>&lt;/html&gt;
+</span><span class='line'><span class="err">$</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>nginxモジュールのビルド</h1>
+
+<p>nginxのモジュールはApacheと違って動的モジュールがサポートされていないので、nginx本体と一緒にビルドして静的に組み込む必要があります。
+なのでまずはnginxnのソースコードを取ってきてアーカイブを展開しましょう。2013年1月時点の最新版(安定版)は1.2.6です。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget http://nginx.org/download/nginx-1.2.6.tar.gz
+</span><span class='line'><span class="nv">$ </span>tar zxvf nginx-1.2.6.tar.gz
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>次に拙作のngx_http_hello_worldモジュールをgithubから落としてきます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone git://github.com/cubicdaiya/ngx_http_hello_world.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>準備ができたのでnginx本体と一緒にビルド&amp;インストールします。組み込むモジュールはconfigure実行時に&#8211;add-moduleで指定することができます。(変数名は適宜環境に合った値を入れてください)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> <span class="k">${</span><span class="nv">nginx_src_dir</span><span class="k">}</span>
+</span><span class='line'><span class="nv">$ </span>./configure --with-pcre --add-module<span class="o">=</span><span class="k">${</span><span class="nv">ngx_http_hello_world_dir</span><span class="k">}</span>
+</span><span class='line'><span class="nv">$ </span>make
+</span><span class='line'><span class="nv">$ </span>sudo make install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ビルド &amp; インストールができたら設定ファイルの適当な箇所に以下の設定を記述します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>location ~ /hello_world<span class="nv">$ </span><span class="o">{</span>
+</span><span class='line'>    hello_world;
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでURLのパスがhello_worldに一致した場合、hellow_worldディレクティブが有効になり、nginxが以下のようにレスポンスを返してくれます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>curl -l <span class="s2">&quot;http://127.0.0.1:80/hello_world&quot;</span>
+</span><span class='line'>&lt;!DOCTYPE html&gt;
+</span><span class='line'>&lt;html&gt;
+</span><span class='line'>&lt;head&gt;
+</span><span class='line'>&lt;title&gt;Hello, World with nginx!&lt;/title&gt;
+</span><span class='line'>&lt;/head&gt;
+</span><span class='line'>&lt;body&gt;
+</span><span class='line'>&lt;p&gt;Hello, World!&lt;/p&gt;&lt;/body&gt;
+</span><span class='line'>&lt;/html&gt;
+</span><span class='line'><span class="err">$</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ngx_http_hello_world自体は非常に短い単純なソースコードになっているので、Cを書いたことのある人ならとりあえず上記の実行結果の確認に加えて
+これを読むだけでなんとなく雰囲気はつかめるのではないかと思います。また、Apacheモジュールを書いたことのある人なら割とすんなり入れるでしょう。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -957,214 +1093,6 @@ Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポ�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/ja/blog/2012/04/30/scala-onp/">&#8216;An O(NP) Sequence Comparison Algorithm with Scala&#8217;</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-30T03:10:00+09:00" pubdate data-updated="true">Apr 30<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>新しい言語を勉強する際、技術書のサンプルを読んだり写経したりするだけだとしっくりこないことが多いので
-自分の好きなアルゴリズムを実装してみるということをよくやる。僕の場合、とりあえずdiffを実装している。
-ただ、LCSやSESを真面目に計算するのは少々面倒なのでいつも編集距離だけ求めるプログラムを書くことにしている(たまに気が変わってLCSやSESを求めるところまで行くこともあるが、今のところそこまで行ったのはC++/Lua/Javascriptだけだ)。
-以下のページに各種言語によるdiff(An O(NP) Sequence Comparison Algorithm)の実装が置いてある。</p>
-
-<p><a href="https://github.com/cubicdaiya/onp">https://github.com/cubicdaiya/onp</a></p>
-
-<p>で、近頃はScalaを勉強しているので今回もそれにならうことにした。</p>
-
-<p><a href="https://github.com/cubicdaiya/onp/blob/master/scala/onp.scala">https://github.com/cubicdaiya/onp/blob/master/scala/onp.scala</a></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="c1">// The algorithm implemented here is based on &quot;An O(NP) Sequence Comparison Algorithm&quot;</span>
-</span><span class='line'><span class="c1">// by described by Sun Wu, Udi Manber and Gene Myers</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">package</span> <span class="nn">onp</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">Diff</span><span class="o">[</span><span class="kt">T</span><span class="o">](</span><span class="nc">_a</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">T</span><span class="o">],</span> <span class="nc">_b</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">T</span><span class="o">])</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">private</span> <span class="k">var</span> <span class="n">a</span> <span class="k">=</span> <span class="nc">_a</span>
-</span><span class='line'>  <span class="k">private</span> <span class="k">var</span> <span class="n">b</span> <span class="k">=</span> <span class="nc">_b</span>
-</span><span class='line'>  <span class="k">private</span> <span class="k">var</span> <span class="n">m</span> <span class="k">=</span> <span class="nc">_a</span><span class="o">.</span><span class="n">length</span>
-</span><span class='line'>  <span class="k">private</span> <span class="k">var</span> <span class="n">n</span> <span class="k">=</span> <span class="nc">_b</span><span class="o">.</span><span class="n">length</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="n">editdistance</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">m</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>      <span class="k">val</span> <span class="n">t1</span> <span class="k">=</span> <span class="n">a</span>
-</span><span class='line'>      <span class="k">val</span> <span class="n">t2</span> <span class="k">=</span> <span class="n">m</span>
-</span><span class='line'>      <span class="n">a</span> <span class="k">=</span> <span class="n">b</span>
-</span><span class='line'>      <span class="n">b</span> <span class="k">=</span> <span class="n">t1</span>
-</span><span class='line'>      <span class="n">m</span> <span class="k">=</span> <span class="n">n</span>
-</span><span class='line'>      <span class="n">n</span> <span class="k">=</span> <span class="n">t2</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">val</span> <span class="n">offset</span><span class="k">:</span>      <span class="kt">Int</span> <span class="o">=</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span>
-</span><span class='line'>    <span class="k">val</span> <span class="n">delta</span><span class="k">:</span>       <span class="kt">Int</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">m</span>
-</span><span class='line'>    <span class="k">val</span> <span class="n">size</span><span class="k">:</span>        <span class="kt">Int</span> <span class="o">=</span> <span class="n">m</span> <span class="o">+</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">3</span>
-</span><span class='line'>    <span class="k">val</span> <span class="n">fp</span><span class="k">:</span>   <span class="kt">Array</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Array</span><span class="o">(</span><span class="n">size</span><span class="o">)</span>
-</span><span class='line'>    <span class="k">var</span> <span class="n">p</span><span class="k">:</span>           <span class="kt">Int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-</span><span class='line'>    <span class="n">fp</span><span class="o">.</span><span class="n">map</span><span class="o">{</span><span class="n">x</span> <span class="k">=&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="o">}</span>
-</span><span class='line'>    <span class="k">do</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">p</span> <span class="k">=</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">1</span>
-</span><span class='line'>      <span class="k">for</span> <span class="o">(</span><span class="n">k</span> <span class="k">&lt;-</span> <span class="o">(-</span><span class="n">p</span> <span class="n">to</span> <span class="n">delta</span><span class="o">)</span> <span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="k">=</span> <span class="n">snake</span><span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">))</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'>      <span class="k">for</span> <span class="o">(</span><span class="n">k</span> <span class="k">&lt;-</span> <span class="o">(</span><span class="n">delta</span> <span class="o">+</span> <span class="n">p</span> <span class="n">to</span> <span class="n">delta</span><span class="o">).</span><span class="n">reverse</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="k">=</span> <span class="n">snake</span><span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">))</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'>      <span class="n">fp</span><span class="o">(</span><span class="n">delta</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="k">=</span> <span class="n">snake</span><span class="o">(</span><span class="n">delta</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">delta</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">delta</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">))</span>
-</span><span class='line'>    <span class="o">}</span> <span class="k">while</span><span class="o">(</span><span class="n">fp</span><span class="o">(</span><span class="n">delta</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">)</span>
-</span><span class='line'>    <span class="n">delta</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">p</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="n">snake</span><span class="o">(</span><span class="n">k</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">p</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">pp</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span><span class="kt">Int</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">var</span> <span class="n">y</span> <span class="k">=</span> <span class="n">scala</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">max</span><span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">pp</span><span class="o">)</span>
-</span><span class='line'>    <span class="k">var</span> <span class="n">x</span> <span class="k">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">k</span>
-</span><span class='line'>    <span class="k">while</span> <span class="o">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">m</span> <span class="o">&amp;&amp;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="o">(</span><span class="n">x</span><span class="o">)</span> <span class="o">==</span> <span class="n">b</span><span class="o">(</span><span class="n">y</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">x</span> <span class="k">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
-</span><span class='line'>      <span class="n">y</span> <span class="k">=</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="n">y</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>使い方はこんな感じ。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">onp.Diff</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">object</span> <span class="nc">main</span> <span class="o">{</span>
-</span><span class='line'>  <span class="k">def</span> <span class="n">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="k">=</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">val</span> <span class="n">diff</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Diff</span><span class="o">[</span><span class="kt">Char</span><span class="o">](</span><span class="n">args</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="n">toCharArray</span><span class="o">(),</span> <span class="n">args</span><span class="o">(</span><span class="mi">1</span><span class="o">).</span><span class="n">toCharArray</span><span class="o">())</span>
-</span><span class='line'>    <span class="n">println</span><span class="o">(</span><span class="s">&quot;editdistance: &quot;</span> <span class="o">+</span> <span class="n">diff</span><span class="o">.</span><span class="n">editdistance</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実行してみる。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sbt
-</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Set current project to default-a136e9 <span class="o">(</span>in build file:/home/bokko/workspace/onp/scala/<span class="o">)</span>
-</span><span class='line'>&gt; run abc abd
-</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Running main abc abd
-</span><span class='line'>editdistance: 2
-</span><span class='line'><span class="o">[</span>success<span class="o">]</span> Total <span class="nb">time</span>: 0 s, completed 2012/04/30 3:17:18
-</span><span class='line'>&gt; run abcdef dacfea
-</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Running main abcdef dacfea
-</span><span class='line'>editdistance: 6
-</span><span class='line'><span class="o">[</span>success<span class="o">]</span> Total <span class="nb">time</span>: 0 s, completed 2012/04/30 3:17:40
-</span><span class='line'>&gt; run acbdeacbed acebdabbabed
-</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Running main acbdeacbed acebdabbabed
-</span><span class='line'>editdistance: 6
-</span><span class='line'><span class="o">[</span>success<span class="o">]</span> Total <span class="nb">time</span>: 0 s, completed 2012/04/30 3:17:42
-</span><span class='line'>&gt;
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>まぁ、いろんな言語で実装してみてはいるもののどの言語でも書き方が大体一緒なので、なんか言語の特徴活かした書き方があればそういう風に書き直したいなぁ。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/ja/blog/page/2/">&larr; Older</a>
@@ -1180,6 +1108,10 @@ Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/ja/blog/2013/01/08/nginx1/">nginx moduleをつくろう その0〜Hello, World〜</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/ja/blog/2013/01/05/libngxcore/">libngxcore〜nginxのコアAPIをライブラリ化する〜</a>
       </li>
     
@@ -1193,10 +1125,6 @@ Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポ�
     
       <li class="post">
         <a href="/blog/ja/blog/2012/11/05/isucon-number-2nican-jia-sitekita/">isucon#2に参加してきた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/ja/blog/2012/09/30/yapc-asia-tokyo-2012/">YAPC::Asia Tokyo 2012で発表してきました</a>
       </li>
     
   </ul>

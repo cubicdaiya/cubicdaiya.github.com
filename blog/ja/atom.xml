@@ -4,7 +4,7 @@
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
   <link href="http://cubicdaiya.github.com/blog/ja/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/ja/"/>
-  <updated>2013-01-05T21:31:45+09:00</updated>
+  <updated>2013-01-08T02:56:46+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -12,6 +12,116 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[nginx moduleをつくろう その0〜Hello, World〜]]></title>
+    <link href="http://cubicdaiya.github.com/blog/ja/blog/2013/01/08/nginx1/"/>
+    <updated>2013-01-08T01:49:00+09:00</updated>
+    <id>http://cubicdaiya.github.com/blog/ja/blog/2013/01/08/nginx1</id>
+    <content type="html"><![CDATA[<p>ここのところ、よくnginxのモジュールを開発してたりするので個人的なメモも兼ねてnginxの開発方法や勘所的なものを紹介していこうかと思います。</p>
+
+<p>で、まずは定番のHello, Worldから。ソースコードはgithubにあります。</p>
+
+<p><a href="https://github.com/cubicdaiya/ngx_http_hello_world">ngx_http_hello_world</a>〜Hello, World with nginx〜</p>
+
+<p>今回はとりあえず最初ということもあるので内部動作の解説は特にせず、単に以下のように「Hello, World!」を出力する上記のモジュールを
+ビルド &amp; 動作確認する方法について解説します。ディレクティブの定義とかは次回以降に。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>curl -l <span class="s2">&quot;http://127.0.0.1:80/hello_world&quot;</span>
+</span><span class='line'>&lt;!DOCTYPE html&gt;
+</span><span class='line'>&lt;html&gt;
+</span><span class='line'>&lt;head&gt;
+</span><span class='line'>&lt;title&gt;Hello, World with nginx!&lt;/title&gt;
+</span><span class='line'>&lt;/head&gt;
+</span><span class='line'>&lt;body&gt;
+</span><span class='line'>&lt;p&gt;Hello, World!&lt;/p&gt;&lt;/body&gt;
+</span><span class='line'>&lt;/html&gt;
+</span><span class='line'><span class="err">$</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>nginxモジュールのビルド</h1>
+
+<p>nginxのモジュールはApacheと違って動的モジュールがサポートされていないので、nginx本体と一緒にビルドして静的に組み込む必要があります。
+なのでまずはnginxnのソースコードを取ってきてアーカイブを展開しましょう。2013年1月時点の最新版(安定版)は1.2.6です。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget http://nginx.org/download/nginx-1.2.6.tar.gz
+</span><span class='line'><span class="nv">$ </span>tar zxvf nginx-1.2.6.tar.gz
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>次に拙作のngx_http_hello_worldモジュールをgithubから落としてきます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone git://github.com/cubicdaiya/ngx_http_hello_world.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>準備ができたのでnginx本体と一緒にビルド&amp;インストールします。組み込むモジュールはconfigure実行時に&#8211;add-moduleで指定することができます。(変数名は適宜環境に合った値を入れてください)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> <span class="k">${</span><span class="nv">nginx_src_dir</span><span class="k">}</span>
+</span><span class='line'><span class="nv">$ </span>./configure --with-pcre --add-module<span class="o">=</span><span class="k">${</span><span class="nv">ngx_http_hello_world_dir</span><span class="k">}</span>
+</span><span class='line'><span class="nv">$ </span>make
+</span><span class='line'><span class="nv">$ </span>sudo make install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ビルド &amp; インストールができたら設定ファイルの適当な箇所に以下の設定を記述します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>location ~ /hello_world<span class="nv">$ </span><span class="o">{</span>
+</span><span class='line'>    hello_world;
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでURLのパスがhello_worldに一致した場合、hellow_worldディレクティブが有効になり、nginxが以下のようにレスポンスを返してくれます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>curl -l <span class="s2">&quot;http://127.0.0.1:80/hello_world&quot;</span>
+</span><span class='line'>&lt;!DOCTYPE html&gt;
+</span><span class='line'>&lt;html&gt;
+</span><span class='line'>&lt;head&gt;
+</span><span class='line'>&lt;title&gt;Hello, World with nginx!&lt;/title&gt;
+</span><span class='line'>&lt;/head&gt;
+</span><span class='line'>&lt;body&gt;
+</span><span class='line'>&lt;p&gt;Hello, World!&lt;/p&gt;&lt;/body&gt;
+</span><span class='line'>&lt;/html&gt;
+</span><span class='line'><span class="err">$</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ngx_http_hello_world自体は非常に短い単純なソースコードになっているので、Cを書いたことのある人ならとりあえず上記の実行結果の確認に加えて
+これを読むだけでなんとなく雰囲気はつかめるのではないかと思います。また、Apacheモジュールを書いたことのある人なら割とすんなり入れるでしょう。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[libngxcore〜nginxのコアAPIをライブラリ化する〜]]></title>
