@@ -4,7 +4,7 @@
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
   <link href="http://cubicdaiya.github.com/blog/ja/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/ja/"/>
-  <updated>2013-01-08T02:56:46+09:00</updated>
+  <updated>2013-01-08T03:05:22+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[nginx moduleをつくろう その0〜Hello, World〜]]></title>
+    <title type="html"><![CDATA[nginx moduleをつくろう その1〜Hello, World〜]]></title>
     <link href="http://cubicdaiya.github.com/blog/ja/blog/2013/01/08/nginx1/"/>
     <updated>2013-01-08T01:49:00+09:00</updated>
     <id>http://cubicdaiya.github.com/blog/ja/blog/2013/01/08/nginx1</id>
