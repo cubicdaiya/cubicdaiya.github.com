@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Utility &mdash; neoagent 0.6.0 documentation</title>
+    <title>Utility &mdash; neoagent 0.6.1 documentation</title>
     
     <link rel="stylesheet" href="static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.6.0',
+        VERSION:     '0.6.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,14 +25,14 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="neoagent 0.6.0 documentation" href="index.html" />
+    <link rel="top" title="neoagent 0.6.1 documentation" href="index.html" />
     <link rel="prev" title="JSON configuration" href="jsonconf.html" /> 
   </head>
   <body>
     <div class="header-wrapper">
       <div class="header">
         <div class="headertitle"><a
-          href="index.html">neoagent 0.6.0 documentation</a></div>
+          href="index.html">neoagent 0.6.1 documentation</a></div>
         <div class="rel">
           <a href="jsonconf.html" title="JSON configuration"
              accesskey="P">previous</a>
@@ -91,6 +91,9 @@ response_bufsize_current_max: 31900
 current_conn: 0
 available_conn: 20
 current_conn_max: 1
+slow_query_sec : 0.01
+slow_query_log_format : json
+worker_map: 0 0 0 0
 connpool_map: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 </pre></div>
 </div>
@@ -194,9 +197,18 @@ connpool_map: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 <p><strong>current_conn_max</strong></p>
 <blockquote>
 <div>recorded maximum count of connection after neoagent start</div></blockquote>
+<p><strong>slow_query_sec</strong></p>
+<blockquote>
+<div>threashold(second) of slow query log</div></blockquote>
+<p><strong>slow_query_log_path</strong></p>
+<blockquote>
+<div>slow query log path</div></blockquote>
+<p><strong>worker_map</strong></p>
+<blockquote>
+<div>condition of each worker(1 is active)</div></blockquote>
 <p><strong>connpool_map</strong></p>
 <blockquote>
-<div>condition of connection-pool</div></blockquote>
+<div>condition of each connection in connection-pool(1 is active)</div></blockquote>
 </div>
 </div>
 
@@ -246,7 +258,7 @@ connpool_map: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
         <div class="right">
           
     <div class="footer">
-        &copy; Copyright 2012 Tatsuhiko Kubo &lt;cubicdaiya@gmail.com&gt;.
+        &copy; Copyright 2013 Tatsuhiko Kubo &lt;cubicdaiya@gmail.com&gt;.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
         </div>
