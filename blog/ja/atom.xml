@@ -4,7 +4,7 @@
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
   <link href="http://cubicdaiya.github.com/blog/ja/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/ja/"/>
-  <updated>2013-01-08T03:05:22+09:00</updated>
+  <updated>2013-01-26T12:59:03+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -12,6 +12,21 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Webサービス開発徹底攻略]]></title>
+    <link href="http://cubicdaiya.github.com/blog/ja/blog/2013/01/26/web-service-dev-fall/"/>
+    <updated>2013-01-26T12:36:00+09:00</updated>
+    <id>http://cubicdaiya.github.com/blog/ja/blog/2013/01/26/web-service-dev-fall</id>
+    <content type="html"><![CDATA[<p><a href="http://www.amazon.co.jp/exec/obidos/ASIN/4774154881/bokko0c-22/ref=nosim/" name="amazletlink" target="_blank"><img src="http://ecx.images-amazon.com/images/I/51AvoWNkeqL._SL160_.jpg" alt="Webサービス開発徹底攻略 (WEB+DB PRESS plus)" style="border: none;" /></a></p>
+
+<p>一昨年に執筆させていただいた「pixivが明かす段階的サービス拡張」という特集記事が再録された「Webサービス開発徹底攻略」が本日発売されました。
+再録記事は若干修正されている箇所もありますが、基本的には当時の内容そのままの形で収録されています。</p>
+
+<p>また、執筆当時から現在に至るまでのpixivの変遷について急ぎ足ではありますが3ページほど僕が新規に書き下ろした記事も収録されています。
+興味がある方はお手に取ってお読みください。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[nginx moduleをつくろう その1〜Hello, World〜]]></title>
