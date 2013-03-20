@@ -4,7 +4,7 @@
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
   <link href="http://cubicdaiya.github.com/blog/ja/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.com/blog/ja/"/>
-  <updated>2013-01-26T12:59:03+09:00</updated>
+  <updated>2013-03-21T02:13:51+09:00</updated>
   <id>http://cubicdaiya.github.com/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -12,6 +12,35 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[php-ext-zopfliでPNG画像を再圧縮]]></title>
+    <link href="http://cubicdaiya.github.com/blog/ja/blog/2013/03/21/zopfli-png-recompress/"/>
+    <updated>2013-03-21T01:46:00+09:00</updated>
+    <id>http://cubicdaiya.github.com/blog/ja/blog/2013/03/21/zopfli-png-recompress</id>
+    <content type="html"><![CDATA[<p><a href="http://bit.ly/10dICrU">php-ext-zopfli</a></p>
+
+<p>先月末から話題の<a href="https://code.google.com/p/zopfli/">zopfli</a>を使ってPNG画像を再圧縮するコードを書いてみた。
+ただ、単にPNG画像を再圧縮するだけの関数をCで書いてgithubとかにあげるよりも何かしらのLLのバインディングに組み込む方が実用的だろうと思って
+既にリリースされている<a href="https://github.com/kjdev/php-ext-zopfli">php-ext-zopfli</a>にzopfli_png_recompressという関数を組み込む形で実装。使い方はこんな感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="nv">$png_image</span> <span class="o">=</span> <span class="nb">file_get_contents</span><span class="p">(</span><span class="s2">&quot;/home/bokko/image.png&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$png_image_recompressed</span> <span class="o">=</span> <span class="nx">zopfli_png_recompress</span><span class="p">(</span><span class="nv">$png_image</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>PNG画像はIDATチャンク(画像の実データ部)がgzip圧縮されているので、この部分を解凍 -> <a href="https://code.google.com/p/zopfli/">zopfli</a>で再圧縮することでサイズをさらに小さくすることができる。
+しかし、<a href="https://code.google.com/p/zopfli/">zopfli</a>はあくまでdeflate互換の圧縮アルゴリズムの実装を提供しているだけなので
+PNG画像を解析してIDATチャンクを取り出し、解凍&amp;再圧縮してチャンクやヘッダを書き換えるするコードは自分で書かなければならない。</p>
+
+<p>というわけでzopfliでPNG画像の再圧縮を行うのが簡単にできるようになった。<a href="http://bit.ly/Z4JtIO">Googleの元の発表</a>にもある通り、
+圧縮にかかるコストがかなり大きいので事前に圧縮した形で配布するような用途以外に使うのは難しいが、zlibと比べて3～8%も小さくできるのは大きい。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Webサービス開発徹底攻略]]></title>

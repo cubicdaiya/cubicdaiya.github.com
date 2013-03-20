@@ -9,8 +9,8 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="https://github.com/cubicdaiya/ngx_small_light サムネイルの動的生成を行うApacheモジュールのmod_small_lightをNginxにポーティングしてみた。
-nginx.confはこんな感じで、 &hellip;">
+  <meta name="description" content="githubの古いAPIが使えなくなったのが原因であっちこっちのOctopressのサイドバーで表示されているgithubのリポジトリ一覧がずっと「Status updating…」になるという問題が発生している模様。
+本家にもIssue(#620) &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,103 @@ nginx.confはこんな感じで、 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ja/blog/2012/06/20/octopress-not-found-github-repos/">&#8216;Octopressでサイドバーにgithubのリポジトリ一覧が表示されない件&#8217;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-20T01:12:00+09:00" pubdate data-updated="true">Jun 20<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>githubの古いAPIが使えなくなったのが原因であっちこっちのOctopressのサイドバーで表示されているgithubのリポジトリ一覧がずっと「Status updating…」になるという問題が発生している模様。
+本家にもIssue(<a href="https://github.com/imathis/octopress/issues/620">#620</a>)として上がっていて以下のパッチがGistで提供されている。</p>
+
+<div><script src='https://gist.github.com/2925425.js?file=github.js.diff'></script>
+<noscript><pre><code>diff --git a/source/javascripts/github.js b/source/javascripts/github.js
+index 678775a..8b79dad 100644
+--- a/source/javascripts/github.js
++++ b/source/javascripts/github.js
+@@ -10,15 +10,15 @@ var github = (function(){
+   return {
+     showRepos: function(options){
+       $.ajax({
+-          url: &quot;http://github.com/api/v2/json/repos/show/&quot;+options.user+&quot;?callback=?&quot;
++          url: &quot;https://api.github.com/users/&quot;+options.user+&quot;/repos?callback=?&quot;
+         , type: 'jsonp'
+         , error: function (err) { $(options.target + ' li.loading').addClass('error').text(&quot;Error loading feed&quot;); }
+         , success: function(data) {
+           var repos = [];
+-          if (!data || !data.repositories) { return; }
+-          for (var i = 0; i &lt; data.repositories.length; i++) {
+-            if (options.skip_forks &amp;&amp; data.repositories[i].fork) { continue; }
+-            repos.push(data.repositories[i]);
++          if (!data || !data.data) { return; }
++          for (var i = 0; i &lt; data.data.length; i++) {
++            if (options.skip_forks &amp;&amp; data.data[i].fork) { continue; }
++            repos.push(data.data[i]);
+           }
+           repos.sort(function(a, b) {
+             var aDate = new Date(a.pushed_at).valueOf(),</code></pre></noscript></div>
+
+
+<p>しかし、このパッチだと各リポジトリのリンク先へ飛ぶとJSON(APIのレスポンス)が表示されてしまう。普通は各リポジトリのページへ飛ばしたいはずなのでこうする。(20行目に注目)</p>
+
+<div><script src='https://gist.github.com/2955189.js?file=github.js.patch'></script>
+<noscript><pre><code>--- a/source/javascripts/github.js        2012-06-20 01:31:15.536783517 +0900
++++ b/source/javascripts/github.js  2012-06-20 01:23:20.044800861 +0900
+@@ -10,15 +10,16 @@
+   return {
+     showRepos: function(options){
+       $.ajax({
+-          url: &quot;http://github.com/api/v2/json/repos/show/&quot;+options.user+&quot;?callback=?&quot;
++          url: &quot;https://api.github.com/users/&quot;+options.user+&quot;/repos?callback=?&quot;
+         , type: 'jsonp'
+         , error: function (err) { $(options.target + ' li.loading').addClass('error').text(&quot;Error loading feed&quot;); }
+         , success: function(data) {
+           var repos = [];
+-          if (!data || !data.repositories) { return; }
+-          for (var i = 0; i &lt; data.repositories.length; i++) {
+-            if (options.skip_forks &amp;&amp; data.repositories[i].fork) { continue; }
+-            repos.push(data.repositories[i]);
++          if (!data || !data.data) { return; }
++          for (var i = 0; i &lt; data.data.length; i++) {
++            if (options.skip_forks &amp;&amp; data.data[i].fork) { continue; }
++            data.data[i].url = data.data[i].svn_url;
++            repos.push(data.data[i]);
+           }
+           repos.sort(function(a, b) {
+             var aDate = new Date(a.pushed_at).valueOf(),
+</code></pre></noscript></div>
+
+
+<p>これで今まで通りOctopressのサイドバーでgithubのリポジトリ一覧を表示できるようになった。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -745,6 +842,10 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/ja/blog/2013/03/21/zopfli-png-recompress/">php-ext-zopfliでPNG画像を再圧縮</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/ja/blog/2013/01/26/web-service-dev-fall/">Webサービス開発徹底攻略</a>
       </li>
     
@@ -758,10 +859,6 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
     
       <li class="post">
         <a href="/blog/ja/blog/2012/12/30/nginx72/">WEB+DB PRESS vol.72</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/ja/blog/2012/11/06/unoh-days/">新卒(?)入社した会社の話</a>
       </li>
     
   </ul>
