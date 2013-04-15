@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Thinking and Writing Software!]]></title>
-  <link href="http://cubicdaiya.github.com/blog/en/atom.xml" rel="self"/>
-  <link href="http://cubicdaiya.github.com/blog/en/"/>
-  <updated>2012-07-17T02:18:56+09:00</updated>
-  <id>http://cubicdaiya.github.com/blog/en/</id>
+  <link href="http://cubicdaiya.github.io/blog/en/atom.xml" rel="self"/>
+  <link href="http://cubicdaiya.github.io/blog/en/"/>
+  <updated>2013-04-16T01:53:57+09:00</updated>
+  <id>http://cubicdaiya.github.io/blog/en/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
     
@@ -14,11 +14,23 @@
 
   
   <entry>
+    <title type="html"><![CDATA[neoagent v0.5.1 released]]></title>
+    <link href="http://cubicdaiya.github.io/blog/en/blog/2012/08/13/neoagent-v0-dot-5-1-released/"/>
+    <updated>2012-08-13T01:47:00+09:00</updated>
+    <id>http://cubicdaiya.github.io/blog/en/blog/2012/08/13/neoagent-v0-dot-5-1-released</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/cubicdaiya/neoagent">https://github.com/cubicdaiya/neoagent</a></p>
+
+<p>I released neoagent v0.5.1. neoagent begins to have multithreaded event workers from this release.
+This enables neoagent is several times faster than v0.4.x.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[New iPad]]></title>
-    <link href="http://cubicdaiya.github.com/blog/en/blog/2012/07/17/new-ipad/"/>
+    <link href="http://cubicdaiya.github.io/blog/en/blog/2012/07/17/new-ipad/"/>
     <updated>2012-07-17T01:50:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/en/blog/2012/07/17/new-ipad</id>
-    <content type="html"><![CDATA[<p><img class="left" src="http://cubicdaiya.github.com/blog/en/images/posts/ipad3.jpg"></p>
+    <id>http://cubicdaiya.github.io/blog/en/blog/2012/07/17/new-ipad</id>
+    <content type="html"><![CDATA[<p><img class="left" src="http://cubicdaiya.github.io/blog/en/images/posts/ipad3.jpg"></p>
 
 <p>I bought a new iPad. I&#8217;m enjoying to browse <a href="http://touch.pixiv.net/">my working site</a> with it.
 Illusts on a new iPad with Retina display are very beautiful.</p>
@@ -32,9 +44,9 @@ I should work this challenge.</p>
   
   <entry>
     <title type="html"><![CDATA[ngx_small_light v0.1.0 released!]]></title>
-    <link href="http://cubicdaiya.github.com/blog/en/blog/2012/07/09/ngx-small-light-v0-dot-1-0/"/>
+    <link href="http://cubicdaiya.github.io/blog/en/blog/2012/07/09/ngx-small-light-v0-dot-1-0/"/>
     <updated>2012-07-09T00:41:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/en/blog/2012/07/09/ngx-small-light-v0-dot-1-0</id>
+    <id>http://cubicdaiya.github.io/blog/en/blog/2012/07/09/ngx-small-light-v0-dot-1-0</id>
     <content type="html"><![CDATA[<p><a href="https://github.com/cubicdaiya/ngx_small_light">https://github.com/cubicdaiya/ngx_small_light</a></p>
 
 <p>I released ngx_small_light v0.1.0. This release includes the function of embedding a icon image in a image.
@@ -58,9 +70,9 @@ It is necessary for using this function to assign a directory to the directive &
   
   <entry>
     <title type="html"><![CDATA[exercise for programmers]]></title>
-    <link href="http://cubicdaiya.github.com/blog/en/blog/2012/07/05/implement-simple-algoritms/"/>
+    <link href="http://cubicdaiya.github.io/blog/en/blog/2012/07/05/implement-simple-algoritms/"/>
     <updated>2012-07-05T23:25:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/en/blog/2012/07/05/implement-simple-algoritms</id>
+    <id>http://cubicdaiya.github.io/blog/en/blog/2012/07/05/implement-simple-algoritms</id>
     <content type="html"><![CDATA[<p>I think that day-to-day programming makes programmers improved technically.
 But as time went on, programmers get to avoid programming. Especially more they belong to same organization&#8230;</p>
 
@@ -101,9 +113,9 @@ But programmers will grow up by day-to-day programming even if they are re-imple
   
   <entry>
     <title type="html"><![CDATA[ngx_small_light]]></title>
-    <link href="http://cubicdaiya.github.com/blog/en/blog/2012/07/04/ngx-small-light/"/>
+    <link href="http://cubicdaiya.github.io/blog/en/blog/2012/07/04/ngx-small-light/"/>
     <updated>2012-07-04T10:07:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/en/blog/2012/07/04/ngx-small-light</id>
+    <id>http://cubicdaiya.github.io/blog/en/blog/2012/07/04/ngx-small-light</id>
     <content type="html"><![CDATA[<p><a href="https://github.com/cubicdaiya/ngx_small_light">https://github.com/cubicdaiya/ngx_small_light</a></p>
 
 <p>I developed <a href="https://github.com/cubicdaiya/ngx_small_light">ngx_small_light</a>.

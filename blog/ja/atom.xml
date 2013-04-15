@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
-  <link href="http://cubicdaiya.github.com/blog/ja/atom.xml" rel="self"/>
-  <link href="http://cubicdaiya.github.com/blog/ja/"/>
-  <updated>2013-03-21T02:13:51+09:00</updated>
-  <id>http://cubicdaiya.github.com/blog/ja/</id>
+  <link href="http://cubicdaiya.github.io/blog/ja/atom.xml" rel="self"/>
+  <link href="http://cubicdaiya.github.io/blog/ja/"/>
+  <updated>2013-04-16T01:52:38+09:00</updated>
+  <id>http://cubicdaiya.github.io/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[php-ext-zopfliでPNG画像を再圧縮]]></title>
-    <link href="http://cubicdaiya.github.com/blog/ja/blog/2013/03/21/zopfli-png-recompress/"/>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2013/03/21/zopfli-png-recompress/"/>
     <updated>2013-03-21T01:46:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/ja/blog/2013/03/21/zopfli-png-recompress</id>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2013/03/21/zopfli-png-recompress</id>
     <content type="html"><![CDATA[<p><a href="http://bit.ly/10dICrU">php-ext-zopfli</a></p>
 
 <p>先月末から話題の<a href="https://code.google.com/p/zopfli/">zopfli</a>を使ってPNG画像を再圧縮するコードを書いてみた。
@@ -44,9 +44,9 @@ PNG画像を解析してIDATチャンクを取り出し、解凍&amp;再圧縮�
   
   <entry>
     <title type="html"><![CDATA[Webサービス開発徹底攻略]]></title>
-    <link href="http://cubicdaiya.github.com/blog/ja/blog/2013/01/26/web-service-dev-fall/"/>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2013/01/26/web-service-dev-fall/"/>
     <updated>2013-01-26T12:36:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/ja/blog/2013/01/26/web-service-dev-fall</id>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2013/01/26/web-service-dev-fall</id>
     <content type="html"><![CDATA[<p><a href="http://www.amazon.co.jp/exec/obidos/ASIN/4774154881/bokko0c-22/ref=nosim/" name="amazletlink" target="_blank"><img src="http://ecx.images-amazon.com/images/I/51AvoWNkeqL._SL160_.jpg" alt="Webサービス開発徹底攻略 (WEB+DB PRESS plus)" style="border: none;" /></a></p>
 
 <p>一昨年に執筆させていただいた「pixivが明かす段階的サービス拡張」という特集記事が再録された「Webサービス開発徹底攻略」が本日発売されました。
@@ -59,9 +59,9 @@ PNG画像を解析してIDATチャンクを取り出し、解凍&amp;再圧縮�
   
   <entry>
     <title type="html"><![CDATA[nginx moduleをつくろう その1〜Hello, World〜]]></title>
-    <link href="http://cubicdaiya.github.com/blog/ja/blog/2013/01/08/nginx1/"/>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2013/01/08/nginx1/"/>
     <updated>2013-01-08T01:49:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/ja/blog/2013/01/08/nginx1</id>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2013/01/08/nginx1</id>
     <content type="html"><![CDATA[<p>ここのところ、よくnginxのモジュールを開発してたりするので個人的なメモも兼ねてnginxの開発方法や勘所的なものを紹介していこうかと思います。</p>
 
 <p>で、まずは定番のHello, Worldから。ソースコードはgithubにあります。</p>
@@ -169,9 +169,9 @@ PNG画像を解析してIDATチャンクを取り出し、解凍&amp;再圧縮�
   
   <entry>
     <title type="html"><![CDATA[libngxcore〜nginxのコアAPIをライブラリ化する〜]]></title>
-    <link href="http://cubicdaiya.github.com/blog/ja/blog/2013/01/05/libngxcore/"/>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2013/01/05/libngxcore/"/>
     <updated>2013-01-05T21:06:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/ja/blog/2013/01/05/libngxcore</id>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2013/01/05/libngxcore</id>
     <content type="html"><![CDATA[<p>nginxの拡張モジュールを作ってると必然的にnginx内部のコアAPIを使ってプログラムを書くことになるのですが、
 各APIの挙動を確認したりする際に毎回nginxと一緒にビルドしなければいけなくてこれが中々面倒です。</p>
 
@@ -287,10 +287,10 @@ Apache以外のプログラムでもApacheのAPIを使って開発すること�
   
   <entry>
     <title type="html"><![CDATA[WEB+DB PRESS vol.72]]></title>
-    <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/12/30/nginx72/"/>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2012/12/30/nginx72/"/>
     <updated>2012-12-30T17:07:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/ja/blog/2012/12/30/nginx72</id>
-    <content type="html"><![CDATA[<p><a href="http://gihyo.jp/magazine/wdpress/archive/2013/vol72"><img src="http://cubicdaiya.github.com/blog/ja/images/nginx72.jpg" width="300" height="300"></a></p>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2012/12/30/nginx72</id>
+    <content type="html"><![CDATA[<p><a href="http://gihyo.jp/magazine/wdpress/archive/2013/vol72"><img src="http://cubicdaiya.github.io/blog/ja/images/nginx72.jpg" width="300" height="300"></a></p>
 
 <p>一週間ほど前にWEB+DB PRESS vol.73が発売なりましたが、同僚二人(うち一人は元)とnginxの特集記事を執筆しました。
 僕がnginxを最初に触ったのは3年くらい前の2009年でその頃はまだバージョンも古く、0.6.xか0.8xあたりを使っていたと思います。
@@ -311,9 +311,9 @@ Apache以外のプログラムでもApacheのAPIを使って開発すること�
   
   <entry>
     <title type="html"><![CDATA[新卒(?)入社した会社の話]]></title>
-    <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/11/06/unoh-days/"/>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2012/11/06/unoh-days/"/>
     <updated>2012-11-06T01:00:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/ja/blog/2012/11/06/unoh-days</id>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2012/11/06/unoh-days</id>
     <content type="html"><![CDATA[<p>この記事は、<a href="http://atnd.org/events/33478">Unoh Advent Calendar</a>の参加記事です。</p>
 
 <h2>はじめに</h2>
@@ -376,9 +376,9 @@ Apacheモジュールなのにapr使わずに標準関数でゴリゴリ書い�
   
   <entry>
     <title type="html"><![CDATA[isucon#2に参加してきた]]></title>
-    <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/11/05/isucon-number-2nican-jia-sitekita/"/>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2012/11/05/isucon-number-2nican-jia-sitekita/"/>
     <updated>2012-11-05T22:37:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/ja/blog/2012/11/05/isucon-number-2nican-jia-sitekita</id>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2012/11/05/isucon-number-2nican-jia-sitekita</id>
     <content type="html"><![CDATA[<p>南国でぼけ〜としていた時に同僚の<a href="https://twitter.com/walf443">@walf443</a>に誘われて二つ返事で参加。チーム名は「くらげとみかん」。</p>
 
 <p>事前にやった作戦会議ではPHP(僕用)でやるかPerl(@walf443用)でやるか前日くらいまで決まらなかったんだけど、
@@ -420,9 +420,9 @@ CSSやJS、画像などの静的ファイルが後段のアプリケーション
   
   <entry>
     <title type="html"><![CDATA[YAPC::Asia Tokyo 2012で発表してきました]]></title>
-    <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/09/30/yapc-asia-tokyo-2012/"/>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2012/09/30/yapc-asia-tokyo-2012/"/>
     <updated>2012-09-30T06:21:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/ja/blog/2012/09/30/yapc-asia-tokyo-2012</id>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2012/09/30/yapc-asia-tokyo-2012</id>
     <content type="html"><![CDATA[<p><a href="http://yapcasia.org/2012/">YAPC::Asia Tokyo 2012</a> 1日目に本編トークとLTをしてきました。去年傍聴者として参加したとき、「やっぱり自分もなんか発表したいなぁ」と感じていたので
 今回は思い切ってはじめて発表者として参加してみることにしました。かなり緊張しましたが、無事終えることができてホッとしています。
 発表外の時間や懇親会でも他社のエンジニアの方といろいろと話ができてとても楽しかったです。</p>
@@ -471,9 +471,9 @@ pixivに限らず大量の画像を扱うようなWebサービスでは何かあ
   
   <entry>
     <title type="html"><![CDATA[ddの途中経過を表示する]]></title>
-    <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/07/18/ddfalsetu-zhong-jing-guo-wobiao-shi-suru/"/>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2012/07/18/ddfalsetu-zhong-jing-guo-wobiao-shi-suru/"/>
     <updated>2012-07-18T22:43:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/ja/blog/2012/07/18/ddfalsetu-zhong-jing-guo-wobiao-shi-suru</id>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2012/07/18/ddfalsetu-zhong-jing-guo-wobiao-shi-suru</id>
     <content type="html"><![CDATA[<p>同じ容量のHDDやSSDをマルっとコピーする際はddを使うと効果的だ。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -509,9 +509,9 @@ pixivに限らず大量の画像を扱うようなWebサービスでは何かあ
   
   <entry>
     <title type="html"><![CDATA[node-dtl v0.1.0リリース]]></title>
-    <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/06/29/xin-siibaziyonfalsenode-dot-jsdenode-dtlgarequiredekinaijian/"/>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2012/06/29/xin-siibaziyonfalsenode-dot-jsdenode-dtlgarequiredekinaijian/"/>
     <updated>2012-06-29T01:10:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/ja/blog/2012/06/29/xin-siibaziyonfalsenode-dot-jsdenode-dtlgarequiredekinaijian</id>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2012/06/29/xin-siibaziyonfalsenode-dot-jsdenode-dtlgarequiredekinaijian</id>
     <content type="html"><![CDATA[<p>npmに登録してあるnode-dtlをバージョンアップ(v0.0.9 -> v0.1.0)した。</p>
 
 <p>特に機能追加とかしたわけではなくて、どうも比較的最近のNode.jsだとアドオンのビルド済みファイルを置くディレクトリが変更されたせいで
@@ -569,9 +569,9 @@ npmでnode-dtlをインストールしても肝心のnode-dtlをrequireできな
   
   <entry>
     <title type="html"><![CDATA['Octopressでサイドバーにgithubのリポジトリ一覧が表示されない件']]></title>
-    <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/06/20/octopress-not-found-github-repos/"/>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2012/06/20/octopress-not-found-github-repos/"/>
     <updated>2012-06-20T01:12:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/ja/blog/2012/06/20/octopress-not-found-github-repos</id>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2012/06/20/octopress-not-found-github-repos</id>
     <content type="html"><![CDATA[<p>githubの古いAPIが使えなくなったのが原因であっちこっちのOctopressのサイドバーで表示されているgithubのリポジトリ一覧がずっと「Status updating…」になるという問題が発生している模様。
 本家にもIssue(<a href="https://github.com/imathis/octopress/issues/620">#620</a>)として上がっていて以下のパッチがGistで提供されている。</p>
 
@@ -639,9 +639,9 @@ index 678775a..8b79dad 100644
   
   <entry>
     <title type="html"><![CDATA['mod_small_lightのNginx版ngx_small_lightをつくってみた']]></title>
-    <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/06/13/ngx-small-light/"/>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2012/06/13/ngx-small-light/"/>
     <updated>2012-06-13T23:51:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/ja/blog/2012/06/13/ngx-small-light</id>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2012/06/13/ngx-small-light</id>
     <content type="html"><![CDATA[<p><a href="https://github.com/cubicdaiya/ngx_small_light">https://github.com/cubicdaiya/ngx_small_light</a></p>
 
 <p>サムネイルの動的生成を行うApacheモジュールの<a href="http://code.google.com/p/smalllight/">mod_small_light</a>をNginxにポーティングしてみた。
@@ -817,9 +817,9 @@ Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポ�
   
   <entry>
     <title type="html"><![CDATA['An O(NP) Sequence Comparison Algorithm with Scala']]></title>
-    <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/04/30/scala-onp/"/>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2012/04/30/scala-onp/"/>
     <updated>2012-04-30T03:10:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/ja/blog/2012/04/30/scala-onp</id>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2012/04/30/scala-onp</id>
     <content type="html"><![CDATA[<p>新しい言語を勉強する際、技術書のサンプルを読んだり写経したりするだけだとしっくりこないことが多いので
 自分の好きなアルゴリズムを実装してみるということをよくやる。僕の場合、とりあえずdiffを実装している。
 ただ、LCSやSESを真面目に計算するのは少々面倒なのでいつも編集距離だけ求めるプログラムを書くことにしている(たまに気が変わってLCSやSESを求めるところまで行くこともあるが、今のところそこまで行ったのはC++/Lua/Javascriptだけだ)。
@@ -998,9 +998,9 @@ Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポ�
   
   <entry>
     <title type="html"><![CDATA['Scalaとsbt']]></title>
-    <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/04/28/scala-sbt/"/>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2012/04/28/scala-sbt/"/>
     <updated>2012-04-28T20:38:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/ja/blog/2012/04/28/scala-sbt</id>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2012/04/28/scala-sbt</id>
     <content type="html"><![CDATA[<p>最近Scalaの勉強をしているのだが、インタプリタだと「Hello, World!」を表示するだけのプログラムでも
 JVMの起動が遅くて実行するのに2〜3秒かかったり、コンパイルが遅いのでどうしたものかと思ってたら<a href="https://github.com/harrah/xsbt">sbt</a>というのを使うといいらしい。
 sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。長らくJava方面からは遠ざかっていたのでAntやMavenはもうさっぱり忘れてしまったが、
@@ -1147,9 +1147,9 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
   
   <entry>
     <title type="html"><![CDATA['原点']]></title>
-    <link href="http://cubicdaiya.github.com/blog/ja/blog/2012/04/25/springhead/"/>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2012/04/25/springhead/"/>
     <updated>2012-04-25T03:12:00+09:00</updated>
-    <id>http://cubicdaiya.github.com/blog/ja/blog/2012/04/25/springhead</id>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2012/04/25/springhead</id>
     <content type="html"><![CDATA[<p>今引越しの準備で部屋を整理している。本棚にあった技術書はあらかた会社の机(とその下)に移動したし、その他の本も大体処分する予定。
 そんな中、大学時代に所属していたサークルの会誌が出てきた。</p>
 
