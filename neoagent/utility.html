@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Utility &mdash; neoagent 0.7.3 documentation</title>
+    <title>Utility &mdash; neoagent 0.8.0 documentation</title>
     
     <link rel="stylesheet" href="static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.7.3',
+        VERSION:     '0.8.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,14 +25,14 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="neoagent 0.7.3 documentation" href="index.html" />
+    <link rel="top" title="neoagent 0.8.0 documentation" href="index.html" />
     <link rel="prev" title="JSON configuration" href="jsonconf.html" /> 
   </head>
   <body>
     <div class="header-wrapper">
       <div class="header">
         <div class="headertitle"><a
-          href="index.html">neoagent 0.7.3 documentation</a></div>
+          href="index.html">neoagent 0.8.0 documentation</a></div>
         <div class="rel">
           <a href="jsonconf.html" title="JSON configuration"
              accesskey="P">previous</a>
@@ -50,6 +50,22 @@
             
   <div class="section" id="utility">
 <h1>Utility<a class="headerlink" href="#utility" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="neoctl">
+<span id="id1"></span><h2>neoctl<a class="headerlink" href="#neoctl" title="Permalink to this headline">¶</a></h2>
+<p>neoctl is a process controller for neoagent.
+neoctl provides the following functions.</p>
+<ul class="simple">
+<li>reload worker process</li>
+<li>restart worker process</li>
+<li>restart worker process gracefully</li>
+</ul>
+<div class="highlight-sh"><div class="highlight"><pre>neoctl -s /var/run/neoagent_ctl.sock -c reload   -n envname <span class="c"># reload worker process</span>
+neoctl -s /var/run/neoagent_ctl.sock -c restart  -n envname <span class="c"># restart worker process</span>
+neoctl -s /var/run/neoagent_ctl.sock -c graceful -n envname <span class="c"># restart worker process gracefully</span>
+</pre></div>
+</div>
+<p>Graceful-restart of neoagent works only when worker process binds an unix domain socket.</p>
+</div>
 <div class="section" id="neostat">
 <h2>neostat<a class="headerlink" href="#neostat" title="Permalink to this headline">¶</a></h2>
 <p>neostat is a status monitor for neoagent.</p>
@@ -75,19 +91,12 @@ backup_host: 127.0.0.1
 backup_port: 11213
 current_target_host: 127.0.0.1
 current_target_port: 11212
-error_count: 0
-error_count_max: 1000
 worker_max: 3
 conn_max: 1000
 connpool_max: 20
-is_connpool_only: <span class="nb">false</span>
 is_refused_active: <span class="nb">false</span>
 request_bufsize: 1024
-request_bufsize_max: 1048576
-request_bufsize_current_max: 54305
 response_bufsize: 1024
-response_bufsize_max: 1048576
-response_bufsize_current_max: 31900
 current_conn: 0
 available_conn: 20
 current_conn_max: 1
@@ -149,12 +158,6 @@ connpool_map: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 <p><strong>current_target_port</strong></p>
 <blockquote>
 <div>hostname of current target memcached server</div></blockquote>
-<p><strong>error_count</strong></p>
-<blockquote>
-<div>count of error</div></blockquote>
-<p><strong>error_count_max</strong></p>
-<blockquote>
-<div>when &#8216;error_count&#8217; is over this value, neoagent is shutdown</div></blockquote>
 <p><strong>worker_max</strong></p>
 <blockquote>
 <div>max count of event worker</div></blockquote>
@@ -164,30 +167,15 @@ connpool_map: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 <p><strong>connpool_max</strong></p>
 <blockquote>
 <div>size of connection-pool</div></blockquote>
-<p><strong>is_connpool_only</strong></p>
-<blockquote>
-<div>if this parameter is true, neoagent use only connection-pool.</div></blockquote>
 <p><strong>is_refused_active</strong></p>
 <blockquote>
 <div>if this parameter is true, neoagent switches over connection-pool.</div></blockquote>
 <p><strong>request_bufsize</strong></p>
 <blockquote>
 <div>starting buffer size of each client&#8217;s request</div></blockquote>
-<p><strong>request_bufsize_max</strong></p>
-<blockquote>
-<div>maximum buffer size of each client&#8217;s request</div></blockquote>
-<p><strong>request_bufsize_current_max</strong></p>
-<blockquote>
-<div>recorded maximum buffer size of each client&#8217;s request</div></blockquote>
 <p><strong>reponse_bufsize</strong></p>
 <blockquote>
 <div>starting buffer size of response from server</div></blockquote>
-<p><strong>response_bufsize_max</strong></p>
-<blockquote>
-<div>maximum buffer size of response from server</div></blockquote>
-<p><strong>response_bufsize_current_max</strong></p>
-<blockquote>
-<div>recoreded maximum buffer size of response from server</div></blockquote>
 <p><strong>current_conn</strong></p>
 <blockquote>
 <div>current count of connection</div></blockquote>
@@ -225,6 +213,7 @@ connpool_map: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 <li class="toctree-l1"><a class="reference internal" href="neoagent.html">Manual page</a></li>
 <li class="toctree-l1"><a class="reference internal" href="jsonconf.html">JSON configuration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Utility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#neoctl">neoctl</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#neostat">neostat</a></li>
 </ul>
 </li>
