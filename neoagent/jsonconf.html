@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>JSON configuration &mdash; neoagent 0.8.1 documentation</title>
+    <title>JSON configuration &mdash; neoagent 0.8.4 documentation</title>
     
     <link rel="stylesheet" href="static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.1',
+        VERSION:     '0.8.4',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="neoagent 0.8.1 documentation" href="index.html" />
+    <link rel="top" title="neoagent 0.8.4 documentation" href="index.html" />
     <link rel="next" title="Utility" href="utility.html" />
     <link rel="prev" title="Manual page" href="neoagent.html" /> 
   </head>
@@ -33,7 +33,7 @@
     <div class="header-wrapper">
       <div class="header">
         <div class="headertitle"><a
-          href="index.html">neoagent 0.8.1 documentation</a></div>
+          href="index.html">neoagent 0.8.4 documentation</a></div>
         <div class="rel">
           <a href="neoagent.html" title="Manual page"
              accesskey="P">previous</a> |
@@ -75,7 +75,6 @@
             <span class="s2">&quot;worker_max&quot;</span><span class="o">:</span><span class="mi">4</span>
             <span class="s2">&quot;conn_max&quot;</span><span class="o">:</span><span class="mi">1000</span><span class="p">,</span>
             <span class="s2">&quot;connpool_max&quot;</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span>
-            <span class="s2">&quot;connpool_use_max&quot;</span><span class="o">:</span> <span class="mi">10000</span><span class="p">,</span>
             <span class="s2">&quot;client_pool_max&quot;</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span>
             <span class="s2">&quot;request_bufsize&quot;</span><span class="o">:</span><span class="mi">65536</span><span class="p">,</span>
             <span class="s2">&quot;response_bufsize&quot;</span><span class="o">:</span><span class="mi">65536</span><span class="p">,</span>
@@ -136,9 +135,6 @@
 <p><strong>connpool_max</strong></p>
 <blockquote>
 <div>connection pool size</div></blockquote>
-<p><strong>connpool_use_max</strong></p>
-<blockquote>
-<div>if a connection in connection pool is over this number, neoagent reconnect target server</div></blockquote>
 <p><strong>client_pool_max</strong></p>
 <blockquote>
 <div>preserved client data size on startup</div></blockquote>
