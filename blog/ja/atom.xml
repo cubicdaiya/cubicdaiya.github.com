@@ -4,7 +4,7 @@
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
   <link href="http://cubicdaiya.github.io/blog/ja/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.io/blog/ja/"/>
-  <updated>2013-07-27T03:32:30+09:00</updated>
+  <updated>2013-07-28T08:52:08+09:00</updated>
   <id>http://cubicdaiya.github.io/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -12,6 +12,67 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[mruby_nginx_module開発日記 その1〜ngx_mrubyからのfork〜]]></title>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2013/07/28/mruby-nginx-module/"/>
+    <updated>2013-07-28T07:54:00+09:00</updated>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2013/07/28/mruby-nginx-module</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/cubicdaiya/mruby_nginx_module">https://github.com/cubicdaiya/mruby_nginx_module</a></p>
+
+<p>一昨日になりますが、これまで数十回かPull-Requestを送る形で開発に参加していた
+<a href="https://github.com/matsumoto-r/ngx_mruby/">ngx_mruby</a>をforkして
+<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>の開発をはじめることにしました。</p>
+
+<p>forkの簡単な経緯はこんな感じ。(一部のツイートが重複していますが、単一のツイートだけ取り出す方法がわからなかったのでこうなってます)</p>
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/cubicdaiya">@cubicdaiya</a> 今の所、自分のやりたい大きな方向性からズレると色々困るのでそれはできません。もしご自身のやりたい事が明確にあるのであればforkするかngx_mrubyとは別のプロジェクト名でやられてはどうでしょうか。色々とやる事があって時間が取れてない状況ですので。</p>&mdash; MATSUMOTO, Ryosuke (@matsumotory) <a href="https://twitter.com/matsumotory/statuses/360445389893140480">July 25, 2013</a></blockquote>
+
+
+<script async src="http://cubicdaiya.github.io/blog/ja//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/cubicdaiya">@cubicdaiya</a> はい、そのお気持ちはとても良く伝わってきていますし、助かっています。ただ、mod_mrubyやその他の支援機構の記述とうまく合わせようとすると色々考えないといけない事があるのと、</p>&mdash; MATSUMOTO, Ryosuke (@matsumotory) <a href="https://twitter.com/matsumotory/statuses/360450943722074112">July 25, 2013</a></blockquote>
+
+
+<script async src="http://cubicdaiya.github.io/blog/ja//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/cubicdaiya">@cubicdaiya</a> 並行して論文も書いていかないといけないので、難しい所です。nginx単体への対応であればさっさと実装して終わらせるのですが。後はこの統一的支援機構という思想は学術研究として大きな柱なので、ここがぶれないように少し長い目で進めていく必要があると思っています。</p>&mdash; MATSUMOTO, Ryosuke (@matsumotory) <a href="https://twitter.com/matsumotory/statuses/360451548440047617">July 25, 2013</a></blockquote>
+
+
+<script async src="http://cubicdaiya.github.io/blog/ja//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/cubicdaiya">@cubicdaiya</a> ですので、これまでのバッチを拝見していると、できるだけngx-lua-moduleに合わせた仕様にしているようにも思えますので、luaに近い仕様で別名プロジェクトとしてやって頂いても構いません。そちらの方が使いやすいと考える人も多いと思います。</p>&mdash; MATSUMOTO, Ryosuke (@matsumotory) <a href="https://twitter.com/matsumotory/statuses/360452360193052672">July 25, 2013</a></blockquote>
+
+
+<script async src="http://cubicdaiya.github.io/blog/ja//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/matsumotory">@matsumotory</a> いえいえ。</p>&mdash; bokko (@cubicdaiya) <a href="https://twitter.com/cubicdaiya/statuses/360456174254030849">July 25, 2013</a></blockquote>
+
+
+<script async src="http://cubicdaiya.github.io/blog/ja//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>という感じで元々結構な頻度でPull-Requestを送ってたのはいいんですが、ngx_mrubyではとにかくやりたいことがたくさんあって
+開発のスピードを加速させたいこともあり、思い切ってCollaboratorへの追加をお願いしてみたところ上記のようなやりとりになりました。
+僕自身forkはメリットよりもデメリットの方が大きいと思っているのでなかなか踏み切れなかったのですが、
+<a href="https://twitter.com/matsumotory">@matsumotor</a>氏のススメもあり、forkすることにしました。
+当面の目標は<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby-nginx-module</a>を<a href="https://github.com/chaoslawful/lua-nginx-module">lua-nginx-module</a>のように実運用に耐えうるレベルにまで持っていくことになります。</p>
+
+<p>というわけで今後は<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>の方に注力していく予定ですが、<a href="https://github.com/cubicdaiya/mruby_nginx_module">ngx_mruby</a>の方にもたまにコントリビュートするかもしれません。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ngx_small_light v0.4.0]]></title>

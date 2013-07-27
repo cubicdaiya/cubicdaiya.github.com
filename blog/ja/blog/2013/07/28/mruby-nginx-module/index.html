@@ -1,0 +1,321 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>mruby_nginx_module開発日記 その1〜ngx_mrubyからのfork〜 - bokko bokkoにしてやんよ</title>
+  <meta name="author" content="Tatsuhiko Kubo">
+
+  
+  <meta name="description" content="https://github.com/cubicdaiya/mruby_nginx_module 一昨日になりますが、これまで数十回かPull-Requestを送る形で開発に参加していた
+ngx_mrubyをforkして
+mruby_nginx_moduleの開発をはじめることにしました。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://cubicdaiya.github.io/blog/ja/blog/2013/07/28/mruby-nginx-module">
+  <link href="/blog/ja/favicon.png" rel="icon">
+  <link href="/blog/ja/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/blog/ja/javascripts/modernizr-2.0.js"></script>
+  <script src="/blog/ja/javascripts/ender.js"></script>
+  <script src="/blog/ja/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/blog/ja/atom.xml" rel="alternate" title="bokko bokkoにしてやんよ" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/blog/ja/">bokko bokkoにしてやんよ</a></h1>
+  
+    <h2>A infrastructure and software engineer's blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/blog/ja/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:cubicdaiya.github.io/blog/ja" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/ja/">Blog</a></li>
+  <li><a href="/blog/ja/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">mruby_nginx_module開発日記 その1〜ngx_mrubyからのfork〜</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-28T07:54:00+09:00" pubdate data-updated="true">Jul 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><a href="https://github.com/cubicdaiya/mruby_nginx_module">https://github.com/cubicdaiya/mruby_nginx_module</a></p>
+
+<p>一昨日になりますが、これまで数十回かPull-Requestを送る形で開発に参加していた
+<a href="https://github.com/matsumoto-r/ngx_mruby/">ngx_mruby</a>をforkして
+<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>の開発をはじめることにしました。</p>
+
+<p>forkの簡単な経緯はこんな感じ。(一部のツイートが重複していますが、単一のツイートだけ取り出す方法がわからなかったのでこうなってます)</p>
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/cubicdaiya">@cubicdaiya</a> 今の所、自分のやりたい大きな方向性からズレると色々困るのでそれはできません。もしご自身のやりたい事が明確にあるのであればforkするかngx_mrubyとは別のプロジェクト名でやられてはどうでしょうか。色々とやる事があって時間が取れてない状況ですので。</p>&mdash; MATSUMOTO, Ryosuke (@matsumotory) <a href="https://twitter.com/matsumotory/statuses/360445389893140480">July 25, 2013</a></blockquote>
+
+
+<script async src="/blog/ja//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/cubicdaiya">@cubicdaiya</a> はい、そのお気持ちはとても良く伝わってきていますし、助かっています。ただ、mod_mrubyやその他の支援機構の記述とうまく合わせようとすると色々考えないといけない事があるのと、</p>&mdash; MATSUMOTO, Ryosuke (@matsumotory) <a href="https://twitter.com/matsumotory/statuses/360450943722074112">July 25, 2013</a></blockquote>
+
+
+<script async src="/blog/ja//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/cubicdaiya">@cubicdaiya</a> 並行して論文も書いていかないといけないので、難しい所です。nginx単体への対応であればさっさと実装して終わらせるのですが。後はこの統一的支援機構という思想は学術研究として大きな柱なので、ここがぶれないように少し長い目で進めていく必要があると思っています。</p>&mdash; MATSUMOTO, Ryosuke (@matsumotory) <a href="https://twitter.com/matsumotory/statuses/360451548440047617">July 25, 2013</a></blockquote>
+
+
+<script async src="/blog/ja//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/cubicdaiya">@cubicdaiya</a> ですので、これまでのバッチを拝見していると、できるだけngx-lua-moduleに合わせた仕様にしているようにも思えますので、luaに近い仕様で別名プロジェクトとしてやって頂いても構いません。そちらの方が使いやすいと考える人も多いと思います。</p>&mdash; MATSUMOTO, Ryosuke (@matsumotory) <a href="https://twitter.com/matsumotory/statuses/360452360193052672">July 25, 2013</a></blockquote>
+
+
+<script async src="/blog/ja//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/matsumotory">@matsumotory</a> いえいえ。</p>&mdash; bokko (@cubicdaiya) <a href="https://twitter.com/cubicdaiya/statuses/360456174254030849">July 25, 2013</a></blockquote>
+
+
+<script async src="/blog/ja//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>という感じで元々結構な頻度でPull-Requestを送ってたのはいいんですが、ngx_mrubyではとにかくやりたいことがたくさんあって
+開発のスピードを加速させたいこともあり、思い切ってCollaboratorへの追加をお願いしてみたところ上記のようなやりとりになりました。
+僕自身forkはメリットよりもデメリットの方が大きいと思っているのでなかなか踏み切れなかったのですが、
+<a href="https://twitter.com/matsumotory">@matsumotor</a>氏のススメもあり、forkすることにしました。
+当面の目標は<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby-nginx-module</a>を<a href="https://github.com/chaoslawful/lua-nginx-module">lua-nginx-module</a>のように実運用に耐えうるレベルにまで持っていくことになります。</p>
+
+<p>というわけで今後は<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>の方に注力していく予定ですが、<a href="https://github.com/cubicdaiya/mruby_nginx_module">ngx_mruby</a>の方にもたまにコントリビュートするかもしれません。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tatsuhiko Kubo</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-28T07:54:00+09:00" pubdate data-updated="true">Jul 28<span>th</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.io/blog/ja/blog/2013/07/28/mruby-nginx-module/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.io/blog/ja/blog/2013/07/28/mruby-nginx-module/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/ja/blog/2013/07/27/ngx-small-light-0-4-0/" title="Previous Post: ngx_small_light v0.4.0">&laquo; ngx_small_light v0.4.0</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module/">mruby_nginx_module開発日記 その1〜ngx_mrubyからのfork〜</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2013/07/27/ngx-small-light-0-4-0/">ngx_small_light v0.4.0</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2013/03/21/zopfli-png-recompress/">php-ext-zopfliでPNG画像を再圧縮</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2013/01/26/web-service-dev-fall/">Webサービス開発徹底攻略</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2013/01/08/nginx1/">nginx moduleをつくろう その1〜Hello, World〜</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/cubicdaiya">@cubicdaiya</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'cubicdaiya',
+            count: 5,
+            skip_forks: false,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/blog/ja/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("cubicdaiya", 4, false);
+    });
+  </script>
+  <script src="/blog/ja/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/cubicdaiya" class="twitter-follow-button" data-show-count="false">Follow @cubicdaiya</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tatsuhiko Kubo -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ja_JP/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

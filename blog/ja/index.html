@@ -9,7 +9,9 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="https://github.com/cubicdaiya/ngx_small_light 一昨日になりますが、ngx_small_light v0.4.0をリリースしました。変更内容は以下の３つです。 e= &hellip;">
+  <meta name="description" content="https://github.com/cubicdaiya/mruby_nginx_module 一昨日になりますが、これまで数十回かPull-Requestを送る形で開発に参加していた
+ngx_mrubyをforkして
+mruby_nginx_moduleの開発をはじめることにしました。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -64,6 +66,94 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ja/blog/2013/07/28/mruby-nginx-module/">mruby_nginx_module開発日記 その1〜ngx_mrubyからのfork〜</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-28T07:54:00+09:00" pubdate data-updated="true">Jul 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/cubicdaiya/mruby_nginx_module">https://github.com/cubicdaiya/mruby_nginx_module</a></p>
+
+<p>一昨日になりますが、これまで数十回かPull-Requestを送る形で開発に参加していた
+<a href="https://github.com/matsumoto-r/ngx_mruby/">ngx_mruby</a>をforkして
+<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>の開発をはじめることにしました。</p>
+
+<p>forkの簡単な経緯はこんな感じ。(一部のツイートが重複していますが、単一のツイートだけ取り出す方法がわからなかったのでこうなってます)</p>
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/cubicdaiya">@cubicdaiya</a> 今の所、自分のやりたい大きな方向性からズレると色々困るのでそれはできません。もしご自身のやりたい事が明確にあるのであればforkするかngx_mrubyとは別のプロジェクト名でやられてはどうでしょうか。色々とやる事があって時間が取れてない状況ですので。</p>&mdash; MATSUMOTO, Ryosuke (@matsumotory) <a href="https://twitter.com/matsumotory/statuses/360445389893140480">July 25, 2013</a></blockquote>
+
+
+<script async src="/blog/ja//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/cubicdaiya">@cubicdaiya</a> はい、そのお気持ちはとても良く伝わってきていますし、助かっています。ただ、mod_mrubyやその他の支援機構の記述とうまく合わせようとすると色々考えないといけない事があるのと、</p>&mdash; MATSUMOTO, Ryosuke (@matsumotory) <a href="https://twitter.com/matsumotory/statuses/360450943722074112">July 25, 2013</a></blockquote>
+
+
+<script async src="/blog/ja//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/cubicdaiya">@cubicdaiya</a> 並行して論文も書いていかないといけないので、難しい所です。nginx単体への対応であればさっさと実装して終わらせるのですが。後はこの統一的支援機構という思想は学術研究として大きな柱なので、ここがぶれないように少し長い目で進めていく必要があると思っています。</p>&mdash; MATSUMOTO, Ryosuke (@matsumotory) <a href="https://twitter.com/matsumotory/statuses/360451548440047617">July 25, 2013</a></blockquote>
+
+
+<script async src="/blog/ja//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/cubicdaiya">@cubicdaiya</a> ですので、これまでのバッチを拝見していると、できるだけngx-lua-moduleに合わせた仕様にしているようにも思えますので、luaに近い仕様で別名プロジェクトとしてやって頂いても構いません。そちらの方が使いやすいと考える人も多いと思います。</p>&mdash; MATSUMOTO, Ryosuke (@matsumotory) <a href="https://twitter.com/matsumotory/statuses/360452360193052672">July 25, 2013</a></blockquote>
+
+
+<script async src="/blog/ja//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/matsumotory">@matsumotory</a> いえいえ。</p>&mdash; bokko (@cubicdaiya) <a href="https://twitter.com/cubicdaiya/statuses/360456174254030849">July 25, 2013</a></blockquote>
+
+
+<script async src="/blog/ja//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>という感じで元々結構な頻度でPull-Requestを送ってたのはいいんですが、ngx_mrubyではとにかくやりたいことがたくさんあって
+開発のスピードを加速させたいこともあり、思い切ってCollaboratorへの追加をお願いしてみたところ上記のようなやりとりになりました。
+僕自身forkはメリットよりもデメリットの方が大きいと思っているのでなかなか踏み切れなかったのですが、
+<a href="https://twitter.com/matsumotory">@matsumotor</a>氏のススメもあり、forkすることにしました。
+当面の目標は<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby-nginx-module</a>を<a href="https://github.com/chaoslawful/lua-nginx-module">lua-nginx-module</a>のように実運用に耐えうるレベルにまで持っていくことになります。</p>
+
+<p>というわけで今後は<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>の方に注力していく予定ですが、<a href="https://github.com/cubicdaiya/mruby_nginx_module">ngx_mruby</a>の方にもたまにコントリビュートするかもしれません。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -970,71 +1060,6 @@ pixivに限らず大量の画像を扱うようなWebサービスでは何かあ
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/ja/blog/2012/07/18/ddfalsetu-zhong-jing-guo-wobiao-shi-suru/">ddの途中経過を表示する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-18T22:43:00+09:00" pubdate data-updated="true">Jul 18<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>同じ容量のHDDやSSDをマルっとコピーする際はddを使うと効果的だ。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>dd <span class="k">if</span><span class="o">=</span>/dev/sda1 <span class="nv">of</span><span class="o">=</span>/dev/sdb
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ディスクによっては以下のようにブロックサイズを大きめに指定すると劇的に速くなる場合がある。(デフォルトは512バイト)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>dd <span class="k">if</span><span class="o">=</span>/dev/sda1 <span class="nv">of</span><span class="o">=</span>/dev/sdb <span class="nv">bs</span><span class="o">=</span>4096
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これはブロック単位ではなくページ単位でデータを読み書きするSSDの場合で特に顕著。
-また、試したことはないけど何年か前にWestern Digitalが従来の512バイトよりも大きいセクタサイズが4KBのHDDを出してるので、
-この手のHDDもbsパラメータの値を大きめにするとかなり速くなるんじゃないかと思う。(実際の速度は自分で確かめてみてね)</p>
-
-<h2>ddの途中経過を表示</h2>
-
-<p>で、本題。ddはそのままだと入力先から出力先まで全部のデータを流し終わるまで何も表示しない。
-イマドキのHDDならSATAでもランダムアクセスはともかくシーケンシャルアクセスはそれなりに速くて
-シーケンシャルリード/ライトともに100MB/sec以上は余裕で出るので、3TBのHDD同士のコピーでも半日もかからずに完了するが、
-やっぱり人間なので現在のコピーの進捗と速度は知っておきたいところだ。ddには途中経過を表示するようなコマンドラインオプションは用意されていないが、
-実はddのプロセスはUSR1シグナルを受け取ると現在のコピーの進捗と速度(MB/sec)を標準エラー出力に出力する。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>pidof dd | xargs <span class="nb">kill</span> -USR1
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/ja/blog/page/2/">&larr; Older</a>
@@ -1050,6 +1075,10 @@ pixivに限らず大量の画像を扱うようなWebサービスでは何かあ
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module/">mruby_nginx_module開発日記 その1〜ngx_mrubyからのfork〜</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/ja/blog/2013/07/27/ngx-small-light-0-4-0/">ngx_small_light v0.4.0</a>
       </li>
     
@@ -1063,10 +1092,6 @@ pixivに限らず大量の画像を扱うようなWebサービスでは何かあ
     
       <li class="post">
         <a href="/blog/ja/blog/2013/01/08/nginx1/">nginx moduleをつくろう その1〜Hello, World〜</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/ja/blog/2013/01/05/libngxcore/">libngxcore〜nginxのコアAPIをライブラリ化する〜</a>
       </li>
     
   </ul>
