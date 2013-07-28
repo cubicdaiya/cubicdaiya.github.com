@@ -9,9 +9,9 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="https://github.com/cubicdaiya/mruby_nginx_module 一昨日になりますが、これまで数十回かPull-Requestを送る形で開発に参加していた
-ngx_mrubyをforkして
-mruby_nginx_moduleの開発をはじめることにしました。 &hellip;">
+  <meta name="description" content="ngx_mrubyでnginxの内部変数を操作するに触発されて
+mruby_nginx_moduleにNginx.Contextという機能を追加してみました。 元々mruby_nginx_module(とngx_mruby)は
+nginxの各処理フェーズ(rewrite,access, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,150 @@ mruby_nginx_moduleの開発をはじめることにしました。 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ja/blog/2013/07/28/mruby-nginx-module2/">mruby_nginx_module開発日記 その2〜Nginx.Context〜</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-28T08:55:00+09:00" pubdate data-updated="true">Jul 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://blog.matsumoto-r.jp/?p=3722">ngx_mrubyでnginxの内部変数を操作する</a>に触発されて
+<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>にNginx.Contextという機能を追加してみました。</p>
+
+<p>元々<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>(と<a href="https://github.com/matsumoto-r/ngx_mruby/">ngx_mruby</a>)は
+nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの状態遷移保存領域を共有しているので、
+グローバル変数を各処理フェーズで共有できるようになっていますが、
+リクエスト毎のコンテキストを各フェーズで共有するための仕組みがありませんでした。</p>
+
+<p><a href="https://github.com/chaoslawful/lua-nginx-module">lua-nginx-module</a>を使ったことのある人なら「ああ、ngx.ctxのことか」と思うかもしれません。そのとおりです。
+まぁ、上記の記事のようにnginxの内部変数で代用できないこともないんですが、あらかじめnginx.confでsetやmruby_setで
+代入されている変数にしかアクセスできないのと、そもそもnginxの内部変数はただの文字列なのであまり使い勝手がよくありません。
+その点、Nginx.Contextはハッシュテーブルなのでなんでも突っ込むことができます。</p>
+
+<p>なにはともわれ実際のコードを見てみましょう。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># 設定読み込み時に$varを初期化
+</span><span class='line'>mruby_init_code "$var = 0;";
+</span><span class='line'>
+</span><span class='line'>server {
+</span><span class='line'>    listen       8000;
+</span><span class='line'>    server_name  localhost;
+</span><span class='line'>
+</span><span class='line'>    root html;
+</span><span class='line'>
+</span><span class='line'>    # rewrite -&gt; access -&gt; contentの順に実行される
+</span><span class='line'>    location /mruby {
+</span><span class='line'>        mruby_rewrite_handler_code '
+</span><span class='line'>            ctx = Nginx::Context.new
+</span><span class='line'>            # ctx["count"]はこの時点では必ずnil
+</span><span class='line'>            ctx["count"] = 1
+</span><span class='line'>            $var += 1;
+</span><span class='line'>        ';
+</span><span class='line'>        mruby_access_handler_code '
+</span><span class='line'>            ctx = Nginx::Context.new
+</span><span class='line'>            ctx["count"] += 1
+</span><span class='line'>            $var += 1;
+</span><span class='line'>        ';
+</span><span class='line'>        mruby_content_handler_code '
+</span><span class='line'>            ctx = Nginx::Context.new
+</span><span class='line'>            ctx["count"] += 1
+</span><span class='line'>            $var += 1;
+</span><span class='line'>            Nginx.rputs("ctx.count:"+ ctx["count"].to_s)
+</span><span class='line'>            Nginx.rputs("\n")
+</span><span class='line'>            Nginx.rputs("$var:" + $var.to_s)
+</span><span class='line'>            Nginx.rputs("\n")
+</span><span class='line'>        ';
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このバーチャルホストにアクセスしてみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl -l "http://localhost:8000/mruby"
+</span><span class='line'>ctx.count:3
+</span><span class='line'>$var:3
+</span><span class='line'>$ curl -l "http://localhost:8000/mruby"
+</span><span class='line'>ctx.count:3
+</span><span class='line'>$var:6
+</span><span class='line'>$ curl -l "http://localhost:8000/mruby"
+</span><span class='line'>ctx.count:3
+</span><span class='line'>$var:9
+</span><span class='line'>bokko-mint@bokko%</span></code></pre></td></tr></table></div></figure>
+
+
+<p>グローバス変数($var)はアクセスする度に増加していますが、Nginx.Contextは各リクエスト毎に独立しているので比較的安全に使うことができます。
+また、Nginx.Contextはハッシュテーブルなのでなんでも突っ込むことができます。(大事なことなので二回言いました)</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -982,84 +1126,6 @@ CSSやJS、画像などの静的ファイルが後段のアプリケーション
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/ja/blog/2012/09/30/yapc-asia-tokyo-2012/">YAPC::Asia Tokyo 2012で発表してきました</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-09-30T06:21:00+09:00" pubdate data-updated="true">Sep 30<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://yapcasia.org/2012/">YAPC::Asia Tokyo 2012</a> 1日目に本編トークとLTをしてきました。去年傍聴者として参加したとき、「やっぱり自分もなんか発表したいなぁ」と感じていたので
-今回は思い切ってはじめて発表者として参加してみることにしました。かなり緊張しましたが、無事終えることができてホッとしています。
-発表外の時間や懇親会でも他社のエンジニアの方といろいろと話ができてとても楽しかったです。</p>
-
-<p>発表資料は以下になります。</p>
-
-<h2>本編トーク：<a href="http://www.slideshare.net/cubicdaiya/pixiv-thumbnails">pixiv thumbnails</a></h2>
-
-<iframe src="http://www.slideshare.net/slideshow/embed_code/14497793" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>
-
-
-
-
-<br />
-
-
-<br />
-
-
-<p>pixivにおける画像サムネイルのアップロードや生成方法について解説しました。
-pixivに限らず大量の画像を扱うようなWebサービスでは何かある度に新しいサムネイルを用意するのは大変ですし、
-画像を保存するのに必要なストレージのコストもバカになりません。こういった問題に対して動的サムネイルは非常に有効な手段となります。</p>
-
-<p>また、資料内では触れていませんがpixivでは静的・動的にかかわらず画像サムネイルはNginxとApache Traffic Serverで構成された前段の画像キャッシュクラスタにキャッシュされます。
-動的サムネイルはその性質上ディスク容量を消費しないかわりにCPUリソースを大量に消費するので、参照される際に活用するリソースが静的サムネイルよりも多くなります。</p>
-
-<p>そのため、動的サムネイルを実際に導入するような場合はそのサムネイルの参照頻度を考慮したり、上述のようにキャッシュを活用してサムネイルを動的に生成するリクエストの絶対数を減らす工夫が求められるでしょう。</p>
-
-<h2>LT：<a href="http://www.slideshare.net/cubicdaiya/ngxsmalllight-yapcasia2012">ngx_small_lightで動的サムネイル生成</a></h2>
-
-<iframe src="http://www.slideshare.net/slideshow/embed_code/14503943" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>
-
-
-
-
-<br />
-
-
-<br />
-
-
-<p><a href="https://github.com/cubicdaiya/ngx_small_light">ngx_small_light</a>自体は単に僕の趣味で作ったものですが、
-実用的な機能はひと通り揃ってるのでそれなりに使えるかと思います。まぁ、今のところ採用実績はないので大手を振ってオススメだよ！とまで言うのは難しいですが。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/ja/blog/page/2/">&larr; Older</a>
@@ -1075,6 +1141,10 @@ pixivに限らず大量の画像を扱うようなWebサービスでは何かあ
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module2/">mruby_nginx_module開発日記 その2〜Nginx.Context〜</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module/">mruby_nginx_module開発日記 その1〜ngx_mrubyからのfork〜</a>
       </li>
     
@@ -1088,10 +1158,6 @@ pixivに限らず大量の画像を扱うようなWebサービスでは何かあ
     
       <li class="post">
         <a href="/blog/ja/blog/2013/01/26/web-service-dev-fall/">Webサービス開発徹底攻略</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/ja/blog/2013/01/08/nginx1/">nginx moduleをつくろう その1〜Hello, World〜</a>
       </li>
     
   </ul>
