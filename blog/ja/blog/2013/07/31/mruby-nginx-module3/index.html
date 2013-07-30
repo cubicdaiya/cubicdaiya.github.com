@@ -171,9 +171,9 @@
 <p>MD5やSHA1を求めるmrbgemは既にあるのですが、元々これらの機能はNginxのコアAPIを通して利用することができますし、
 Nginx内部と<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>とで別々の実装になるのもあまりよろしくないので採用していません。</p>
 
-<p>またこれらのハッシュ関数に加えてbase64のエンコード/デコード機能も追加したので
-<a href="https://code.google.com/p/modaccesstoken/">mod_access_token</a>や<a href="https://github.com/cubicdaiya/ngx_access_token">ngx_access_token</a>のような
-アクセス制御を<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>で実現できるようになりました。その方法については次回解説します。</p>
+<p>また、これらのハッシュ関数に加えてbase64のエンコード/デコード機能も追加したので
+<a href="https://code.google.com/p/modaccesstoken/">mod_access_token</a>や<a href="https://github.com/cubicdaiya/ngx_access_token">ngx_access_token</a>がやっているような
+アクセス制御機構を<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>で実現できるようになりました。その方法については次回解説します。</p>
 </div>
 
 
