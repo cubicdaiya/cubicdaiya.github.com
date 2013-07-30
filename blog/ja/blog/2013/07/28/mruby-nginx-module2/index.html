@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>mruby_nginx_module開発日記 その2〜Nginx.Context〜 - bokko bokkoにしてやんよ</title>
+  <title>mruby_nginx_module開発日記 その2〜Nginx::Context〜 - bokko bokkoにしてやんよ</title>
   <meta name="author" content="Tatsuhiko Kubo">
 
   
   <meta name="description" content="ngx_mrubyでnginxの内部変数を操作するに触発されて
-mruby_nginx_moduleにNginx.Contextという機能を追加してみました。 元々mruby_nginx_module(とngx_mruby)は
+mruby_nginx_moduleにNginx::Contextという機能を追加してみました。 元々mruby_nginx_module(とngx_mruby)は
 nginxの各処理フェーズ(rewrite,access, &hellip;">
   
 
@@ -69,7 +69,7 @@ nginxの各処理フェーズ(rewrite,access, &hellip;">
   
   <header>
     
-      <h1 class="entry-title">mruby_nginx_module開発日記 その2〜Nginx.Context〜</h1>
+      <h1 class="entry-title">mruby_nginx_module開発日記 その2〜Nginx::Context〜</h1>
     
     
       <p class="meta">
@@ -93,7 +93,7 @@ nginxの各処理フェーズ(rewrite,access, &hellip;">
 
 
 <div class="entry-content"><p><a href="http://blog.matsumoto-r.jp/?p=3722">ngx_mrubyでnginxの内部変数を操作する</a>に触発されて
-<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>にNginx.Contextという機能を追加してみました。</p>
+<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>にNginx::Contextという機能を追加してみました。</p>
 
 <p>元々<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>(と<a href="https://github.com/matsumoto-r/ngx_mruby/">ngx_mruby</a>)は
 nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの状態遷移保存領域を共有しているので、
@@ -103,7 +103,7 @@ nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの
 <p><a href="https://github.com/chaoslawful/lua-nginx-module">lua-nginx-module</a>を使ったことのある人なら「ああ、ngx.ctxのことか」と思うかもしれません。そのとおりです。
 まぁ、上記の記事のようにnginxの内部変数で代用できないこともないんですが、あらかじめnginx.confでsetやmruby_setで
 代入されている変数にしかアクセスできないのと、そもそもnginxの内部変数はただの文字列なのであまり使い勝手がよくありません。
-その点、Nginx.Contextはハッシュテーブルなのでなんでも突っ込むことができます。</p>
+その点、Nginx::Contextはハッシュテーブルなのでなんでも突っ込むことができます。</p>
 
 <p>なにはともわれ実際のコードを見てみましょう。</p>
 
@@ -199,8 +199,8 @@ nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの
 </span><span class='line'>bokko-mint@bokko%</span></code></pre></td></tr></table></div></figure>
 
 
-<p>グローバス変数($var)はアクセスする度に増加していますが、Nginx.Contextは各リクエスト毎に独立しているので比較的安全に使うことができます。
-また、Nginx.Contextはハッシュテーブルなのでなんでも突っ込むことができます。(大事なことなので二回言いました)</p>
+<p>グローバス変数($var)はアクセスする度に増加していますが、Nginx::Contextは各リクエスト毎に独立しているので比較的安全に使うことができます。
+また、Nginx::Contextはハッシュテーブルなのでなんでも突っ込むことができます。(大事なことなので二回言いました)</p>
 </div>
 
 
@@ -245,6 +245,8 @@ nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの
         <a class="basic-alignment left" href="/blog/ja/blog/2013/07/28/mruby-nginx-module/" title="Previous Post: mruby_nginx_module開発日記 その1〜ngx_mrubyからのfork〜">&laquo; mruby_nginx_module開発日記 その1〜ngx_mrubyからのfork〜</a>
       
       
+        <a class="basic-alignment right" href="/blog/ja/blog/2013/07/31/mruby-nginx-module3/" title="Next Post: mruby_nginx_module開発日記 その3〜Nginx::Hash〜">mruby_nginx_module開発日記 その3〜Nginx::Hash〜 &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -258,7 +260,11 @@ nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module2/">mruby_nginx_module開発日記 その2〜Nginx.Context〜</a>
+        <a href="/blog/ja/blog/2013/07/31/mruby-nginx-module3/">mruby_nginx_module開発日記 その3〜Nginx::Hash〜</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module2/">mruby_nginx_module開発日記 その2〜Nginx::Context〜</a>
       </li>
     
       <li class="post">
@@ -271,10 +277,6 @@ nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの
     
       <li class="post">
         <a href="/blog/ja/blog/2013/03/21/zopfli-png-recompress/">php-ext-zopfliでPNG画像を再圧縮</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/ja/blog/2013/01/26/web-service-dev-fall/">Webサービス開発徹底攻略</a>
       </li>
     
   </ul>

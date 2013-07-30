@@ -9,8 +9,8 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="YAPC::Asia Tokyo 2012 1日目に本編トークとLTをしてきました。去年傍聴者として参加したとき、「やっぱり自分もなんか発表したいなぁ」と感じていたので
-今回は思い切ってはじめて発表者として参加してみることにしました。かなり緊張しましたが、無事終えることができてホッとしています。 &hellip;">
+  <meta name="description" content="南国でぼけ〜としていた時に同僚の@walf443に誘われて二つ返事で参加。チーム名は「くらげとみかん」。 事前にやった作戦会議ではPHP(僕用)でやるかPerl(@walf443用)でやるか前日くらいまで決まらなかったんだけど、
+最終的に言語はPerlでアプリケーションの変更は@ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,77 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ja/blog/2012/11/05/isucon-number-2nican-jia-sitekita/">isucon#2に参加してきた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-05T22:37:00+09:00" pubdate data-updated="true">Nov 5<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>南国でぼけ〜としていた時に同僚の<a href="https://twitter.com/walf443">@walf443</a>に誘われて二つ返事で参加。チーム名は「くらげとみかん」。</p>
+
+<p>事前にやった作戦会議ではPHP(僕用)でやるかPerl(@walf443用)でやるか前日くらいまで決まらなかったんだけど、
+最終的に言語はPerlでアプリケーションの変更は<a href="https://twitter.com/walf443">@walf443</a>に任せて
+僕がバックエンドのミドルウェアまわりのチューニングやら調整をやることに。</p>
+
+<p>当日やったのはまず、sshの公開鍵と秘伝の.dotfilesを全サーバへコピー。そしてiptablesをオフる。(SELinuxは切ろうと思ったら既に無効になってた)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>chkconfig iptables off</span></code></pre></td></tr></table></div></figure>
+
+
+<p>次にリバースプロキシのサーバをApache(MPMはprefork)からnginxへ切り替え。
+しかし、パフォーマンスが大して良くならないどころかむしろ悪くなってるように見えた(断定しない理由は後述)ので結局Apacheに戻す。
+このあたりは納得がいかなくて細かいパラメータの変更をかなり試していたんですが、それでかなり時間をロスしてしまいました。
+今思うと開始当初は完全にDBがボトルネックだったので、その段階ではリバースプロキシ側ではApacheのMPMをpreforkからworkerに変更するくらいで切り上げて
+さっさとDBのボトルネック特定やパラメータのチューニング作業に移るべきでした。そっちが一段落してからリバースプロキシ側のチューニングを行えば
+違った結果になったかな、と思っています。実際、DBのチューニングがある程度進んだ段階でMPMをworkerに切り替えるとチケットの販売数が倍に上昇しました。
+また、ルールを勘違いしていたところがあって、isucon#2ではスコアは小さければ小さいほど良いのですが、
+「チューニングしたはずなのになんでスコア下がってるんだ？」と見当違いなことを言ったりして、開始してから2時間近く間違いに気づいてませんでしたorz。</p>
+
+<p>結局上記のことで時間を浪費し過ぎてしまってあとはMySQLのパラメータ(query_cache_size, slow_query_log, etc)をちょこちょこっといじったり、
+CSSやJS、画像などの静的ファイルが後段のアプリケーションサーバから配信されていたので、これらをリバースプロキシ側へ移動してそこから返すように変更するくらいしか
+できませんでした。このあたりは初参加で勝手が分からずあたふたしていたとはいえ、<a href="https://twitter.com/walf443">@walf443</a>には申し訳ないことをしたと思っているので、
+お詫びに今度なんかおごります。いや、次のisucon3で頑張ります、と言うべきなのか。
+あとは最後にログを吐かないようにしたり、デバッグ用の設定を削除してたらあっという間に終了。終了2分前にベンチマークが失敗した時は焦りましたが、なんとか完走できたようです。</p>
+
+<h1>まとめ</h1>
+
+<p>まず個人的な反省点ですが、開始当初から局所的な細かい最適化に走りすぎました。実際のアプリケーションでもそうですが、
+パフォーマンスが極端に悪い原因はある特定のコンポーネントがボトルネックになっているケースが非常に多いので、
+まずはそこ(開始当初はDB)を解消することに集中して局所的な最適化は最後の最後に贅肉をそぎ落とすくらいの感覚でやるべきでした。
+あるボトルネックを解消すると今度は別のボトルネックが顕在化するといった具合に、
+ボトルネックとなるコンポーネントはソフトウェア(あるいはハードウェア)が改善される度にどんどん移り変わっていく傾向があります。</p>
+
+<p>実際の開発や運用と同じように「早すぎる最適化」を避け、その都度一番効果がある対策を実行していくのが一番の近道という至極当たり前な事実を再確認した日でした。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1072,7 +1143,11 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module2/">mruby_nginx_module開発日記 その2〜Nginx.Context〜</a>
+        <a href="/blog/ja/blog/2013/07/31/mruby-nginx-module3/">mruby_nginx_module開発日記 その3〜Nginx::Hash〜</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module2/">mruby_nginx_module開発日記 その2〜Nginx::Context〜</a>
       </li>
     
       <li class="post">
@@ -1085,10 +1160,6 @@ sbtはSimple-Build-Toolの略でScalaやJavaのためのビルドツールだ。
     
       <li class="post">
         <a href="/blog/ja/blog/2013/03/21/zopfli-png-recompress/">php-ext-zopfliでPNG画像を再圧縮</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/ja/blog/2013/01/26/web-service-dev-fall/">Webサービス開発徹底攻略</a>
       </li>
     
   </ul>

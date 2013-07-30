@@ -9,9 +9,18 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="ngx_mrubyでnginxの内部変数を操作するに触発されて
-mruby_nginx_moduleにNginx.Contextという機能を追加してみました。 元々mruby_nginx_module(とngx_mruby)は
-nginxの各処理フェーズ(rewrite,access, &hellip;">
+  <meta name="description" content="mruby_nginx_moduleにNginx::Hashクラスを追加しました。
+これでMD5やSHA1、HMAC-SHA1などのハッシュ関数をmruby_nginx_moduleの中で呼び出すことができるようになりました。こんな感じで使えます。 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,7 +81,114 @@ nginxの各処理フェーズ(rewrite,access, &hellip;">
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/ja/blog/2013/07/28/mruby-nginx-module2/">mruby_nginx_module開発日記 その2〜Nginx.Context〜</a></h1>
+      <h1 class="entry-title"><a href="/blog/ja/blog/2013/07/31/mruby-nginx-module3/">mruby_nginx_module開発日記 その3〜Nginx::Hash〜</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-31T01:19:00+09:00" pubdate data-updated="true">Jul 31<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>にNginx::Hashクラスを追加しました。
+これでMD5やSHA1、HMAC-SHA1などのハッシュ関数を<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>の中で呼び出すことができるようになりました。こんな感じで使えます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server {
+</span><span class='line'>    listen       8000;
+</span><span class='line'>    server_name  localhost;
+</span><span class='line'>
+</span><span class='line'>    location /hash {
+</span><span class='line'>        mruby_content_handler_code '
+</span><span class='line'>            mruby_content_handler_code '
+</span><span class='line'>            r = Nginx::Request.new
+</span><span class='line'>            text = r.var.arg_text
+</span><span class='line'>            md5  = Nginx::Hash.md5(text)
+</span><span class='line'>            sha1 = Nginx::Hash.sha1(text)
+</span><span class='line'>            hmac = Nginx::Hash.hmac_sha1(text, "cubicdaiya")
+</span><span class='line'>            Nginx.rputs("text:" + text)
+</span><span class='line'>            Nginx.rputs("\n")
+</span><span class='line'>            Nginx.rputs("md5 :" + Nginx::Hash.hexdigest(md5))
+</span><span class='line'>            Nginx.rputs("\n")
+</span><span class='line'>            Nginx.rputs("sha1:" + Nginx::Hash.hexdigest(sha1))
+</span><span class='line'>            Nginx.rputs("\n")
+</span><span class='line'>            Nginx.rputs("hmac(key=cubicdaiya):" + Nginx::Hash.hexdigest(hmac))
+</span><span class='line'>            Nginx.rputs("\n")
+</span><span class='line'>        ';
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このバーチャルホストにアクセスしてみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl "http://localhost:8000/hash?text=bokko"
+</span><span class='line'>text:bokko
+</span><span class='line'>md5 :fe9749f7f1d1c8ec7f6ddd1f0521cdb0
+</span><span class='line'>sha1:cea3d1bca602a6017e9a02520e3d392ba6b7838d
+</span><span class='line'>hmac(key=cubicdaiya):3c5b1594272423068bf9516eb45447e3b868051b
+</span><span class='line'>$</span></code></pre></td></tr></table></div></figure>
+
+
+<p>MD5やSHA1を求めるmrbgemは既にあるのですが、元々これらの機能はNginxのコアAPIを通して利用することができますし、
+Nginx内部と<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>とで別々の実装になるのもあまりよろしくないので採用していません。</p>
+
+<p>またこれらのハッシュ関数に加えてbase64のエンコード/デコード機能も追加したので
+<a href="https://code.google.com/p/modaccesstoken/">mod_access_token</a>や<a href="">ngx_access_token</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ja/blog/2013/07/28/mruby-nginx-module2/">mruby_nginx_module開発日記 その2〜Nginx::Context〜</a></h1>
     
     
       <p class="meta">
@@ -96,7 +212,7 @@ nginxの各処理フェーズ(rewrite,access, &hellip;">
 
 
   <div class="entry-content"><p><a href="http://blog.matsumoto-r.jp/?p=3722">ngx_mrubyでnginxの内部変数を操作する</a>に触発されて
-<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>にNginx.Contextという機能を追加してみました。</p>
+<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>にNginx::Contextという機能を追加してみました。</p>
 
 <p>元々<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>(と<a href="https://github.com/matsumoto-r/ngx_mruby/">ngx_mruby</a>)は
 nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの状態遷移保存領域を共有しているので、
@@ -106,7 +222,7 @@ nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの
 <p><a href="https://github.com/chaoslawful/lua-nginx-module">lua-nginx-module</a>を使ったことのある人なら「ああ、ngx.ctxのことか」と思うかもしれません。そのとおりです。
 まぁ、上記の記事のようにnginxの内部変数で代用できないこともないんですが、あらかじめnginx.confでsetやmruby_setで
 代入されている変数にしかアクセスできないのと、そもそもnginxの内部変数はただの文字列なのであまり使い勝手がよくありません。
-その点、Nginx.Contextはハッシュテーブルなのでなんでも突っ込むことができます。</p>
+その点、Nginx::Contextはハッシュテーブルなのでなんでも突っ込むことができます。</p>
 
 <p>なにはともわれ実際のコードを見てみましょう。</p>
 
@@ -202,8 +318,8 @@ nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの
 </span><span class='line'>bokko-mint@bokko%</span></code></pre></td></tr></table></div></figure>
 
 
-<p>グローバス変数($var)はアクセスする度に増加していますが、Nginx.Contextは各リクエスト毎に独立しているので比較的安全に使うことができます。
-また、Nginx.Contextはハッシュテーブルなのでなんでも突っ込むことができます。(大事なことなので二回言いました)</p>
+<p>グローバス変数($var)はアクセスする度に増加していますが、Nginx::Contextは各リクエスト毎に独立しているので比較的安全に使うことができます。
+また、Nginx::Contextはハッシュテーブルなのでなんでも突っ込むことができます。(大事なことなので二回言いました)</p>
 </div>
   
   
@@ -1055,77 +1171,6 @@ Apacheモジュールなのにapr使わずに標準関数でゴリゴリ書い�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/ja/blog/2012/11/05/isucon-number-2nican-jia-sitekita/">isucon#2に参加してきた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-05T22:37:00+09:00" pubdate data-updated="true">Nov 5<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>南国でぼけ〜としていた時に同僚の<a href="https://twitter.com/walf443">@walf443</a>に誘われて二つ返事で参加。チーム名は「くらげとみかん」。</p>
-
-<p>事前にやった作戦会議ではPHP(僕用)でやるかPerl(@walf443用)でやるか前日くらいまで決まらなかったんだけど、
-最終的に言語はPerlでアプリケーションの変更は<a href="https://twitter.com/walf443">@walf443</a>に任せて
-僕がバックエンドのミドルウェアまわりのチューニングやら調整をやることに。</p>
-
-<p>当日やったのはまず、sshの公開鍵と秘伝の.dotfilesを全サーバへコピー。そしてiptablesをオフる。(SELinuxは切ろうと思ったら既に無効になってた)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>chkconfig iptables off</span></code></pre></td></tr></table></div></figure>
-
-
-<p>次にリバースプロキシのサーバをApache(MPMはprefork)からnginxへ切り替え。
-しかし、パフォーマンスが大して良くならないどころかむしろ悪くなってるように見えた(断定しない理由は後述)ので結局Apacheに戻す。
-このあたりは納得がいかなくて細かいパラメータの変更をかなり試していたんですが、それでかなり時間をロスしてしまいました。
-今思うと開始当初は完全にDBがボトルネックだったので、その段階ではリバースプロキシ側ではApacheのMPMをpreforkからworkerに変更するくらいで切り上げて
-さっさとDBのボトルネック特定やパラメータのチューニング作業に移るべきでした。そっちが一段落してからリバースプロキシ側のチューニングを行えば
-違った結果になったかな、と思っています。実際、DBのチューニングがある程度進んだ段階でMPMをworkerに切り替えるとチケットの販売数が倍に上昇しました。
-また、ルールを勘違いしていたところがあって、isucon#2ではスコアは小さければ小さいほど良いのですが、
-「チューニングしたはずなのになんでスコア下がってるんだ？」と見当違いなことを言ったりして、開始してから2時間近く間違いに気づいてませんでしたorz。</p>
-
-<p>結局上記のことで時間を浪費し過ぎてしまってあとはMySQLのパラメータ(query_cache_size, slow_query_log, etc)をちょこちょこっといじったり、
-CSSやJS、画像などの静的ファイルが後段のアプリケーションサーバから配信されていたので、これらをリバースプロキシ側へ移動してそこから返すように変更するくらいしか
-できませんでした。このあたりは初参加で勝手が分からずあたふたしていたとはいえ、<a href="https://twitter.com/walf443">@walf443</a>には申し訳ないことをしたと思っているので、
-お詫びに今度なんかおごります。いや、次のisucon3で頑張ります、と言うべきなのか。
-あとは最後にログを吐かないようにしたり、デバッグ用の設定を削除してたらあっという間に終了。終了2分前にベンチマークが失敗した時は焦りましたが、なんとか完走できたようです。</p>
-
-<h1>まとめ</h1>
-
-<p>まず個人的な反省点ですが、開始当初から局所的な細かい最適化に走りすぎました。実際のアプリケーションでもそうですが、
-パフォーマンスが極端に悪い原因はある特定のコンポーネントがボトルネックになっているケースが非常に多いので、
-まずはそこ(開始当初はDB)を解消することに集中して局所的な最適化は最後の最後に贅肉をそぎ落とすくらいの感覚でやるべきでした。
-あるボトルネックを解消すると今度は別のボトルネックが顕在化するといった具合に、
-ボトルネックとなるコンポーネントはソフトウェア(あるいはハードウェア)が改善される度にどんどん移り変わっていく傾向があります。</p>
-
-<p>実際の開発や運用と同じように「早すぎる最適化」を避け、その都度一番効果がある対策を実行していくのが一番の近道という至極当たり前な事実を再確認した日でした。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/ja/blog/page/2/">&larr; Older</a>
@@ -1141,7 +1186,11 @@ CSSやJS、画像などの静的ファイルが後段のアプリケーション
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module2/">mruby_nginx_module開発日記 その2〜Nginx.Context〜</a>
+        <a href="/blog/ja/blog/2013/07/31/mruby-nginx-module3/">mruby_nginx_module開発日記 その3〜Nginx::Hash〜</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module2/">mruby_nginx_module開発日記 その2〜Nginx::Context〜</a>
       </li>
     
       <li class="post">
@@ -1154,10 +1203,6 @@ CSSやJS、画像などの静的ファイルが後段のアプリケーション
     
       <li class="post">
         <a href="/blog/ja/blog/2013/03/21/zopfli-png-recompress/">php-ext-zopfliでPNG画像を再圧縮</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/ja/blog/2013/01/26/web-service-dev-fall/">Webサービス開発徹底攻略</a>
       </li>
     
   </ul>
