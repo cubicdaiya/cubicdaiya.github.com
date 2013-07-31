@@ -5,21 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>mruby_nginx_module開発日記 その3〜Nginx::Digest〜 - bokko bokkoにしてやんよ</title>
+  <title>mruby_nginx_moduleでアクセス制御 - bokko bokkoにしてやんよ</title>
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="mruby_nginx_moduleにNginx::Digestクラスを追加しました。
-これでMD5やSHA1、HMAC-SHA1などのハッシュ関数をmruby_nginx_moduleの中で呼び出すことができるようになりました。こんな感じで使えます。 1
-2
-3
-4
-5
-6
-7
-8
-9
-10 &hellip;">
+  <meta name="description" content="前回の予告どおり、
+mruby_nginx_moduleで
+mod_access_tokenやngx_access_tokenのように
+トークンによるアクセス制御やリソースの有効期限を設定する方法について解説します。 まず、mod_access_tokenやngx_access_tokenが &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -28,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://cubicdaiya.github.io/blog/ja/blog/2013/07/31/mruby-nginx-module3">
+  <link rel="canonical" href="http://cubicdaiya.github.io/blog/ja/blog/2013/08/01/mruby-nginx-module4">
   <link href="/blog/ja/favicon.png" rel="icon">
   <link href="/blog/ja/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/blog/ja/javascripts/modernizr-2.0.js"></script>
@@ -77,7 +70,7 @@
   
   <header>
     
-      <h1 class="entry-title">mruby_nginx_module開発日記 その3〜Nginx::Digest〜</h1>
+      <h1 class="entry-title">mruby_nginx_moduleでアクセス制御</h1>
     
     
       <p class="meta">
@@ -93,15 +86,22 @@
   
 
 
-<time datetime="2013-07-31T01:19:00+09:00" pubdate data-updated="true">Jul 31<span>st</span>, 2013</time>
+<time datetime="2013-08-01T01:04:00+09:00" pubdate data-updated="true">Aug 1<span>st</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>にNginx::Digestクラスを追加しました。
-これでMD5やSHA1、HMAC-SHA1などのハッシュ関数を<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>の中で呼び出すことができるようになりました。こんな感じで使えます。</p>
+<div class="entry-content"><p><a href="http://cubicdaiya.github.io/blog/ja/blog/2013/07/31/mruby-nginx-module3/">前回の予告</a>どおり、
+<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>で
+<a href="https://code.google.com/p/modaccesstoken/">mod_access_token</a>や<a href="https://github.com/cubicdaiya/ngx_access_token">ngx_access_token</a>のように
+トークンによるアクセス制御やリソースの有効期限を設定する方法について解説します。</p>
+
+<p>まず、<a href="https://code.google.com/p/modaccesstoken/">mod_access_token</a>や<a href="https://github.com/cubicdaiya/ngx_access_token">ngx_access_token</a>が
+行うアクセス制御方法ですが、これは<a href="https://code.google.com/p/modaccesstoken/">mod_access_tokenのページ</a>を見るとわかりやすいでしょう。</p>
+
+<p><a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>でこれと同じアクセス制御を行うnginx.confは以下のようになります。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -117,62 +117,23 @@
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>server {
-</span><span class='line'>    listen       8000;
-</span><span class='line'>    server_name  localhost;
-</span><span class='line'>
-</span><span class='line'>    location /hash {
-</span><span class='line'>        mruby_content_handler_code '
-</span><span class='line'>            mruby_content_handler_code '
-</span><span class='line'>            r = Nginx::Request.new
-</span><span class='line'>            text = r.var.arg_text
-</span><span class='line'>            md5  = Nginx::Digest.md5(text)
-</span><span class='line'>            sha1 = Nginx::Digest.sha1(text)
-</span><span class='line'>            hmac = Nginx::Digest.hmac_sha1(text, "cubicdaiya")
-</span><span class='line'>            Nginx.rputs("text:" + text)
-</span><span class='line'>            Nginx.rputs("\n")
-</span><span class='line'>            Nginx.rputs("md5 :" + Nginx::Digest.hexdigest(md5))
-</span><span class='line'>            Nginx.rputs("\n")
-</span><span class='line'>            Nginx.rputs("sha1:" + Nginx::Digest.hexdigest(sha1))
-</span><span class='line'>            Nginx.rputs("\n")
-</span><span class='line'>            Nginx.rputs("hmac(key=cubicdaiya):" + Nginx::Digest.hexdigest(hmac))
-</span><span class='line'>            Nginx.rputs("\n")
-</span><span class='line'>        ';
-</span><span class='line'>    }
+</pre></td><td class='code'><pre><code class=''><span class='line'>location /index.html {
+</span><span class='line'>    set $access_key "bokko";
+</span><span class='line'>    set $secret_key "cubicdaiya";
+</span><span class='line'>    mruby_access_handler_code '
+</span><span class='line'>        r          = Nginx::Request.new
+</span><span class='line'>        now        = Nginx::Time.now()
+</span><span class='line'>        plain_text = r.method + r.uri + r.var.arg_expires.to_s + r.var.access_key.to_s
+</span><span class='line'>        hmac_sha1  = Nginx::Digest.hmac_sha1(plain_text, r.var.secret_key)
+</span><span class='line'>        signature  = Nginx::Base64.encode(hmac_sha1)
+</span><span class='line'>        if r.var.arg_expires &lt; now || signature != r.var.arg_signature then
+</span><span class='line'>            Nginx.return Nginx::NGX_HTTP_FORBIDDEN
+</span><span class='line'>        end
+</span><span class='line'>    ';
 </span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 
-<p>このバーチャルホストにアクセスしてみます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl "http://localhost:8000/hash?text=bokko"
-</span><span class='line'>text:bokko
-</span><span class='line'>md5 :fe9749f7f1d1c8ec7f6ddd1f0521cdb0
-</span><span class='line'>sha1:cea3d1bca602a6017e9a02520e3d392ba6b7838d
-</span><span class='line'>hmac(key=cubicdaiya):3c5b1594272423068bf9516eb45447e3b868051b
-</span><span class='line'>$</span></code></pre></td></tr></table></div></figure>
-
-
-<p>MD5やSHA1を求めるmrbgemは既にあるのですが、元々これらの機能はNginxのコアAPIを通して利用することができますし、
-Nginx内部と<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>とで別々の実装になるのもあまりよろしくないので採用していません。</p>
-
-<p>また、これらのハッシュ関数に加えてbase64のエンコード/デコード機能も追加したので
-<a href="https://code.google.com/p/modaccesstoken/">mod_access_token</a>や<a href="https://github.com/cubicdaiya/ngx_access_token">ngx_access_token</a>がやっているような
-アクセス制御機構を<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>で実現できるようになりました。その方法については次回解説します。</p>
+<p>なんと10行ちょっとで書けてしまいました。<a href="https://code.google.com/p/modaccesstoken/">mod_access_token</a>や<a href="https://github.com/cubicdaiya/ngx_access_token">ngx_access_token</a>がCで200〜300行くらいのコードであることを考えるとすごい進歩です。あらためてスクリプト言語の生産性の高さを認識することができました。</p>
 </div>
 
 
@@ -195,7 +156,7 @@ Nginx内部と<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_n
   
 
 
-<time datetime="2013-07-31T01:19:00+09:00" pubdate data-updated="true">Jul 31<span>st</span>, 2013</time>
+<time datetime="2013-08-01T01:04:00+09:00" pubdate data-updated="true">Aug 1<span>st</span>, 2013</time>
       
 
 
@@ -203,7 +164,7 @@ Nginx内部と<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_n
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.io/blog/ja/blog/2013/07/31/mruby-nginx-module3/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.io/blog/ja/blog/2013/07/31/mruby-nginx-module3/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.io/blog/ja/blog/2013/08/01/mruby-nginx-module4/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.io/blog/ja/blog/2013/08/01/mruby-nginx-module4/" >Tweet</a>
   
   
   
@@ -214,10 +175,8 @@ Nginx内部と<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_n
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/ja/blog/2013/07/28/mruby-nginx-module2/" title="Previous Post: mruby_nginx_module開発日記 その2〜Nginx::Context〜">&laquo; mruby_nginx_module開発日記 その2〜Nginx::Context〜</a>
+        <a class="basic-alignment left" href="/blog/ja/blog/2013/07/31/mruby-nginx-module3/" title="Previous Post: mruby_nginx_module開発日記 その3〜Nginx::Digest〜">&laquo; mruby_nginx_module開発日記 その3〜Nginx::Digest〜</a>
       
-      
-        <a class="basic-alignment right" href="/blog/ja/blog/2013/08/01/mruby-nginx-module4/" title="Next Post: mruby_nginx_moduleでアクセス制御">mruby_nginx_moduleでアクセス制御 &raquo;</a>
       
     </p>
   </footer>

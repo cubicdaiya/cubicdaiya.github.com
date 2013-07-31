@@ -9,18 +9,10 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="mruby_nginx_moduleにNginx::Hashクラスを追加しました。
-これでMD5やSHA1、HMAC-SHA1などのハッシュ関数をmruby_nginx_moduleの中で呼び出すことができるようになりました。こんな感じで使えます。 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11 &hellip;">
+  <meta name="description" content="前回の予告どおり、
+mruby_nginx_moduleで
+mod_access_tokenやngx_access_tokenのように
+トークンによるアクセス制御やリソースの有効期限を設定する方法について解説します。 まず、mod_access_tokenやngx_access_tokenが &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,7 +73,83 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/ja/blog/2013/07/31/mruby-nginx-module3/">mruby_nginx_module開発日記 その3〜Nginx::Hash〜</a></h1>
+      <h1 class="entry-title"><a href="/blog/ja/blog/2013/08/01/mruby-nginx-module4/">mruby_nginx_moduleでアクセス制御</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-01T01:04:00+09:00" pubdate data-updated="true">Aug 1<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://cubicdaiya.github.io/blog/ja/blog/2013/07/31/mruby-nginx-module3/">前回の予告</a>どおり、
+<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>で
+<a href="https://code.google.com/p/modaccesstoken/">mod_access_token</a>や<a href="https://github.com/cubicdaiya/ngx_access_token">ngx_access_token</a>のように
+トークンによるアクセス制御やリソースの有効期限を設定する方法について解説します。</p>
+
+<p>まず、<a href="https://code.google.com/p/modaccesstoken/">mod_access_token</a>や<a href="https://github.com/cubicdaiya/ngx_access_token">ngx_access_token</a>が
+行うアクセス制御方法ですが、これは<a href="https://code.google.com/p/modaccesstoken/">mod_access_tokenのページ</a>を見るとわかりやすいでしょう。</p>
+
+<p><a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>でこれと同じアクセス制御を行うnginx.confは以下のようになります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>location /index.html {
+</span><span class='line'>    set $access_key "bokko";
+</span><span class='line'>    set $secret_key "cubicdaiya";
+</span><span class='line'>    mruby_access_handler_code '
+</span><span class='line'>        r          = Nginx::Request.new
+</span><span class='line'>        now        = Nginx::Time.now()
+</span><span class='line'>        plain_text = r.method + r.uri + r.var.arg_expires.to_s + r.var.access_key.to_s
+</span><span class='line'>        hmac_sha1  = Nginx::Digest.hmac_sha1(plain_text, r.var.secret_key)
+</span><span class='line'>        signature  = Nginx::Base64.encode(hmac_sha1)
+</span><span class='line'>        if r.var.arg_expires &lt; now || signature != r.var.arg_signature then
+</span><span class='line'>            Nginx.return Nginx::NGX_HTTP_FORBIDDEN
+</span><span class='line'>        end
+</span><span class='line'>    ';
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>なんと10行ちょっとで書けてしまいました。<a href="https://code.google.com/p/modaccesstoken/">mod_access_token</a>や<a href="https://github.com/cubicdaiya/ngx_access_token">ngx_access_token</a>がCで200〜300行くらいのコードであることを考えるとすごい進歩です。あらためてスクリプト言語の生産性の高さを認識することができました。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ja/blog/2013/07/31/mruby-nginx-module3/">mruby_nginx_module開発日記 その3〜Nginx::Digest〜</a></h1>
     
     
       <p class="meta">
@@ -104,7 +172,7 @@
   </header>
 
 
-  <div class="entry-content"><p><a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>にNginx::Hashクラスを追加しました。
+  <div class="entry-content"><p><a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>にNginx::Digestクラスを追加しました。
 これでMD5やSHA1、HMAC-SHA1などのハッシュ関数を<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>の中で呼び出すことができるようになりました。こんな感じで使えます。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -139,16 +207,16 @@
 </span><span class='line'>            mruby_content_handler_code '
 </span><span class='line'>            r = Nginx::Request.new
 </span><span class='line'>            text = r.var.arg_text
-</span><span class='line'>            md5  = Nginx::Hash.md5(text)
-</span><span class='line'>            sha1 = Nginx::Hash.sha1(text)
-</span><span class='line'>            hmac = Nginx::Hash.hmac_sha1(text, "cubicdaiya")
+</span><span class='line'>            md5  = Nginx::Digest.md5(text)
+</span><span class='line'>            sha1 = Nginx::Digest.sha1(text)
+</span><span class='line'>            hmac = Nginx::Digest.hmac_sha1(text, "cubicdaiya")
 </span><span class='line'>            Nginx.rputs("text:" + text)
 </span><span class='line'>            Nginx.rputs("\n")
-</span><span class='line'>            Nginx.rputs("md5 :" + Nginx::Hash.hexdigest(md5))
+</span><span class='line'>            Nginx.rputs("md5 :" + Nginx::Digest.hexdigest(md5))
 </span><span class='line'>            Nginx.rputs("\n")
-</span><span class='line'>            Nginx.rputs("sha1:" + Nginx::Hash.hexdigest(sha1))
+</span><span class='line'>            Nginx.rputs("sha1:" + Nginx::Digest.hexdigest(sha1))
 </span><span class='line'>            Nginx.rputs("\n")
-</span><span class='line'>            Nginx.rputs("hmac(key=cubicdaiya):" + Nginx::Hash.hexdigest(hmac))
+</span><span class='line'>            Nginx.rputs("hmac(key=cubicdaiya):" + Nginx::Digest.hexdigest(hmac))
 </span><span class='line'>            Nginx.rputs("\n")
 </span><span class='line'>        ';
 </span><span class='line'>    }
@@ -1080,98 +1148,6 @@ Apache以外のプログラムでもApacheのAPIを使って開発すること�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/ja/blog/2012/11/06/unoh-days/">新卒(?)入社した会社の話</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-06T01:00:00+09:00" pubdate data-updated="true">Nov 6<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>この記事は、<a href="http://atnd.org/events/33478">Unoh Advent Calendar</a>の参加記事です。</p>
-
-<h2>はじめに</h2>
-
-<p>昔々ウノウという会社がありました。僕が新卒(?)入社した会社です。(※)</p>
-
-<p>まぁ、とはいえ元々少人数のベンチャー企業なので新卒などという概念はないに等しく、扱い的にはちょっと生意気で世間知らずな若い中途、ぐらいのものだったように思います。
-実際新人研修なんてものは存在せず入社して2日目には映画生活のsvnリポジトリにコミットしてその後もひたすらPHPでプログラムを書いていました(1日目はPCセットアップ)。
-また、面接もスーツではなく私服で行ったのを覚えています。ちなみにその時の面接を再現した記事が<a href="http://rikunabi-next.yahoo.co.jp/tech/docs/ct_s03600.jsp?p=001467">こちら</a>にあります。</p>
-
-<p>※ 実を言うと入社したのは7月の半ばでまだ大学を卒業していなかった</p>
-
-<h2>ウノウという会社</h2>
-
-<p>当時(2007年)の僕は<a href="http://ssl.ohmsha.co.jp/cgi-bin/menu.cgi?ISBN=4-274-06630-4">Joel On Software</a>や
-<a href="http://ssl.ohmsha.co.jp/cgi-bin/menu.cgi?ISBN=4-274-06597-9">ハッカーと画家</a>を読んでいて、就職するならこれらの本に出てくるような思想(エンジニア中心)の会社に入社したいと思っていました。
-この頃の僕は大学で時間を持て余していたこともあってとっととプログラマになって働こうと思っていて、そんな時にたまたま技術ブログが目に止まったことで興味を持ったのがウノウでした。
-僕が入社した時のウノウはフリーアドレス、希望するノートPCの支給(もちろんOSは自由)、デュアルディスプレイ、エンジニアが技術情報を発信できるブログ(ウノウラボ)、
-毎週木曜日に開催される社内勉強会、ペアプログラミングといった制度があり、<strong>始業時間である朝の10時に出社しても誰もいない(！)のが珍しくない</strong>とてもおもしろい会社でした。</p>
-
-<h2>アプリケーションとインフラの二足のわらじ</h2>
-
-<p>入社してから半年くらいはWebアプリケーションの開発しかしていませんでしたが、ある時インフラエンジニアが足りないので社内のサーバやネットワークの管理をやってほしいと
-CTOに頼まれてそれがきっかけでインフラにも関わるようになりました。ちなみに何で僕だったのかと言うと社員の中で一番CUIに慣れてるとかそんな理由だった気がします。
-正直BIND？Postfix？何それ？な状態でのスタートだったので相当苦労しましたが、オライリー本(<a href="http://www.oreilly.co.jp/books/9784873113906/">これ</a>と
-<a href="http://www.oreilly.co.jp/books/4873111951/">これ</a>)のおかげでなんとかやっていけました。ほかにもsvnリポジトリのバックアップ管理やHyperEstraierによる社内Wikiの検索高速化など、
-一見地味ながらもエンジニアに喜ばれそうなことをやったりしていました。今でも僕は開発とインフラの両方に関わっていますが、このへんでの経験が非常に生きていると思っています。</p>
-
-<h2>フォト蔵の思い出</h2>
-
-<p>さっき書いたのは社内のインフラ業務ですが、ウノウが提供するWebサービスのインフラにもいくつか関わっていました。
-中でも<a href="http://photozou.jp/">フォト蔵</a>は特に思い出深いサービスです。当時ウノウが提供するWebサービスの中では最も規模が大きいサービスでした。
-正直数えきれないほどの失敗をしましたし、うまくいかなかったこともたくさんありますが、いい経験をさせてもらいました。</p>
-
-<p>昼夜逆転した生活を送りながら数十TBの画像データを商用ストレージに移行したり、
-当時3万円した2TBのHDDを大量に使った分散ストレージを実現するためにApacheモジュールを
-数日で書いて投入したのも今となってはいい思い出です。当時は時間がなかったのに加えてApacheモジュールを書いたこともなくて(そもそもC言語書けるエンジニアが当時僕とCTOしかいなかった、確か)、
-画像ストレージのホストが増える度にモジュールを再コンパイルしなければならないくらい拡張性が無かったり、
-Apacheモジュールなのにapr使わずに標準関数でゴリゴリ書いてたり、と正直あまり褒められたものではありませんでしたが、
-これのおかげで<a href="http://photozou.jp/">フォト蔵</a>では画像ストレージの追加が以前よりもとても簡単にできるようになりました。</p>
-
-<p>ところで、このApacheモジュールは今でも稼働しているらしく<a href="https://twitter.com/cocoitiban">@cocoitiban</a>さんの結婚式の二次会で、現在メンテしている
-<a href="https://twitter.com/rsky">@rsky</a>さんから「最近ちゃんとディレクティブで制御できるようにしたんですよ〜」と教えてもらいました。</p>
-
-<h2>ラボブログと執筆活動</h2>
-
-<p>ウノウと言えば<a href="http://labs.unoh.net/">ウノウラボ</a>、というかウノウラボが社名だと思っている人が結構いたくらい当時知名度の高かった所謂エンジニアブログですが、
-僕も合計20本近く記事を書かせて頂きました。ラボブログを書いてよかったと思うのドキュメントを書くのが昔ほど苦ではなくなったことです。
-学生の頃は作文がとても苦手でしたがラボブログを書くのはとても楽しかったし、多くのエンジニアの方に読まれることもあって自然と内容に気を使う癖が付き、結果的に文章力も向上したと思います。
-またラボブログがきっかけでSoftware DesignやWEB+DB PRESSに寄稿する機会にも恵まれました。</p>
-
-<h2>さいごに</h2>
-
-<p>というわけでウノウにいた頃の話を書いてみました。社会人1〜2年目で何かと至らなくて関係者の方にはいろいろとご迷惑をおかけしたと思いますが、ありがとうございました。
-今度機会がありましたら飲みに行きましょう。(あ、でも僕は烏龍茶で！)</p>
-
-<p>ちなみに僕の最近の主な仕事は<a href="http://www.pixiv.net/">www.pixiv.net</a>をDebian Wheezy(7.0)で<del>動かして遊ぶ</del>動くようにすることです。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/ja/blog/page/2/">&larr; Older</a>
@@ -1187,7 +1163,11 @@ Apacheモジュールなのにapr使わずに標準関数でゴリゴリ書い�
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/ja/blog/2013/07/31/mruby-nginx-module3/">mruby_nginx_module開発日記 その3〜Nginx::Hash〜</a>
+        <a href="/blog/ja/blog/2013/08/01/mruby-nginx-module4/">mruby_nginx_moduleでアクセス制御</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2013/07/31/mruby-nginx-module3/">mruby_nginx_module開発日記 その3〜Nginx::Digest〜</a>
       </li>
     
       <li class="post">
@@ -1200,10 +1180,6 @@ Apacheモジュールなのにapr使わずに標準関数でゴリゴリ書い�
     
       <li class="post">
         <a href="/blog/ja/blog/2013/07/27/ngx-small-light-0-4-0/">ngx_small_light v0.4.0</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/ja/blog/2013/03/21/zopfli-png-recompress/">php-ext-zopfliでPNG画像を再圧縮</a>
       </li>
     
   </ul>
