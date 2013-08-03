@@ -4,7 +4,7 @@
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
   <link href="http://cubicdaiya.github.io/blog/ja/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.io/blog/ja/"/>
-  <updated>2013-08-01T01:33:47+09:00</updated>
+  <updated>2013-08-04T02:38:21+09:00</updated>
   <id>http://cubicdaiya.github.io/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -47,7 +47,7 @@
 </span><span class='line'>    set $secret_key "cubicdaiya";
 </span><span class='line'>    mruby_access_handler_code '
 </span><span class='line'>        r          = Nginx::Request.new
-</span><span class='line'>        now        = Nginx::Time.now()
+</span><span class='line'>        now        = Nginx::Time.time()
 </span><span class='line'>        plain_text = r.method + r.uri + r.var.arg_expires.to_s + r.var.access_key.to_s
 </span><span class='line'>        hmac_sha1  = Nginx::Digest.hmac_sha1(plain_text, r.var.secret_key)
 </span><span class='line'>        signature  = Nginx::Base64.encode(hmac_sha1)

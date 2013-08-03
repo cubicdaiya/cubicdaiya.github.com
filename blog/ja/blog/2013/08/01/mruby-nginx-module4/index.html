@@ -122,7 +122,7 @@ mod_access_tokenやngx_access_tokenのように
 </span><span class='line'>    set $secret_key "cubicdaiya";
 </span><span class='line'>    mruby_access_handler_code '
 </span><span class='line'>        r          = Nginx::Request.new
-</span><span class='line'>        now        = Nginx::Time.now()
+</span><span class='line'>        now        = Nginx::Time.time()
 </span><span class='line'>        plain_text = r.method + r.uri + r.var.arg_expires.to_s + r.var.access_key.to_s
 </span><span class='line'>        hmac_sha1  = Nginx::Digest.hmac_sha1(plain_text, r.var.secret_key)
 </span><span class='line'>        signature  = Nginx::Base64.encode(hmac_sha1)
