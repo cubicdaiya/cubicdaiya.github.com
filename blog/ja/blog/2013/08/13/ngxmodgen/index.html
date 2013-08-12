@@ -5,12 +5,15 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>YAPC::Asia Tokyo 2012で発表してきました - bokko bokkoにしてやんよ</title>
+  <title>ngxmodgen - bokko bokkoにしてやんよ</title>
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="YAPC::Asia Tokyo 2012 1日目に本編トークとLTをしてきました。去年傍聴者として参加したとき、「やっぱり自分もなんか発表したいなぁ」と感じていたので
-今回は思い切ってはじめて発表者として参加してみることにしました。かなり緊張しましたが、無事終えることができてホッとしています。 &hellip;">
+  <meta name="description" content="https://github.com/cubicdaiya/ngxmodgen Rubyの勉強がてらNginxモジュールのソースコードの雛形を生成するプログラムを書いてみました。こんな感じで生成できます。 1
+2
+3
+4
+$ mkdir ngx_hoge_module cd &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +22,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://cubicdaiya.github.io/blog/ja/blog/2012/09/30/yapc-asia-tokyo-2012">
+  <link rel="canonical" href="http://cubicdaiya.github.io/blog/ja/blog/2013/08/13/ngxmodgen">
   <link href="/blog/ja/favicon.png" rel="icon">
   <link href="/blog/ja/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/blog/ja/javascripts/modernizr-2.0.js"></script>
@@ -68,7 +71,7 @@
   
   <header>
     
-      <h1 class="entry-title">YAPC::Asia Tokyo 2012で発表してきました</h1>
+      <h1 class="entry-title">ngxmodgen</h1>
     
     
       <p class="meta">
@@ -84,56 +87,44 @@
   
 
 
-<time datetime="2012-09-30T06:21:00+09:00" pubdate data-updated="true">Sep 30<span>th</span>, 2012</time>
+<time datetime="2013-08-13T00:38:00+09:00" pubdate data-updated="true">Aug 13<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a href="http://yapcasia.org/2012/">YAPC::Asia Tokyo 2012</a> 1日目に本編トークとLTをしてきました。去年傍聴者として参加したとき、「やっぱり自分もなんか発表したいなぁ」と感じていたので
-今回は思い切ってはじめて発表者として参加してみることにしました。かなり緊張しましたが、無事終えることができてホッとしています。
-発表外の時間や懇親会でも他社のエンジニアの方といろいろと話ができてとても楽しかったです。</p>
+<div class="entry-content"><p><a href="https://github.com/cubicdaiya/ngxmodgen">https://github.com/cubicdaiya/ngxmodgen</a></p>
 
-<p>発表資料は以下になります。</p>
+<p>Rubyの勉強がてらNginxモジュールのソースコードの雛形を生成するプログラムを書いてみました。こんな感じで生成できます。</p>
 
-<h2>本編トーク：<a href="http://www.slideshare.net/cubicdaiya/pixiv-thumbnails">pixiv thumbnails</a></h2>
-
-<iframe src="http://www.slideshare.net/slideshow/embed_code/14497793" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>
-
-
-
-
-<br />
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir ngx_hoge_module cd ngx_hoge_module
+</span><span class='line'>$ ngxmodgen -n hoge
+</span><span class='line'>ngx_http_hoge_module.c and config is generated
+</span><span class='line'>$</span></code></pre></td></tr></table></div></figure>
 
 
-<br />
+<p>filterモジュールの場合は-tオプションにhttp_filterを指定します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir ngx_hoge_filter_module cd ngx_hoge_filter_module
+</span><span class='line'>$ ngxmodgen -n hoge -t http_filter # http filter module
+</span><span class='line'>ngx_http_hoge_filter_module.c and config is generated
+</span><span class='line'>$</span></code></pre></td></tr></table></div></figure>
 
 
-<p>pixivにおける画像サムネイルのアップロードや生成方法について解説しました。
-pixivに限らず大量の画像を扱うようなWebサービスでは何かある度に新しいサムネイルを用意するのは大変ですし、
-画像を保存するのに必要なストレージのコストもバカになりません。こういった問題に対して動的サムネイルは非常に有効な手段となります。</p>
+<p>RubyGemsにも登録したのでgemコマンドでインストールできます。</p>
 
-<p>また、資料内では触れていませんがpixivでは静的・動的にかかわらず画像サムネイルはNginxとApache Traffic Serverで構成された前段の画像キャッシュクラスタにキャッシュされます。
-動的サムネイルはその性質上ディスク容量を消費しないかわりにCPUリソースを大量に消費するので、参照される際に活用するリソースが静的サムネイルよりも多くなります。</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem install ngxmodgen</span></code></pre></td></tr></table></div></figure>
 
-<p>そのため、動的サムネイルを実際に導入するような場合はそのサムネイルの参照頻度を考慮したり、上述のようにキャッシュを活用してサムネイルを動的に生成するリクエストの絶対数を減らす工夫が求められるでしょう。</p>
-
-<h2>LT：<a href="http://www.slideshare.net/cubicdaiya/ngxsmalllight-yapcasia2012">ngx_small_lightで動的サムネイル生成</a></h2>
-
-<iframe src="http://www.slideshare.net/slideshow/embed_code/14503943" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>
-
-
-
-
-<br />
-
-
-<br />
-
-
-<p><a href="https://github.com/cubicdaiya/ngx_small_light">ngx_small_light</a>自体は単に僕の趣味で作ったものですが、
-実用的な機能はひと通り揃ってるのでそれなりに使えるかと思います。まぁ、今のところ採用実績はないので大手を振ってオススメだよ！とまで言うのは難しいですが。</p>
 </div>
 
 
@@ -156,7 +147,7 @@ pixivに限らず大量の画像を扱うようなWebサービスでは何かあ
   
 
 
-<time datetime="2012-09-30T06:21:00+09:00" pubdate data-updated="true">Sep 30<span>th</span>, 2012</time>
+<time datetime="2013-08-13T00:38:00+09:00" pubdate data-updated="true">Aug 13<span>th</span>, 2013</time>
       
 
 
@@ -164,7 +155,7 @@ pixivに限らず大量の画像を扱うようなWebサービスでは何かあ
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.io/blog/ja/blog/2012/09/30/yapc-asia-tokyo-2012/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.io/blog/ja/blog/2012/09/30/yapc-asia-tokyo-2012/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.io/blog/ja/blog/2013/08/13/ngxmodgen/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.io/blog/ja/blog/2013/08/13/ngxmodgen/" >Tweet</a>
   
   
   
@@ -175,10 +166,8 @@ pixivに限らず大量の画像を扱うようなWebサービスでは何かあ
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/ja/blog/2012/07/18/ddfalsetu-zhong-jing-guo-wobiao-shi-suru/" title="Previous Post: ddの途中経過を表示する">&laquo; ddの途中経過を表示する</a>
+        <a class="basic-alignment left" href="/blog/ja/blog/2013/08/01/mruby-nginx-module4/" title="Previous Post: mruby_nginx_moduleでアクセス制御">&laquo; mruby_nginx_moduleでアクセス制御</a>
       
-      
-        <a class="basic-alignment right" href="/blog/ja/blog/2012/11/05/isucon-number-2nican-jia-sitekita/" title="Next Post: isucon#2に参加してきた">isucon#2に参加してきた &raquo;</a>
       
     </p>
   </footer>

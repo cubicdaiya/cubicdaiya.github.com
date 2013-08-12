@@ -9,10 +9,11 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="前回の予告どおり、
-mruby_nginx_moduleで
-mod_access_tokenやngx_access_tokenのように
-トークンによるアクセス制御やリソースの有効期限を設定する方法について解説します。 まず、mod_access_tokenやngx_access_tokenが &hellip;">
+  <meta name="description" content="https://github.com/cubicdaiya/ngxmodgen Rubyの勉強がてらNginxモジュールのソースコードの雛形を生成するプログラムを書いてみました。こんな感じで生成できます。 1
+2
+3
+4
+$ mkdir ngx_hoge_module cd &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +68,72 @@ mod_access_tokenやngx_access_tokenのように
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ja/blog/2013/08/13/ngxmodgen/">ngxmodgen</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-13T00:38:00+09:00" pubdate data-updated="true">Aug 13<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/cubicdaiya/ngxmodgen">https://github.com/cubicdaiya/ngxmodgen</a></p>
+
+<p>Rubyの勉強がてらNginxモジュールのソースコードの雛形を生成するプログラムを書いてみました。こんな感じで生成できます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir ngx_hoge_module cd ngx_hoge_module
+</span><span class='line'>$ ngxmodgen -n hoge
+</span><span class='line'>ngx_http_hoge_module.c and config is generated
+</span><span class='line'>$</span></code></pre></td></tr></table></div></figure>
+
+
+<p>filterモジュールの場合は-tオプションにhttp_filterを指定します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir ngx_hoge_filter_module cd ngx_hoge_filter_module
+</span><span class='line'>$ ngxmodgen -n hoge -t http_filter # http filter module
+</span><span class='line'>ngx_http_hoge_filter_module.c and config is generated
+</span><span class='line'>$</span></code></pre></td></tr></table></div></figure>
+
+
+<p>RubyGemsにも登録したのでgemコマンドでインストールできます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem install ngxmodgen</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1097,57 +1164,6 @@ Apache以外のプログラムでもApacheのAPIを使って開発すること�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/ja/blog/2012/12/30/nginx72/">WEB+DB PRESS vol.72</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-30T17:07:00+09:00" pubdate data-updated="true">Dec 30<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://gihyo.jp/magazine/wdpress/archive/2013/vol72"><img src="/blog/ja/images/nginx72.jpg" width="300" height="300"></a></p>
-
-<p>一週間ほど前にWEB+DB PRESS vol.73が発売なりましたが、同僚二人(うち一人は元)とnginxの特集記事を執筆しました。
-僕がnginxを最初に触ったのは3年くらい前の2009年でその頃はまだバージョンも古く、0.6.xか0.8xあたりを使っていたと思います。
-その頃に当時在籍していた会社の技術ブログに書いたnginxの紹介記事が<a href="http://unoh.github.com/2009/08/18/tips_for_nginx.html">こちら</a>(アーカイブです)。</p>
-
-<p>その後、組み込み系の会社に移って1年後ぐらいに再びWeb屋さんの世界に戻るべく、pixivに入社しました。
-それから約2年が経ち、pixivで元々Apacheで構築されていたコンポーネントはほぼnginxに置き換えられています。
-本特集には実運用の経験から得られたTipsがふんだんに盛り込まれているので、非常にオススメできる内容になっていると思いますので、
-興味のあることはご覧ください。</p>
-
-<h2>その他の話題</h2>
-
-<p>個人的に今月号で参考になったのはやはりコードレビュー特集でしょうか。
-僕自身今年に入ってからコードレビューを依頼されたり、する必要に迫られる場面が非常に増えたので
-どうやったら効率的にできるか模索しています。とりあえずツールの導入から始めたいですね。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/ja/blog/page/2/">&larr; Older</a>
@@ -1163,6 +1179,10 @@ Apache以外のプログラムでもApacheのAPIを使って開発すること�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/ja/blog/2013/08/13/ngxmodgen/">ngxmodgen</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/ja/blog/2013/08/01/mruby-nginx-module4/">mruby_nginx_moduleでアクセス制御</a>
       </li>
     
@@ -1176,10 +1196,6 @@ Apache以外のプログラムでもApacheのAPIを使って開発すること�
     
       <li class="post">
         <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module/">mruby_nginx_module開発日記 その1〜ngx_mrubyからのfork〜</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/ja/blog/2013/07/27/ngx-small-light-0-4-0/">ngx_small_light v0.4.0</a>
       </li>
     
   </ul>
