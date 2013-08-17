@@ -24,10 +24,11 @@ mod_access_tokenやngx_access_tokenのように
   <link rel="canonical" href="http://cubicdaiya.github.io/blog/ja/blog/2013/08/01/mruby-nginx-module4">
   <link href="/blog/ja/favicon.png" rel="icon">
   <link href="/blog/ja/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/blog/ja/javascripts/modernizr-2.0.js"></script>
-  <script src="/blog/ja/javascripts/ender.js"></script>
-  <script src="/blog/ja/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/blog/ja/atom.xml" rel="alternate" title="bokko bokkoにしてやんよ" type="application/atom+xml">
+  <script src="/blog/ja/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/blog/ja/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -103,7 +104,7 @@ mod_access_tokenやngx_access_tokenのように
 
 <p><a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>でこれと同じアクセス制御を行うnginx.confは以下のようになります。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -117,20 +118,21 @@ mod_access_tokenやngx_access_tokenのように
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>location /index.html {
-</span><span class='line'>    set $access_key "bokko";
-</span><span class='line'>    set $secret_key "cubicdaiya";
-</span><span class='line'>    mruby_access_handler_code '
-</span><span class='line'>        r          = Nginx::Request.new
-</span><span class='line'>        now        = Nginx::Time.time()
-</span><span class='line'>        plain_text = r.method + r.uri + r.var.arg_expires.to_s + r.var.access_key.to_s
-</span><span class='line'>        hmac_sha1  = Nginx::Digest.hmac_sha1(plain_text, r.var.secret_key)
-</span><span class='line'>        signature  = Nginx::Base64.encode(hmac_sha1)
-</span><span class='line'>        if r.var.arg_expires &lt; now || signature != r.var.arg_signature then
-</span><span class='line'>            Nginx.return Nginx::NGX_HTTP_FORBIDDEN
-</span><span class='line'>        end
-</span><span class='line'>    ';
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="k">location</span> <span class="s">/index.html</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kn">set</span> <span class="nv">$access_key</span> <span class="s">&quot;bokko&quot;</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">set</span> <span class="nv">$secret_key</span> <span class="s">&quot;cubicdaiya&quot;</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">mruby_access_handler_code</span> <span class="s">&#39;</span>
+</span><span class='line'>        <span class="s">r</span>          <span class="p">=</span> <span class="s">Nginx::Request.new</span>
+</span><span class='line'>        <span class="s">now</span>        <span class="p">=</span> <span class="s">Nginx::Time.time()</span>
+</span><span class='line'>        <span class="s">plain_text</span> <span class="p">=</span> <span class="s">r.method</span> <span class="s">+</span> <span class="s">r.uri</span> <span class="s">+</span> <span class="s">r.var.arg_expires.to_s</span> <span class="s">+</span> <span class="s">r.var.access_key.to_s</span>
+</span><span class='line'>        <span class="s">hmac_sha1</span>  <span class="p">=</span> <span class="s">Nginx::Digest.hmac_sha1(plain_text,</span> <span class="s">r.var.secret_key)</span>
+</span><span class='line'>        <span class="s">signature</span>  <span class="p">=</span> <span class="s">Nginx::Base64.encode(hmac_sha1)</span>
+</span><span class='line'>        <span class="s">if</span> <span class="s">r.var.arg_expires</span> <span class="s">&lt;</span> <span class="s">now</span> <span class="s">||</span> <span class="s">signature</span> <span class="s">!=</span> <span class="s">r.var.arg_signature</span> <span class="s">then</span>
+</span><span class='line'>            <span class="s">Nginx.return</span> <span class="s">Nginx::NGX_HTTP_FORBIDDEN</span>
+</span><span class='line'>        <span class="s">end</span>
+</span><span class='line'>    <span class="s">&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>なんと10行ちょっとで書けてしまいました。<a href="https://code.google.com/p/modaccesstoken/">mod_access_token</a>や<a href="https://github.com/cubicdaiya/ngx_access_token">ngx_access_token</a>がCで200〜300行くらいのコードであることを考えるとすごい進歩です。あらためてスクリプト言語の生産性の高さを認識することができました。</p>
@@ -164,11 +166,9 @@ mod_access_tokenやngx_access_tokenのように
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.io/blog/ja/blog/2013/08/01/mruby-nginx-module4/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.io/blog/ja/blog/2013/08/01/mruby-nginx-module4/" >Tweet</a>
+  <a href="/blog/ja//twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.io/blog/ja/blog/2013/08/01/mruby-nginx-module4/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.io/blog/ja/blog/2013/08/01/mruby-nginx-module4/" >Tweet</a>
   
   
-  
-    <div class="fb-like" data-width="450" data-show-faces="false"></div>
   
 </div>
 
@@ -193,6 +193,10 @@ mod_access_tokenやngx_access_tokenのように
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/ja/blog/2013/08/17/mruby-nginx-module-0-dot-1-0/">mruby_nginx_module-0.1.0</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/ja/blog/2013/08/13/ngxmodgen/">ngxmodgen</a>
       </li>
     
@@ -208,10 +212,6 @@ mod_access_tokenやngx_access_tokenのように
         <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module2/">mruby_nginx_module開発日記 その2〜Nginx::Context〜</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module/">mruby_nginx_module開発日記 その1〜ngx_mrubyからのfork〜</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -224,7 +224,7 @@ mod_access_tokenやngx_access_tokenのように
   <a href="https://github.com/cubicdaiya">@cubicdaiya</a> on GitHub
   
   <script type="text/javascript">
-    $.domReady(function(){
+    $(document).ready(function(){
         if (!window.jXHR){
             var jxhr = document.createElement('script');
             jxhr.type = 'text/javascript';
@@ -281,15 +281,6 @@ mod_access_tokenやngx_access_tokenのように
 
 
 
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/ja_JP/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
 
 
 
@@ -299,7 +290,7 @@ mod_access_tokenやngx_access_tokenのように
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>

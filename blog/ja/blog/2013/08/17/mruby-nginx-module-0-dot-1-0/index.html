@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>php-ext-zopfliでPNG画像を再圧縮 - bokko bokkoにしてやんよ</title>
+  <title>mruby_nginx_module-0.1.0 - bokko bokkoにしてやんよ</title>
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="php-ext-zopfli 先月末から話題のzopfliを使ってPNG画像を再圧縮するコードを書いてみた。
-ただ、単にPNG画像を再圧縮するだけの関数をCで書いてgithubとかにあげるよりも何かしらのLLのバインディングに組み込む方が実用的だろうと思って
-既にリリースされているphp-ext- &hellip;">
+  <meta name="description" content="https://github.com/cubicdaiya/mruby_nginx_module mruby_nginx_module-0.1.0をリリースしました。主な変更点は以下になります。 Nginx::Contextが意図しないタイミングでmrubyのGCに回収されてしまうバグの修正 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://cubicdaiya.github.io/blog/ja/blog/2013/03/21/zopfli-png-recompress">
+  <link rel="canonical" href="http://cubicdaiya.github.io/blog/ja/blog/2013/08/17/mruby-nginx-module-0-dot-1-0">
   <link href="/blog/ja/favicon.png" rel="icon">
   <link href="/blog/ja/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/blog/ja/atom.xml" rel="alternate" title="bokko bokkoにしてやんよ" type="application/atom+xml">
@@ -70,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">php-ext-zopfliでPNG画像を再圧縮</h1>
+      <h1 class="entry-title">mruby_nginx_module-0.1.0</h1>
     
     
       <p class="meta">
@@ -86,34 +84,42 @@
   
 
 
-<time datetime="2013-03-21T01:46:00+09:00" pubdate data-updated="true">Mar 21<span>st</span>, 2013</time>
+<time datetime="2013-08-17T13:50:00+09:00" pubdate data-updated="true">Aug 17<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a href="http://bit.ly/10dICrU">php-ext-zopfli</a></p>
+<div class="entry-content"><p><a href="https://github.com/cubicdaiya/mruby_nginx_module">https://github.com/cubicdaiya/mruby_nginx_module</a></p>
 
-<p>先月末から話題の<a href="https://code.google.com/p/zopfli/">zopfli</a>を使ってPNG画像を再圧縮するコードを書いてみた。
-ただ、単にPNG画像を再圧縮するだけの関数をCで書いてgithubとかにあげるよりも何かしらのLLのバインディングに組み込む方が実用的だろうと思って
-既にリリースされている<a href="https://github.com/kjdev/php-ext-zopfli">php-ext-zopfli</a>にzopfli_png_recompressという関数を組み込む形で実装。使い方はこんな感じ。</p>
+<p>mruby_nginx_module-0.1.0をリリースしました。主な変更点は以下になります。</p>
+
+<ol>
+<li>Nginx::Contextが意図しないタイミングでmrubyのGCに回収されてしまうバグの修正</li>
+<li>ヘッダおよびボディフィルターのハンドラが設定ファイルの書き方次第でハングする問題の修正</li>
+<li>nginx.confに記述されてるハンドラだけを呼ぶように変更</li>
+<li>POST_READ_PHASEおよびSERVER_REWRITE_PHASEのハンドラを削除</li>
+<li>Nginxクラスのメンバ変数や関数を整理</li>
+<li>mruby_cacheをデフォルトでOnに変更</li>
+<li>テストスイートの追加</li>
+<li>Nginx::Timeのメソッド追加(time, http_time, cookie_time等)</li>
+</ol>
+
+
+<p>mruby_nginx_moduleのハンドラまわりの仕様は自分の中で大体固まってきて入るのですが、
+まだ実装が追いついてない感じなので今後も割とドラスティックな変更が入るかもしれません。</p>
+
+<p>あとソースコードの規模も大きくなってきたのでちゃんとテストを書くことにしました。</p>
+
+<p>こんな感じで実行できます。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
-</span><span class='line'><span class="nv">$png_image</span> <span class="o">=</span> <span class="nb">file_get_contents</span><span class="p">(</span><span class="s2">&quot;/home/bokko/image.png&quot;</span><span class="p">);</span>
-</span><span class='line'><span class="nv">$png_image_recompressed</span> <span class="o">=</span> <span class="nx">zopfli_png_recompress</span><span class="p">(</span><span class="nv">$png_image</span><span class="p">);</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>rake <span class="nv">NGINX_BIN</span><span class="o">=</span>/usr/sbin/nginx
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>PNG画像はIDATチャンク(画像の実データ部)がgzip圧縮されているので、この部分を解凍 -> <a href="https://code.google.com/p/zopfli/">zopfli</a>で再圧縮することでサイズをさらに小さくすることができる。
-しかし、<a href="https://code.google.com/p/zopfli/">zopfli</a>はあくまでdeflate互換の圧縮アルゴリズムの実装を提供しているだけなので
-PNG画像を解析してIDATチャンクを取り出し、解凍&amp;再圧縮してチャンクやヘッダを書き換えるするコードは自分で書かなければならない。</p>
 
-<p>というわけでzopfliでPNG画像の再圧縮を行うのが簡単にできるようになった。<a href="http://bit.ly/Z4JtIO">Googleの元の発表</a>にもある通り、
-圧縮にかかるコストがかなり大きいので事前に圧縮した形で配布するような用途以外に使うのは難しいが、zlibと比べて3～8%も小さくできるのは大きい。</p>
 </div>
 
 
@@ -136,7 +142,7 @@ PNG画像を解析してIDATチャンクを取り出し、解凍&amp;再圧縮�
   
 
 
-<time datetime="2013-03-21T01:46:00+09:00" pubdate data-updated="true">Mar 21<span>st</span>, 2013</time>
+<time datetime="2013-08-17T13:50:00+09:00" pubdate data-updated="true">Aug 17<span>th</span>, 2013</time>
       
 
 
@@ -144,7 +150,7 @@ PNG画像を解析してIDATチャンクを取り出し、解凍&amp;再圧縮�
     
       <div class="sharing">
   
-  <a href="/blog/ja//twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.io/blog/ja/blog/2013/03/21/zopfli-png-recompress/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.io/blog/ja/blog/2013/03/21/zopfli-png-recompress/" >Tweet</a>
+  <a href="/blog/ja//twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.io/blog/ja/blog/2013/08/17/mruby-nginx-module-0-dot-1-0/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.io/blog/ja/blog/2013/08/17/mruby-nginx-module-0-dot-1-0/" >Tweet</a>
   
   
   
@@ -153,10 +159,8 @@ PNG画像を解析してIDATチャンクを取り出し、解凍&amp;再圧縮�
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/ja/blog/2013/01/26/web-service-dev-fall/" title="Previous Post: Webサービス開発徹底攻略">&laquo; Webサービス開発徹底攻略</a>
+        <a class="basic-alignment left" href="/blog/ja/blog/2013/08/13/ngxmodgen/" title="Previous Post: ngxmodgen">&laquo; ngxmodgen</a>
       
-      
-        <a class="basic-alignment right" href="/blog/ja/blog/2013/07/27/ngx-small-light-0-4-0/" title="Next Post: ngx_small_light v0.4.0">ngx_small_light v0.4.0 &raquo;</a>
       
     </p>
   </footer>

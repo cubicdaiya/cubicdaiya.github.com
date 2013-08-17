@@ -22,10 +22,11 @@ nginx.confはこんな感じで、 &hellip;">
   <link rel="canonical" href="http://cubicdaiya.github.io/blog/ja/blog/2012/06/13/ngx-small-light">
   <link href="/blog/ja/favicon.png" rel="icon">
   <link href="/blog/ja/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/blog/ja/javascripts/modernizr-2.0.js"></script>
-  <script src="/blog/ja/javascripts/ender.js"></script>
-  <script src="/blog/ja/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/blog/ja/atom.xml" rel="alternate" title="bokko bokkoにしてやんよ" type="application/atom+xml">
+  <script src="/blog/ja/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/blog/ja/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -291,11 +292,9 @@ Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポ�
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.io/blog/ja/blog/2012/06/13/ngx-small-light/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.io/blog/ja/blog/2012/06/13/ngx-small-light/" >Tweet</a>
+  <a href="/blog/ja//twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.io/blog/ja/blog/2012/06/13/ngx-small-light/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.io/blog/ja/blog/2012/06/13/ngx-small-light/" >Tweet</a>
   
   
-  
-    <div class="fb-like" data-width="450" data-show-faces="false"></div>
   
 </div>
 
@@ -320,6 +319,10 @@ Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/ja/blog/2013/08/17/mruby-nginx-module-0-dot-1-0/">mruby_nginx_module-0.1.0</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/ja/blog/2013/08/13/ngxmodgen/">ngxmodgen</a>
       </li>
     
@@ -335,10 +338,6 @@ Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポ�
         <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module2/">mruby_nginx_module開発日記 その2〜Nginx::Context〜</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module/">mruby_nginx_module開発日記 その1〜ngx_mrubyからのfork〜</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -351,7 +350,7 @@ Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポ�
   <a href="https://github.com/cubicdaiya">@cubicdaiya</a> on GitHub
   
   <script type="text/javascript">
-    $.domReady(function(){
+    $(document).ready(function(){
         if (!window.jXHR){
             var jxhr = document.createElement('script');
             jxhr.type = 'text/javascript';
@@ -408,15 +407,6 @@ Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポ�
 
 
 
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/ja_JP/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
 
 
 
@@ -426,7 +416,7 @@ Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポ�
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>

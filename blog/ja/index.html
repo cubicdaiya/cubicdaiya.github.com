@@ -9,11 +9,7 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="https://github.com/cubicdaiya/ngxmodgen Rubyの勉強がてらNginxモジュールのソースコードの雛形を生成するプログラムを書いてみました。こんな感じで生成できます。 1
-2
-3
-4
-$ mkdir ngx_hoge_module cd &hellip;">
+  <meta name="description" content="https://github.com/cubicdaiya/mruby_nginx_module mruby_nginx_module-0.1.0をリリースしました。主な変更点は以下になります。 Nginx::Contextが意図しないタイミングでmrubyのGCに回収されてしまうバグの修正 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -25,10 +21,11 @@ $ mkdir ngx_hoge_module cd &hellip;">
   <link rel="canonical" href="http://cubicdaiya.github.io/blog/ja">
   <link href="/blog/ja/favicon.png" rel="icon">
   <link href="/blog/ja/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/blog/ja/javascripts/modernizr-2.0.js"></script>
-  <script src="/blog/ja/javascripts/ender.js"></script>
-  <script src="/blog/ja/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/blog/ja/atom.xml" rel="alternate" title="bokko bokkoにしてやんよ" type="application/atom+xml">
+  <script src="/blog/ja/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/blog/ja/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -74,6 +71,70 @@ $ mkdir ngx_hoge_module cd &hellip;">
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/ja/blog/2013/08/17/mruby-nginx-module-0-dot-1-0/">mruby_nginx_module-0.1.0</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-17T13:50:00+09:00" pubdate data-updated="true">Aug 17<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/cubicdaiya/mruby_nginx_module">https://github.com/cubicdaiya/mruby_nginx_module</a></p>
+
+<p>mruby_nginx_module-0.1.0をリリースしました。主な変更点は以下になります。</p>
+
+<ol>
+<li>Nginx::Contextが意図しないタイミングでmrubyのGCに回収されてしまうバグの修正</li>
+<li>ヘッダおよびボディフィルターのハンドラが設定ファイルの書き方次第でハングする問題の修正</li>
+<li>nginx.confに記述されてるハンドラだけを呼ぶように変更</li>
+<li>POST_READ_PHASEおよびSERVER_REWRITE_PHASEのハンドラを削除</li>
+<li>Nginxクラスのメンバ変数や関数を整理</li>
+<li>mruby_cacheをデフォルトでOnに変更</li>
+<li>テストスイートの追加</li>
+<li>Nginx::Timeのメソッド追加(time, http_time, cookie_time等)</li>
+</ol>
+
+
+<p>mruby_nginx_moduleのハンドラまわりの仕様は自分の中で大体固まってきて入るのですが、
+まだ実装が追いついてない感じなので今後も割とドラスティックな変更が入るかもしれません。</p>
+
+<p>あとソースコードの規模も大きくなってきたのでちゃんとテストを書くことにしました。</p>
+
+<p>こんな感じで実行できます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>rake <span class="nv">NGINX_BIN</span><span class="o">=</span>/usr/sbin/nginx
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/ja/blog/2013/08/13/ngxmodgen/">ngxmodgen</a></h1>
     
     
@@ -101,32 +162,35 @@ $ mkdir ngx_hoge_module cd &hellip;">
 
 <p>Rubyの勉強がてらNginxモジュールのソースコードの雛形を生成するプログラムを書いてみました。こんな感じで生成できます。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir ngx_hoge_module cd ngx_hoge_module
-</span><span class='line'>$ ngxmodgen -n hoge
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mkdir ngx_hoge_module <span class="nb">cd </span>ngx_hoge_module
+</span><span class='line'><span class="nv">$ </span>ngxmodgen -n hoge
 </span><span class='line'>ngx_http_hoge_module.c and config is generated
-</span><span class='line'>$</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="err">$</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>filterモジュールの場合は-tオプションにhttp_filterを指定します。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir ngx_hoge_filter_module cd ngx_hoge_filter_module
-</span><span class='line'>$ ngxmodgen -n hoge -t http_filter # http filter module
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mkdir ngx_hoge_filter_module <span class="nb">cd </span>ngx_hoge_filter_module
+</span><span class='line'><span class="nv">$ </span>ngxmodgen -n hoge -t http_filter <span class="c"># http filter module</span>
 </span><span class='line'>ngx_http_hoge_filter_module.c and config is generated
-</span><span class='line'>$</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="err">$</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>RubyGemsにも登録したのでgemコマンドでインストールできます。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>gem install ngxmodgen</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>gem install ngxmodgen
+</span></code></pre></td></tr></table></div></figure>
 
 </div>
   
@@ -173,7 +237,7 @@ $ mkdir ngx_hoge_module cd &hellip;">
 
 <p><a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>でこれと同じアクセス制御を行うnginx.confは以下のようになります。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -187,20 +251,21 @@ $ mkdir ngx_hoge_module cd &hellip;">
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>location /index.html {
-</span><span class='line'>    set $access_key "bokko";
-</span><span class='line'>    set $secret_key "cubicdaiya";
-</span><span class='line'>    mruby_access_handler_code '
-</span><span class='line'>        r          = Nginx::Request.new
-</span><span class='line'>        now        = Nginx::Time.time()
-</span><span class='line'>        plain_text = r.method + r.uri + r.var.arg_expires.to_s + r.var.access_key.to_s
-</span><span class='line'>        hmac_sha1  = Nginx::Digest.hmac_sha1(plain_text, r.var.secret_key)
-</span><span class='line'>        signature  = Nginx::Base64.encode(hmac_sha1)
-</span><span class='line'>        if r.var.arg_expires &lt; now || signature != r.var.arg_signature then
-</span><span class='line'>            Nginx.return Nginx::NGX_HTTP_FORBIDDEN
-</span><span class='line'>        end
-</span><span class='line'>    ';
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="k">location</span> <span class="s">/index.html</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kn">set</span> <span class="nv">$access_key</span> <span class="s">&quot;bokko&quot;</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">set</span> <span class="nv">$secret_key</span> <span class="s">&quot;cubicdaiya&quot;</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">mruby_access_handler_code</span> <span class="s">&#39;</span>
+</span><span class='line'>        <span class="s">r</span>          <span class="p">=</span> <span class="s">Nginx::Request.new</span>
+</span><span class='line'>        <span class="s">now</span>        <span class="p">=</span> <span class="s">Nginx::Time.time()</span>
+</span><span class='line'>        <span class="s">plain_text</span> <span class="p">=</span> <span class="s">r.method</span> <span class="s">+</span> <span class="s">r.uri</span> <span class="s">+</span> <span class="s">r.var.arg_expires.to_s</span> <span class="s">+</span> <span class="s">r.var.access_key.to_s</span>
+</span><span class='line'>        <span class="s">hmac_sha1</span>  <span class="p">=</span> <span class="s">Nginx::Digest.hmac_sha1(plain_text,</span> <span class="s">r.var.secret_key)</span>
+</span><span class='line'>        <span class="s">signature</span>  <span class="p">=</span> <span class="s">Nginx::Base64.encode(hmac_sha1)</span>
+</span><span class='line'>        <span class="s">if</span> <span class="s">r.var.arg_expires</span> <span class="s">&lt;</span> <span class="s">now</span> <span class="s">||</span> <span class="s">signature</span> <span class="s">!=</span> <span class="s">r.var.arg_signature</span> <span class="s">then</span>
+</span><span class='line'>            <span class="s">Nginx.return</span> <span class="s">Nginx::NGX_HTTP_FORBIDDEN</span>
+</span><span class='line'>        <span class="s">end</span>
+</span><span class='line'>    <span class="s">&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>なんと10行ちょっとで書けてしまいました。<a href="https://code.google.com/p/modaccesstoken/">mod_access_token</a>や<a href="https://github.com/cubicdaiya/ngx_access_token">ngx_access_token</a>がCで200〜300行くらいのコードであることを考えるとすごい進歩です。あらためてスクリプト言語の生産性の高さを認識することができました。</p>
@@ -242,7 +307,7 @@ $ mkdir ngx_hoge_module cd &hellip;">
   <div class="entry-content"><p><a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>にNginx::Digestクラスを追加しました。
 これでMD5やSHA1、HMAC-SHA1などのハッシュ関数を<a href="https://github.com/cubicdaiya/mruby_nginx_module">mruby_nginx_module</a>の中で呼び出すことができるようになりました。こんな感じで使えます。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -265,45 +330,47 @@ $ mkdir ngx_hoge_module cd &hellip;">
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>server {
-</span><span class='line'>    listen       8000;
-</span><span class='line'>    server_name  localhost;
+</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="k">server</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kn">listen</span>       <span class="mi">8000</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">server_name</span>  <span class="s">localhost</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>    location /hash {
-</span><span class='line'>        mruby_content_handler_code '
-</span><span class='line'>            mruby_content_handler_code '
-</span><span class='line'>            r = Nginx::Request.new
-</span><span class='line'>            text = r.var.arg_text
-</span><span class='line'>            md5  = Nginx::Digest.md5(text)
-</span><span class='line'>            sha1 = Nginx::Digest.sha1(text)
-</span><span class='line'>            hmac = Nginx::Digest.hmac_sha1(text, "cubicdaiya")
-</span><span class='line'>            Nginx.rputs("text:" + text)
-</span><span class='line'>            Nginx.rputs("\n")
-</span><span class='line'>            Nginx.rputs("md5 :" + Nginx::Digest.hexdigest(md5))
-</span><span class='line'>            Nginx.rputs("\n")
-</span><span class='line'>            Nginx.rputs("sha1:" + Nginx::Digest.hexdigest(sha1))
-</span><span class='line'>            Nginx.rputs("\n")
-</span><span class='line'>            Nginx.rputs("hmac(key=cubicdaiya):" + Nginx::Digest.hexdigest(hmac))
-</span><span class='line'>            Nginx.rputs("\n")
-</span><span class='line'>        ';
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>    <span class="kn">location</span> <span class="s">/hash</span> <span class="p">{</span>
+</span><span class='line'>        <span class="kn">mruby_content_handler_code</span> <span class="s">&#39;</span>
+</span><span class='line'>            <span class="s">mruby_content_handler_code</span> <span class="s">&#39;</span>
+</span><span class='line'>            <span class="s">r</span> <span class="p">=</span> <span class="s">Nginx::Request.new</span>
+</span><span class='line'>            <span class="s">text</span> <span class="p">=</span> <span class="s">r.var.arg_text</span>
+</span><span class='line'>            <span class="s">md5</span>  <span class="p">=</span> <span class="s">Nginx::Digest.md5(text)</span>
+</span><span class='line'>            <span class="s">sha1</span> <span class="p">=</span> <span class="s">Nginx::Digest.sha1(text)</span>
+</span><span class='line'>            <span class="s">hmac</span> <span class="p">=</span> <span class="s">Nginx::Digest.hmac_sha1(text,</span> <span class="s">&quot;cubicdaiya&quot;)</span>
+</span><span class='line'>            <span class="s">Nginx.rputs(&quot;text:&quot;</span> <span class="s">+</span> <span class="s">text)</span>
+</span><span class='line'>            <span class="s">Nginx.rputs(&quot;\n&quot;)</span>
+</span><span class='line'>            <span class="s">Nginx.rputs(&quot;md5</span> <span class="p">:</span><span class="s">&quot;</span> <span class="s">+</span> <span class="s">Nginx::Digest.hexdigest(md5))</span>
+</span><span class='line'>            <span class="s">Nginx.rputs(&quot;\n&quot;)</span>
+</span><span class='line'>            <span class="s">Nginx.rputs(&quot;sha1:&quot;</span> <span class="s">+</span> <span class="s">Nginx::Digest.hexdigest(sha1))</span>
+</span><span class='line'>            <span class="s">Nginx.rputs(&quot;\n&quot;)</span>
+</span><span class='line'>            <span class="s">Nginx.rputs(&quot;hmac(key=cubicdaiya):&quot;</span> <span class="s">+</span> <span class="s">Nginx::Digest.hexdigest(hmac))</span>
+</span><span class='line'>            <span class="s">Nginx.rputs(&quot;\n&quot;)</span>
+</span><span class='line'>        <span class="s">&#39;</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>このバーチャルホストにアクセスしてみます。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl "http://localhost:8000/hash?text=bokko"
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>curl <span class="s2">&quot;http://localhost:8000/hash?text=bokko&quot;</span>
 </span><span class='line'>text:bokko
 </span><span class='line'>md5 :fe9749f7f1d1c8ec7f6ddd1f0521cdb0
 </span><span class='line'>sha1:cea3d1bca602a6017e9a02520e3d392ba6b7838d
-</span><span class='line'>hmac(key=cubicdaiya):3c5b1594272423068bf9516eb45447e3b868051b
-</span><span class='line'>$</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>hmac<span class="o">(</span><span class="nv">key</span><span class="o">=</span>cubicdaiya<span class="o">)</span>:3c5b1594272423068bf9516eb45447e3b868051b
+</span><span class='line'><span class="err">$</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>MD5やSHA1を求めるmrbgemは既にあるのですが、元々これらの機能はNginxのコアAPIを通して利用することができますし、
@@ -362,7 +429,7 @@ nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの
 
 <p>なにはともわれ実際のコードを見てみましょう。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -395,44 +462,45 @@ nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの
 <span class='line-number'>31</span>
 <span class='line-number'>32</span>
 <span class='line-number'>33</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'># 設定読み込み時に$varを初期化
-</span><span class='line'>mruby_init_code "$var = 0;";
+</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="c1"># 設定読み込み時に$varを初期化</span>
+</span><span class='line'><span class="k">mruby_init_code</span> <span class="s">&quot;</span><span class="nv">$var</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span><span class="k">&quot;</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>server {
-</span><span class='line'>    listen       8000;
-</span><span class='line'>    server_name  localhost;
+</span><span class='line'><span class="k">server</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kn">listen</span>       <span class="mi">8000</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">server_name</span>  <span class="s">localhost</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>    root html;
+</span><span class='line'>    <span class="kn">root</span> <span class="s">html</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>    # rewrite -&gt; access -&gt; contentの順に実行される
-</span><span class='line'>    location /mruby {
-</span><span class='line'>        mruby_rewrite_handler_code '
-</span><span class='line'>            ctx = Nginx::Context.new
-</span><span class='line'>            # ctx["count"]はこの時点では必ずnil
-</span><span class='line'>            ctx["count"] = 1
-</span><span class='line'>            $var += 1;
-</span><span class='line'>        ';
-</span><span class='line'>        mruby_access_handler_code '
-</span><span class='line'>            ctx = Nginx::Context.new
-</span><span class='line'>            ctx["count"] += 1
-</span><span class='line'>            $var += 1;
-</span><span class='line'>        ';
-</span><span class='line'>        mruby_content_handler_code '
-</span><span class='line'>            ctx = Nginx::Context.new
-</span><span class='line'>            ctx["count"] += 1
-</span><span class='line'>            $var += 1;
-</span><span class='line'>            Nginx.rputs("ctx.count:"+ ctx["count"].to_s)
-</span><span class='line'>            Nginx.rputs("\n")
-</span><span class='line'>            Nginx.rputs("$var:" + $var.to_s)
-</span><span class='line'>            Nginx.rputs("\n")
-</span><span class='line'>        ';
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>    <span class="c1"># rewrite -&gt; access -&gt; contentの順に実行される</span>
+</span><span class='line'>    <span class="kn">location</span> <span class="s">/mruby</span> <span class="p">{</span>
+</span><span class='line'>        <span class="kn">mruby_rewrite_handler_code</span> <span class="s">&#39;</span>
+</span><span class='line'>            <span class="s">ctx</span> <span class="p">=</span> <span class="s">Nginx::Context.new</span>
+</span><span class='line'>            <span class="c1"># ctx[&quot;count&quot;]はこの時点では必ずnil</span>
+</span><span class='line'>            <span class="s">ctx[&quot;count&quot;]</span> <span class="p">=</span> <span class="mi">1</span>
+</span><span class='line'>            <span class="nv">$var</span> <span class="s">+=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>        <span class="kn">&#39;</span><span class="p">;</span>
+</span><span class='line'>        <span class="kn">mruby_access_handler_code</span> <span class="s">&#39;</span>
+</span><span class='line'>            <span class="s">ctx</span> <span class="p">=</span> <span class="s">Nginx::Context.new</span>
+</span><span class='line'>            <span class="s">ctx[&quot;count&quot;]</span> <span class="s">+=</span> <span class="mi">1</span>
+</span><span class='line'>            <span class="nv">$var</span> <span class="s">+=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>        <span class="kn">&#39;</span><span class="p">;</span>
+</span><span class='line'>        <span class="kn">mruby_content_handler_code</span> <span class="s">&#39;</span>
+</span><span class='line'>            <span class="s">ctx</span> <span class="p">=</span> <span class="s">Nginx::Context.new</span>
+</span><span class='line'>            <span class="s">ctx[&quot;count&quot;]</span> <span class="s">+=</span> <span class="mi">1</span>
+</span><span class='line'>            <span class="nv">$var</span> <span class="s">+=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>            <span class="kn">Nginx.rputs(&quot;ctx.count:&quot;+</span> <span class="s">ctx[&quot;count&quot;].to_s)</span>
+</span><span class='line'>            <span class="s">Nginx.rputs(&quot;\n&quot;)</span>
+</span><span class='line'>            <span class="s">Nginx.rputs(&quot;</span><span class="nv">$var:&quot;</span> <span class="s">+</span> <span class="nv">$var.to_s</span><span class="s">)</span>
+</span><span class='line'>            <span class="s">Nginx.rputs(&quot;\n&quot;)</span>
+</span><span class='line'>        <span class="s">&#39;</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>このバーチャルホストにアクセスしてみます。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -442,16 +510,17 @@ nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl -l "http://localhost:8000/mruby"
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>curl -l <span class="s2">&quot;http://localhost:8000/mruby&quot;</span>
 </span><span class='line'>ctx.count:3
-</span><span class='line'>$var:3
-</span><span class='line'>$ curl -l "http://localhost:8000/mruby"
+</span><span class='line'><span class="nv">$var</span>:3
+</span><span class='line'><span class="nv">$ </span>curl -l <span class="s2">&quot;http://localhost:8000/mruby&quot;</span>
 </span><span class='line'>ctx.count:3
-</span><span class='line'>$var:6
-</span><span class='line'>$ curl -l "http://localhost:8000/mruby"
+</span><span class='line'><span class="nv">$var</span>:6
+</span><span class='line'><span class="nv">$ </span>curl -l <span class="s2">&quot;http://localhost:8000/mruby&quot;</span>
 </span><span class='line'>ctx.count:3
-</span><span class='line'>$var:9
-</span><span class='line'>bokko-mint@bokko%</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="nv">$var</span>:9
+</span><span class='line'>bokko-mint@bokko%
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>グローバス変数($var)はアクセスする度に増加していますが、Nginx::Contextは各リクエスト毎に独立しているので比較的安全に使うことができます。
@@ -821,7 +890,7 @@ nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
 </span><span class='line'><span class="nv">$png_image</span> <span class="o">=</span> <span class="nb">file_get_contents</span><span class="p">(</span><span class="s2">&quot;/home/bokko/image.png&quot;</span><span class="p">);</span>
 </span><span class='line'><span class="nv">$png_image_recompressed</span> <span class="o">=</span> <span class="nx">zopfli_png_recompress</span><span class="p">(</span><span class="nv">$png_image</span><span class="p">);</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -1019,151 +1088,6 @@ PNG画像を解析してIDATチャンクを取り出し、解凍&amp;再圧縮�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/ja/blog/2013/01/05/libngxcore/">libngxcore〜nginxのコアAPIをライブラリ化する〜</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-05T21:06:00+09:00" pubdate data-updated="true">Jan 5<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>nginxの拡張モジュールを作ってると必然的にnginx内部のコアAPIを使ってプログラムを書くことになるのですが、
-各APIの挙動を確認したりする際に毎回nginxと一緒にビルドしなければいけなくてこれが中々面倒です。</p>
-
-<p>ApacheだとAPIがAPR(Apache Portable Runtime)というライブラリにまとめられてApache本体とは切り離されているので、
-Apache以外のプログラムでもApacheのAPIを使って開発することができます。Subversionなんかはこれの良い例です。</p>
-
-<p>そこでnginxのコアAPIもnginx以外のプログラムでも使えるようにしてメモリプールや文字列APIまわりの挙動をサクっと確認したいなぁと思ってやってみました。</p>
-
-<p><a href="https://github.com/cubicdaiya/libngxcore">libngxcore</a>〜libngxcore is the library builded from nginx core APIs.〜</p>
-
-<p>あくまでAPIの挙動確認が主な目的なのでこのライブラリをnginxの外でも広く使っていこうというわけではありません。
-というのもAPIの充実度で言うとnginxよりもApacheというかAPRの方に分があるからです。</p>
-
-<h1>Let&#8217;s try libngxcore</h1>
-
-<p>nginxの文字列関連のAPIはこんな感じで呼び出せます。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
-</span><span class='line'><span class="cp"> </span>
-</span><span class='line'><span class="cp">#include &lt;ngx_core.h&gt;</span>
-</span><span class='line'><span class="cp">#include &lt;ngx_string.h&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kt">int</span> <span class="nf">main</span> <span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-</span><span class='line'>    <span class="n">ngx_str_t</span> <span class="n">s</span> <span class="o">=</span> <span class="n">ngx_string</span><span class="p">(</span><span class="s">&quot;bokko&quot;</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;s            :%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>  <span class="n">s</span><span class="p">.</span><span class="n">data</span><span class="p">);</span>             <span class="c1">// bokko</span>
-</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;ngx_strlen(s):%ld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ngx_strlen</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">data</span><span class="p">));</span> <span class="c1">// 5</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>メモリプールはこんな感じ。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="cp">#include &lt;ngx_core.h&gt;</span>
-</span><span class='line'><span class="cp">#include &lt;ngx_palloc.h&gt;</span>
-</span><span class='line'><span class="cp">#include &lt;ngx_string.h&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kt">int</span> <span class="nf">main</span> <span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-</span><span class='line'>    <span class="n">ngx_str_t</span> <span class="n">s</span> <span class="o">=</span> <span class="n">ngx_string</span><span class="p">(</span><span class="s">&quot;bokko&quot;</span><span class="p">);</span>
-</span><span class='line'>    <span class="kt">char</span> <span class="o">*</span><span class="n">sp</span><span class="p">;</span>
-</span><span class='line'>    <span class="n">ngx_pool_t</span> <span class="o">*</span><span class="n">pool</span><span class="p">;</span>
-</span><span class='line'>    <span class="kt">size_t</span> <span class="n">len</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">pool</span> <span class="o">=</span> <span class="n">ngx_create_pool</span><span class="p">(</span><span class="mi">4096</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
-</span><span class='line'>    <span class="n">len</span>  <span class="o">=</span> <span class="n">ngx_strlen</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">data</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">sp</span> <span class="o">=</span> <span class="n">ngx_palloc</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">sp</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;alloc failed</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">NGX_ERROR</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">ngx_cpystrn</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">s</span><span class="p">.</span><span class="n">data</span><span class="p">,</span> <span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;sp            :%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>  <span class="n">sp</span><span class="p">);</span>
-</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;ngx_strlen(sp):%ld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ngx_strlen</span><span class="p">(</span><span class="n">sp</span><span class="p">));</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">ngx_destroy_pool</span><span class="p">(</span><span class="n">pool</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/ja/blog/page/2/">&larr; Older</a>
@@ -1177,6 +1101,10 @@ Apache以外のプログラムでもApacheのAPIを使って開発すること�
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2013/08/17/mruby-nginx-module-0-dot-1-0/">mruby_nginx_module-0.1.0</a>
+      </li>
     
       <li class="post">
         <a href="/blog/ja/blog/2013/08/13/ngxmodgen/">ngxmodgen</a>
@@ -1194,10 +1122,6 @@ Apache以外のプログラムでもApacheのAPIを使って開発すること�
         <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module2/">mruby_nginx_module開発日記 その2〜Nginx::Context〜</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module/">mruby_nginx_module開発日記 その1〜ngx_mrubyからのfork〜</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -1210,7 +1134,7 @@ Apache以外のプログラムでもApacheのAPIを使って開発すること�
   <a href="https://github.com/cubicdaiya">@cubicdaiya</a> on GitHub
   
   <script type="text/javascript">
-    $.domReady(function(){
+    $(document).ready(function(){
         if (!window.jXHR){
             var jxhr = document.createElement('script');
             jxhr.type = 'text/javascript';
@@ -1266,15 +1190,6 @@ Apache以外のプログラムでもApacheのAPIを使って開発すること�
 
 
 
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/ja_JP/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
 
 
 
@@ -1284,7 +1199,7 @@ Apache以外のプログラムでもApacheのAPIを使って開発すること�
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>

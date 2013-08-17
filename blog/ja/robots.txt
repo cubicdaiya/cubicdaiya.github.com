@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://cubicdaiya.github.io/blog/ja/sitemap.xml 
