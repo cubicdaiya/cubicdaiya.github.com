@@ -4,7 +4,7 @@
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
   <link href="http://cubicdaiya.github.io/blog/ja/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.io/blog/ja/"/>
-  <updated>2013-08-17T14:32:02+09:00</updated>
+  <updated>2013-08-24T08:54:27+09:00</updated>
   <id>http://cubicdaiya.github.io/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -12,6 +12,65 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[mruby_nginx_module-0.1.1]]></title>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2013/08/24/mruby-nginx-module-0-1-1/"/>
+    <updated>2013-08-24T01:27:00+09:00</updated>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2013/08/24/mruby-nginx-module-0-1-1</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/cubicdaiya/mruby_nginx_module">https://github.com/cubicdaiya/mruby_nginx_module</a></p>
+
+<p>mruby_nginx_module-0.1.1をリリースしました。主な変更点は以下になります。</p>
+
+<ol>
+<li>mruby_init, mruby_set, mruby_xxx_handlerに相対パスを指定できるように変更</li>
+<li>mruby_cacacheをmainコンテキストで有効化</li>
+<li>Nginx::Request.var.setのバグ修正</li>
+<li>Nginx::(Connection|Server)を削除</li>
+<li>Nginx::Headers_inを読み取り専用に変更</li>
+<li>Nginx.return(Nginx::HTTP_OK)が呼ばれると空バッファを出力してしまうのを修正</li>
+</ol>
+
+
+<p>今回の変更点で主なものとしてはファイル指定用の各ハンドラーディレクティブに相対パスを指定できるようになったことです。
+例えば以前までは以下のようにフルパスで指定する必要がありましたが、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="k">location</span> <span class="s">/content</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kn">mruby_rewrite_handler</span> <span class="s">/etc/nginx/mrbs/rewrite.mrb</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">mruby_access_handler</span>  <span class="s">/etc/nginx/mrbs/access.mrb</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">mruby_content_handler</span> <span class="s">/etc/nginx/mrbs/content.mrb</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">mruby_log_handler</span>     <span class="s">/etc/nginx/mrbs/log.mrb</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>0.1.1以降ではこのように相対パスで指定できます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="k">location</span> <span class="s">/content</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kn">mruby_rewrite_handler</span> <span class="s">mrbs/rewrite.mrb</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">mruby_access_handler</span>  <span class="s">mrbs/access.mrb</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">mruby_content_handler</span> <span class="s">mrbs/content.mrb</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">mruby_log_handler</span>     <span class="s">mrbs/log.mrb</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>起点となるディレクトリはconfigure時に指定した&#8211;conf-pathを元にしていて、
+例えば&#8211;conf-path=/etc/nginx/nginx.confなら/etc/nginxが起点のディレクトリになります。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[mruby_nginx_module-0.1.0]]></title>
@@ -1418,187 +1477,6 @@ Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポ�
 
 <p>次にmod_small_lightがサポートしていないアイコン埋め込みや画像のプロファイル情報を削除するためのパラメータの追加。
 これはImageMagickであればさほど難しくないので近いうちに追加する予定。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA['An O(NP) Sequence Comparison Algorithm with Scala']]></title>
-    <link href="http://cubicdaiya.github.io/blog/ja/blog/2012/04/30/scala-onp/"/>
-    <updated>2012-04-30T03:10:00+09:00</updated>
-    <id>http://cubicdaiya.github.io/blog/ja/blog/2012/04/30/scala-onp</id>
-    <content type="html"><![CDATA[<p>新しい言語を勉強する際、技術書のサンプルを読んだり写経したりするだけだとしっくりこないことが多いので
-自分の好きなアルゴリズムを実装してみるということをよくやる。僕の場合、とりあえずdiffを実装している。
-ただ、LCSやSESを真面目に計算するのは少々面倒なのでいつも編集距離だけ求めるプログラムを書くことにしている(たまに気が変わってLCSやSESを求めるところまで行くこともあるが、今のところそこまで行ったのはC++/Lua/Javascriptだけだ)。
-以下のページに各種言語によるdiff(An O(NP) Sequence Comparison Algorithm)の実装が置いてある。</p>
-
-<p><a href="https://github.com/cubicdaiya/onp">https://github.com/cubicdaiya/onp</a></p>
-
-<p>で、近頃はScalaを勉強しているので今回もそれにならうことにした。</p>
-
-<p><a href="https://github.com/cubicdaiya/onp/blob/master/scala/onp.scala">https://github.com/cubicdaiya/onp/blob/master/scala/onp.scala</a></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="c1">// The algorithm implemented here is based on &quot;An O(NP) Sequence Comparison Algorithm&quot;</span>
-</span><span class='line'><span class="c1">// by described by Sun Wu, Udi Manber and Gene Myers</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">package</span> <span class="nn">onp</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">Diff</span><span class="o">[</span><span class="kt">T</span><span class="o">](</span><span class="nc">_a</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">T</span><span class="o">],</span> <span class="nc">_b</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">T</span><span class="o">])</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">private</span> <span class="k">var</span> <span class="n">a</span> <span class="k">=</span> <span class="nc">_a</span>
-</span><span class='line'>  <span class="k">private</span> <span class="k">var</span> <span class="n">b</span> <span class="k">=</span> <span class="nc">_b</span>
-</span><span class='line'>  <span class="k">private</span> <span class="k">var</span> <span class="n">m</span> <span class="k">=</span> <span class="nc">_a</span><span class="o">.</span><span class="n">length</span>
-</span><span class='line'>  <span class="k">private</span> <span class="k">var</span> <span class="n">n</span> <span class="k">=</span> <span class="nc">_b</span><span class="o">.</span><span class="n">length</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="n">editdistance</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">m</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>      <span class="k">val</span> <span class="n">t1</span> <span class="k">=</span> <span class="n">a</span>
-</span><span class='line'>      <span class="k">val</span> <span class="n">t2</span> <span class="k">=</span> <span class="n">m</span>
-</span><span class='line'>      <span class="n">a</span> <span class="k">=</span> <span class="n">b</span>
-</span><span class='line'>      <span class="n">b</span> <span class="k">=</span> <span class="n">t1</span>
-</span><span class='line'>      <span class="n">m</span> <span class="k">=</span> <span class="n">n</span>
-</span><span class='line'>      <span class="n">n</span> <span class="k">=</span> <span class="n">t2</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">val</span> <span class="n">offset</span><span class="k">:</span>      <span class="kt">Int</span> <span class="o">=</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span>
-</span><span class='line'>    <span class="k">val</span> <span class="n">delta</span><span class="k">:</span>       <span class="kt">Int</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">m</span>
-</span><span class='line'>    <span class="k">val</span> <span class="n">size</span><span class="k">:</span>        <span class="kt">Int</span> <span class="o">=</span> <span class="n">m</span> <span class="o">+</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">3</span>
-</span><span class='line'>    <span class="k">val</span> <span class="n">fp</span><span class="k">:</span>   <span class="kt">Array</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Array</span><span class="o">(</span><span class="n">size</span><span class="o">)</span>
-</span><span class='line'>    <span class="k">var</span> <span class="n">p</span><span class="k">:</span>           <span class="kt">Int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-</span><span class='line'>    <span class="n">fp</span><span class="o">.</span><span class="n">map</span><span class="o">{</span><span class="n">x</span> <span class="k">=&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="o">}</span>
-</span><span class='line'>    <span class="k">do</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">p</span> <span class="k">=</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">1</span>
-</span><span class='line'>      <span class="k">for</span> <span class="o">(</span><span class="n">k</span> <span class="k">&lt;-</span> <span class="o">(-</span><span class="n">p</span> <span class="n">to</span> <span class="n">delta</span><span class="o">)</span> <span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="k">=</span> <span class="n">snake</span><span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">))</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'>      <span class="k">for</span> <span class="o">(</span><span class="n">k</span> <span class="k">&lt;-</span> <span class="o">(</span><span class="n">delta</span> <span class="o">+</span> <span class="n">p</span> <span class="n">to</span> <span class="n">delta</span><span class="o">).</span><span class="n">reverse</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="k">=</span> <span class="n">snake</span><span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">))</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'>      <span class="n">fp</span><span class="o">(</span><span class="n">delta</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="k">=</span> <span class="n">snake</span><span class="o">(</span><span class="n">delta</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">delta</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">fp</span><span class="o">(</span><span class="n">delta</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">offset</span><span class="o">))</span>
-</span><span class='line'>    <span class="o">}</span> <span class="k">while</span><span class="o">(</span><span class="n">fp</span><span class="o">(</span><span class="n">delta</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">)</span>
-</span><span class='line'>    <span class="n">delta</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">p</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="n">snake</span><span class="o">(</span><span class="n">k</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">p</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">pp</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span><span class="kt">Int</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">var</span> <span class="n">y</span> <span class="k">=</span> <span class="n">scala</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">max</span><span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">pp</span><span class="o">)</span>
-</span><span class='line'>    <span class="k">var</span> <span class="n">x</span> <span class="k">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">k</span>
-</span><span class='line'>    <span class="k">while</span> <span class="o">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">m</span> <span class="o">&amp;&amp;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="o">(</span><span class="n">x</span><span class="o">)</span> <span class="o">==</span> <span class="n">b</span><span class="o">(</span><span class="n">y</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">x</span> <span class="k">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
-</span><span class='line'>      <span class="n">y</span> <span class="k">=</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="n">y</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>使い方はこんな感じ。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">onp.Diff</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">object</span> <span class="nc">main</span> <span class="o">{</span>
-</span><span class='line'>  <span class="k">def</span> <span class="n">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="k">=</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">val</span> <span class="n">diff</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Diff</span><span class="o">[</span><span class="kt">Char</span><span class="o">](</span><span class="n">args</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="n">toCharArray</span><span class="o">(),</span> <span class="n">args</span><span class="o">(</span><span class="mi">1</span><span class="o">).</span><span class="n">toCharArray</span><span class="o">())</span>
-</span><span class='line'>    <span class="n">println</span><span class="o">(</span><span class="s">&quot;editdistance: &quot;</span> <span class="o">+</span> <span class="n">diff</span><span class="o">.</span><span class="n">editdistance</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実行してみる。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sbt
-</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Set current project to default-a136e9 <span class="o">(</span>in build file:/home/bokko/workspace/onp/scala/<span class="o">)</span>
-</span><span class='line'>&gt; run abc abd
-</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Running main abc abd
-</span><span class='line'>editdistance: 2
-</span><span class='line'><span class="o">[</span>success<span class="o">]</span> Total <span class="nb">time</span>: 0 s, completed 2012/04/30 3:17:18
-</span><span class='line'>&gt; run abcdef dacfea
-</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Running main abcdef dacfea
-</span><span class='line'>editdistance: 6
-</span><span class='line'><span class="o">[</span>success<span class="o">]</span> Total <span class="nb">time</span>: 0 s, completed 2012/04/30 3:17:40
-</span><span class='line'>&gt; run acbdeacbed acebdabbabed
-</span><span class='line'><span class="o">[</span>info<span class="o">]</span> Running main acbdeacbed acebdabbabed
-</span><span class='line'>editdistance: 6
-</span><span class='line'><span class="o">[</span>success<span class="o">]</span> Total <span class="nb">time</span>: 0 s, completed 2012/04/30 3:17:42
-</span><span class='line'>&gt;
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>まぁ、いろんな言語で実装してみてはいるもののどの言語でも書き方が大体一緒なので、なんか言語の特徴活かした書き方があればそういう風に書き直したいなぁ。</p>
 ]]></content>
   </entry>
   

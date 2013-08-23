@@ -9,7 +9,7 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="https://github.com/cubicdaiya/mruby_nginx_module mruby_nginx_module-0.1.0をリリースしました。主な変更点は以下になります。 Nginx::Contextが意図しないタイミングでmrubyのGCに回収されてしまうバグの修正 &hellip;">
+  <meta name="description" content="https://github.com/cubicdaiya/mruby_nginx_module mruby_nginx_module-0.1.1をリリースしました。主な変更点は以下になります。 mruby_init, mruby_set, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,92 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ja/blog/2013/08/24/mruby-nginx-module-0-1-1/">mruby_nginx_module-0.1.1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-24T01:27:00+09:00" pubdate data-updated="true">Aug 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/cubicdaiya/mruby_nginx_module">https://github.com/cubicdaiya/mruby_nginx_module</a></p>
+
+<p>mruby_nginx_module-0.1.1をリリースしました。主な変更点は以下になります。</p>
+
+<ol>
+<li>mruby_init, mruby_set, mruby_xxx_handlerに相対パスを指定できるように変更</li>
+<li>mruby_cacacheをmainコンテキストで有効化</li>
+<li>Nginx::Request.var.setのバグ修正</li>
+<li>Nginx::(Connection|Server)を削除</li>
+<li>Nginx::Headers_inを読み取り専用に変更</li>
+<li>Nginx.return(Nginx::HTTP_OK)が呼ばれると空バッファを出力してしまうのを修正</li>
+</ol>
+
+
+<p>今回の変更点で主なものとしてはファイル指定用の各ハンドラーディレクティブに相対パスを指定できるようになったことです。
+例えば以前までは以下のようにフルパスで指定する必要がありましたが、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="k">location</span> <span class="s">/content</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kn">mruby_rewrite_handler</span> <span class="s">/etc/nginx/mrbs/rewrite.mrb</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">mruby_access_handler</span>  <span class="s">/etc/nginx/mrbs/access.mrb</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">mruby_content_handler</span> <span class="s">/etc/nginx/mrbs/content.mrb</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">mruby_log_handler</span>     <span class="s">/etc/nginx/mrbs/log.mrb</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>0.1.1以降ではこのように相対パスで指定できます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="k">location</span> <span class="s">/content</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kn">mruby_rewrite_handler</span> <span class="s">mrbs/rewrite.mrb</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">mruby_access_handler</span>  <span class="s">mrbs/access.mrb</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">mruby_content_handler</span> <span class="s">mrbs/content.mrb</span><span class="p">;</span>
+</span><span class='line'>    <span class="kn">mruby_log_handler</span>     <span class="s">mrbs/log.mrb</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>起点となるディレクトリはconfigure時に指定した&#8211;conf-pathを元にしていて、
+例えば&#8211;conf-path=/etc/nginx/nginx.confなら/etc/nginxが起点のディレクトリになります。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -951,143 +1037,6 @@ PNG画像を解析してIDATチャンクを取り出し、解凍&amp;再圧縮�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/ja/blog/2013/01/08/nginx1/">nginx moduleをつくろう その1〜Hello, World〜</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-08T01:49:00+09:00" pubdate data-updated="true">Jan 8<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>ここのところ、よくnginxのモジュールを開発してたりするので個人的なメモも兼ねてnginxの開発方法や勘所的なものを紹介していこうかと思います。</p>
-
-<p>で、まずは定番のHello, Worldから。ソースコードはgithubにあります。</p>
-
-<p><a href="https://github.com/cubicdaiya/ngx_http_hello_world">ngx_http_hello_world</a>〜Hello, World with nginx〜</p>
-
-<p>今回はとりあえず最初ということもあるので内部動作の解説は特にせず、単に以下のように「Hello, World!」を出力する上記のモジュールを
-ビルド &amp; 動作確認する方法について解説します。ディレクティブの定義とかは次回以降に。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>curl -l <span class="s2">&quot;http://127.0.0.1:80/hello_world&quot;</span>
-</span><span class='line'>&lt;!DOCTYPE html&gt;
-</span><span class='line'>&lt;html&gt;
-</span><span class='line'>&lt;head&gt;
-</span><span class='line'>&lt;title&gt;Hello, World with nginx!&lt;/title&gt;
-</span><span class='line'>&lt;/head&gt;
-</span><span class='line'>&lt;body&gt;
-</span><span class='line'>&lt;p&gt;Hello, World!&lt;/p&gt;&lt;/body&gt;
-</span><span class='line'>&lt;/html&gt;
-</span><span class='line'><span class="err">$</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h1>nginxモジュールのビルド</h1>
-
-<p>nginxのモジュールはApacheと違って動的モジュールがサポートされていないので、nginx本体と一緒にビルドして静的に組み込む必要があります。
-なのでまずはnginxnのソースコードを取ってきてアーカイブを展開しましょう。2013年1月時点の最新版(安定版)は1.2.6です。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget http://nginx.org/download/nginx-1.2.6.tar.gz
-</span><span class='line'><span class="nv">$ </span>tar zxvf nginx-1.2.6.tar.gz
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>次に拙作のngx_http_hello_worldモジュールをgithubから落としてきます。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone git://github.com/cubicdaiya/ngx_http_hello_world.git
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>準備ができたのでnginx本体と一緒にビルド&amp;インストールします。組み込むモジュールはconfigure実行時に&#8211;add-moduleで指定することができます。(変数名は適宜環境に合った値を入れてください)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> <span class="k">${</span><span class="nv">nginx_src_dir</span><span class="k">}</span>
-</span><span class='line'><span class="nv">$ </span>./configure --with-pcre --add-module<span class="o">=</span><span class="k">${</span><span class="nv">ngx_http_hello_world_dir</span><span class="k">}</span>
-</span><span class='line'><span class="nv">$ </span>make
-</span><span class='line'><span class="nv">$ </span>sudo make install
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ビルド &amp; インストールができたら設定ファイルの適当な箇所に以下の設定を記述します。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>location ~ /hello_world<span class="nv">$ </span><span class="o">{</span>
-</span><span class='line'>    hello_world;
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これでURLのパスがhello_worldに一致した場合、hellow_worldディレクティブが有効になり、nginxが以下のようにレスポンスを返してくれます。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>curl -l <span class="s2">&quot;http://127.0.0.1:80/hello_world&quot;</span>
-</span><span class='line'>&lt;!DOCTYPE html&gt;
-</span><span class='line'>&lt;html&gt;
-</span><span class='line'>&lt;head&gt;
-</span><span class='line'>&lt;title&gt;Hello, World with nginx!&lt;/title&gt;
-</span><span class='line'>&lt;/head&gt;
-</span><span class='line'>&lt;body&gt;
-</span><span class='line'>&lt;p&gt;Hello, World!&lt;/p&gt;&lt;/body&gt;
-</span><span class='line'>&lt;/html&gt;
-</span><span class='line'><span class="err">$</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ngx_http_hello_world自体は非常に短い単純なソースコードになっているので、Cを書いたことのある人ならとりあえず上記の実行結果の確認に加えて
-これを読むだけでなんとなく雰囲気はつかめるのではないかと思います。また、Apacheモジュールを書いたことのある人なら割とすんなり入れるでしょう。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/ja/blog/page/2/">&larr; Older</a>
@@ -1103,6 +1052,10 @@ PNG画像を解析してIDATチャンクを取り出し、解凍&amp;再圧縮�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/ja/blog/2013/08/24/mruby-nginx-module-0-1-1/">mruby_nginx_module-0.1.1</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/ja/blog/2013/08/17/mruby-nginx-module-0-dot-1-0/">mruby_nginx_module-0.1.0</a>
       </li>
     
@@ -1116,10 +1069,6 @@ PNG画像を解析してIDATチャンクを取り出し、解凍&amp;再圧縮�
     
       <li class="post">
         <a href="/blog/ja/blog/2013/07/31/mruby-nginx-module3/">mruby_nginx_module開発日記 その3〜Nginx::Digest〜</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/ja/blog/2013/07/28/mruby-nginx-module2/">mruby_nginx_module開発日記 その2〜Nginx::Context〜</a>
       </li>
     
   </ul>
