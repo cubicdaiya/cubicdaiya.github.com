@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>ddの途中経過を表示する - bokko bokkoにしてやんよ</title>
+  <title>ngx_small_light-0.4.1 - bokko bokkoにしてやんよ</title>
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="同じ容量のHDDやSSDをマルっとコピーする際はddを使うと効果的だ。 1
-dd if=/dev/sda1 of=/dev/sdb ディスクによっては以下のようにブロックサイズを大きめに指定すると劇的に速くなる場合がある。(デフォルトは512バイト) 1
-dd if=/dev/sda1 of=/ &hellip;">
+  <meta name="description" content="https://github.com/cubicdaiya/ngx_small_light ngx_small_light v0.4.1をリリースしました。変更内容は以下の2つです。 e=imlib2 &amp; ofが使われていない場合にContent- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@ dd if=/dev/sda1 of=/ &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://cubicdaiya.github.io/blog/ja/blog/2012/07/18/ddfalsetu-zhong-jing-guo-wobiao-shi-suru">
+  <link rel="canonical" href="http://cubicdaiya.github.io/blog/ja/blog/2013/09/26/ngx-small-light-0-4-1">
   <link href="/blog/ja/favicon.png" rel="icon">
   <link href="/blog/ja/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/blog/ja/atom.xml" rel="alternate" title="bokko bokkoにしてやんよ" type="application/atom+xml">
@@ -70,7 +68,7 @@ dd if=/dev/sda1 of=/ &hellip;">
   
   <header>
     
-      <h1 class="entry-title">ddの途中経過を表示する</h1>
+      <h1 class="entry-title">ngx_small_light-0.4.1</h1>
     
     
       <p class="meta">
@@ -86,43 +84,27 @@ dd if=/dev/sda1 of=/ &hellip;">
   
 
 
-<time datetime="2012-07-18T22:43:00+09:00" pubdate data-updated="true">Jul 18<span>th</span>, 2012</time>
+<time datetime="2013-09-26T03:26:00+09:00" pubdate data-updated="true">Sep 26<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>同じ容量のHDDやSSDをマルっとコピーする際はddを使うと効果的だ。</p>
+<div class="entry-content"><p><a href="https://github.com/cubicdaiya/ngx_small_light">https://github.com/cubicdaiya/ngx_small_light</a></p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>dd <span class="k">if</span><span class="o">=</span>/dev/sda1 <span class="nv">of</span><span class="o">=</span>/dev/sdb
-</span></code></pre></td></tr></table></div></figure>
+<p>ngx_small_light v0.4.1をリリースしました。変更内容は以下の2つです。</p>
 
-
-<p>ディスクによっては以下のようにブロックサイズを大きめに指定すると劇的に速くなる場合がある。(デフォルトは512バイト)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>dd <span class="k">if</span><span class="o">=</span>/dev/sda1 <span class="nv">of</span><span class="o">=</span>/dev/sdb <span class="nv">bs</span><span class="o">=</span>4096
-</span></code></pre></td></tr></table></div></figure>
+<ul>
+<li>e=imlib2 &amp; ofが使われていない場合にContent-Typeが拡張子の文字列になってしまうバグを修正</li>
+<li>image/pngであるべきところがpngになってしまう</li>
+<li>e=(imagemagick|gd)の場合にContent-Type用の文字列データに定数を使う</li>
+<li>前のバージョンまでは毎回メモリプールからアロケートしてた</li>
+</ul>
 
 
-<p>これはブロック単位ではなくページ単位でデータを読み書きするSSDの場合で特に顕著。
-また、試したことはないけど何年か前にWestern Digitalが従来の512バイトよりも大きいセクタサイズが4KBのHDDを出してるので、
-この手のHDDもbsパラメータの値を大きめにするとかなり速くなるんじゃないかと思う。(実際の速度は自分で確かめてみてね)</p>
-
-<h2>ddの途中経過を表示</h2>
-
-<p>で、本題。ddはそのままだと入力先から出力先まで全部のデータを流し終わるまで何も表示しない。
-イマドキのHDDならSATAでもランダムアクセスはともかくシーケンシャルアクセスはそれなりに速くて
-シーケンシャルリード/ライトともに100MB/sec以上は余裕で出るので、3TBのHDD同士のコピーでも半日もかからずに完了するが、
-やっぱり人間なので現在のコピーの進捗と速度は知っておきたいところだ。ddには途中経過を表示するようなコマンドラインオプションは用意されていないが、
-実はddのプロセスはUSR1シグナルを受け取ると現在のコピーの進捗と速度(MB/sec)を標準エラー出力に出力する。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>pidof dd | xargs <span class="nb">kill</span> -USR1
-</span></code></pre></td></tr></table></div></figure>
-
+<p>というわけでバグフィックスと細かい最適化1つずつです。
+まぁ、バグの方は↑の最適化してる最中に見つけて速攻で直したというオチなのですが。</p>
 </div>
 
 
@@ -145,7 +127,7 @@ dd if=/dev/sda1 of=/ &hellip;">
   
 
 
-<time datetime="2012-07-18T22:43:00+09:00" pubdate data-updated="true">Jul 18<span>th</span>, 2012</time>
+<time datetime="2013-09-26T03:26:00+09:00" pubdate data-updated="true">Sep 26<span>th</span>, 2013</time>
       
 
 
@@ -153,7 +135,7 @@ dd if=/dev/sda1 of=/ &hellip;">
     
       <div class="sharing">
   
-  <a href="/blog/ja//twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.io/blog/ja/blog/2012/07/18/ddfalsetu-zhong-jing-guo-wobiao-shi-suru/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.io/blog/ja/blog/2012/07/18/ddfalsetu-zhong-jing-guo-wobiao-shi-suru/" >Tweet</a>
+  <a href="/blog/ja//twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.io/blog/ja/blog/2013/09/26/ngx-small-light-0-4-1/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.io/blog/ja/blog/2013/09/26/ngx-small-light-0-4-1/" >Tweet</a>
   
   
   
@@ -162,10 +144,8 @@ dd if=/dev/sda1 of=/ &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/ja/blog/2012/06/29/xin-siibaziyonfalsenode-dot-jsdenode-dtlgarequiredekinaijian/" title="Previous Post: node-dtl v0.1.0リリース">&laquo; node-dtl v0.1.0リリース</a>
+        <a class="basic-alignment left" href="/blog/ja/blog/2013/08/24/mruby-nginx-module-0-1-1/" title="Previous Post: mruby_nginx_module-0.1.1">&laquo; mruby_nginx_module-0.1.1</a>
       
-      
-        <a class="basic-alignment right" href="/blog/ja/blog/2012/09/30/yapc-asia-tokyo-2012/" title="Next Post: YAPC::Asia Tokyo 2012で発表してきました">YAPC::Asia Tokyo 2012で発表してきました &raquo;</a>
       
     </p>
   </footer>

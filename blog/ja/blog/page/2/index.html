@@ -9,7 +9,8 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="ここのところ、よくnginxのモジュールを開発してたりするので個人的なメモも兼ねてnginxの開発方法や勘所的なものを紹介していこうかと思います。 で、まずは定番のHello, Worldから。ソースコードはgithubにあります。 ngx_http_hello_world〜Hello, &hellip;">
+  <meta name="description" content="一昨年に執筆させていただいた「pixivが明かす段階的サービス拡張」という特集記事が再録された「Webサービス開発徹底攻略」が本日発売されました。
+再録記事は若干修正されている箇所もありますが、基本的には当時の内容そのままの形で収録されています。 また、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +66,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ja/blog/2013/01/26/web-service-dev-fall/">Webサービス開発徹底攻略</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-26T12:36:00+09:00" pubdate data-updated="true">Jan 26<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://www.amazon.co.jp/exec/obidos/ASIN/4774154881/bokko0c-22/ref=nosim/" name="amazletlink" target="_blank"><img src="http://ecx.images-amazon.com/images/I/51AvoWNkeqL._SL160_.jpg" alt="Webサービス開発徹底攻略 (WEB+DB PRESS plus)" style="border: none;" /></a></p>
+
+<p>一昨年に執筆させていただいた「pixivが明かす段階的サービス拡張」という特集記事が再録された「Webサービス開発徹底攻略」が本日発売されました。
+再録記事は若干修正されている箇所もありますが、基本的には当時の内容そのままの形で収録されています。</p>
+
+<p>また、執筆当時から現在に至るまでのpixivの変遷について急ぎ足ではありますが3ページほど僕が新規に書き下ろした記事も収録されています。
+興味がある方はお手に取ってお読みください。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -897,211 +940,6 @@ index 678775a..bc4c9bd 100644
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/ja/blog/2012/06/13/ngx-small-light/">&#8216;mod_small_lightのNginx版ngx_small_lightをつくってみた&#8217;</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-13T23:51:00+09:00" pubdate data-updated="true">Jun 13<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://github.com/cubicdaiya/ngx_small_light">https://github.com/cubicdaiya/ngx_small_light</a></p>
-
-<p>サムネイルの動的生成を行うApacheモジュールの<a href="http://code.google.com/p/smalllight/">mod_small_light</a>をNginxにポーティングしてみた。
-nginx.confはこんな感じで、できるだけ<a href="http://code.google.com/p/smalllight/">mod_small_light</a>とあえて同じようにパラメータを指定できる形にしてある。
-なのでパラメータの詳細についてはmod_small_lightの<a href="http://code.google.com/p/smalllight/wiki/PatternString">公式解説ページ</a>を参考にするとよい。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="k">server</span> <span class="p">{</span>
-</span><span class='line'>    <span class="kn">listen</span> <span class="mi">8000</span><span class="p">;</span>
-</span><span class='line'>    <span class="kn">server_name</span> <span class="s">localhost</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1"># small_lightを有効にする</span>
-</span><span class='line'>    <span class="kn">small_light</span> <span class="no">on</span><span class="p">;</span>
-</span><span class='line'>    <span class="c1"># 変換パターンを定義</span>
-</span><span class='line'>    <span class="kn">small_light_pattern_define</span> <span class="s">msize</span> <span class="s">dw=500,dh=500,da=l,q=95,e=imagemagick,jpeghint=y</span><span class="p">;</span>
-</span><span class='line'>    <span class="kn">small_light_pattern_define</span> <span class="s">ssize</span> <span class="s">dw=120,dh=120,da=l,q=95,e=imagemagick,jpeghint=y</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1"># http://localhost:8000/small_light(p=msize)/img/filename.jpg -&gt; generate msize image</span>
-</span><span class='line'>    <span class="c1"># http://localhost:8000/small_light(p=ssize)/img/filename.jpg -&gt; generate ssize image</span>
-</span><span class='line'>    <span class="c1"># http://localhost:8000/small_light(of=gif,q=100)/img/filename.jpg -&gt; generate gif image which quality is 100</span>
-</span><span class='line'>    <span class="kn">location</span> <span class="p">~</span> <span class="sr">small_light[^/]*/(.+)$</span> <span class="p">{</span>
-</span><span class='line'>        <span class="kn">set</span> <span class="nv">$file</span> <span class="nv">$1</span><span class="p">;</span>
-</span><span class='line'>        <span class="kn">rewrite</span> <span class="s">^</span> <span class="s">/</span><span class="nv">$file</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>続いてインストール方法について。NginxはApacheと違い、拡張モジュールを動的に組み込むことができないので、nginxと一緒にビルドして静的に組み込む必要がある。
-また、変換パターンの抽出にPCREを活用しているので「&#8211;with-pcre」を付ける。あとImageMagickも必要。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">cd</span> <span class="k">${</span><span class="nv">ngx_small_light_src_dir</span><span class="k">}</span>
-</span><span class='line'><span class="c"># Wand-configでリンクが必要なライブラリやヘッダファイルのパスを抽出・ビルド用ファイルを生成</span>
-</span><span class='line'>./setup
-</span><span class='line'><span class="nb">cd</span> <span class="o">{</span><span class="nv">$nginx_src_dir</span><span class="o">}</span>
-</span><span class='line'>./configure --with-pcre --add-module<span class="o">=</span><span class="k">${</span><span class="nv">ngx_small_light_src_dir</span><span class="k">}</span>
-</span><span class='line'>make
-</span><span class='line'>make install
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>あとは↑のnginx.confのコメントに書かれているURLを叩けばパラメータで指定した変換を行なってレスポンスを返してくれる。</p>
-
-<h1>ngx_small_light開発の経緯</h1>
-
-<p>時代の流れなのか近頃はNginxはバリバリ使ってるけどApacheは使ったことがないというエンジニアもちらほら見かけるので、
-Nginxで画像変換を行いたいという需要はそれなりにあるのではないかと思う。</p>
-
-<p>元々mod_small_lightにはお仕事で大変お世話になっていて、自分の用途に必要なパラメータを約20個追加するくらい改造して開発・運用しているので、
-ちょっと頑張ればNginxでも同じようにできるだろうと思った。(実際には結構大変だった)</p>
-
-<p>また、実はNginxにはimage_filterという画像変換モジュールが標準で付いてくるのだが、
-mod_small_lightに慣れている自分からするとパラメータの指定方法がイケテない。
-例えばリクエストされた画像をMサイズ(500x500)あるいはSサイズ(120x120)に変換するケースを考えてみよう。
-さらにMサイズの場合は画質を95、Sサイズの場合は100にしたいとする。</p>
-
-<h2>image_filterの場合</h2>
-
-<p>image_filterの場合は以下のように変数代入やif文による分岐制御、正規表現によるマッチングなど非常に多くの機能を使って実現することとなる。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="k">location</span> <span class="p">~</span> <span class="sr">/resize/(msize|ssize)/([^/]*\.jpg)$</span> <span class="p">{</span>
-</span><span class='line'>    <span class="kn">set</span> <span class="nv">$type</span> <span class="nv">$1</span><span class="p">;</span>
-</span><span class='line'>    <span class="kn">set</span> <span class="nv">$file</span> <span class="nv">$2</span><span class="p">;</span>
-</span><span class='line'>    <span class="kn">rewrite</span> <span class="s">^</span> <span class="s">/</span><span class="nv">$file</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">location</span> <span class="p">~</span> <span class="sr">/[^/]*\.jpg$</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kn">if</span> <span class="s">(</span><span class="nv">$type</span> <span class="p">=</span> <span class="s">msize)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="kn">set</span> <span class="nv">$q</span> <span class="mi">95</span><span class="p">;</span>
-</span><span class='line'>        <span class="kn">set</span> <span class="nv">$w</span> <span class="mi">500</span><span class="p">;</span>
-</span><span class='line'>        <span class="kn">set</span> <span class="nv">$h</span> <span class="mi">500</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kn">if</span> <span class="s">(</span><span class="nv">$type</span> <span class="p">=</span> <span class="s">ssize)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="kn">set</span> <span class="nv">$q</span> <span class="mi">100</span><span class="p">;</span>
-</span><span class='line'>        <span class="kn">set</span> <span class="nv">$w</span> <span class="mi">120</span><span class="p">;</span>
-</span><span class='line'>        <span class="kn">set</span> <span class="nv">$h</span> <span class="mi">120</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kn">image_filter_jpeg_quality</span> <span class="nv">$q</span><span class="p">;</span>
-</span><span class='line'>    <span class="kn">image_filter</span> <span class="s">resize</span> <span class="nv">$w</span> <span class="nv">$h</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>今回の場合、生成する画像の種類が2種類と少ないので実感しづらいかもしれないが、実際のシステムに適用する場合は
-透過処理やブラー処理、cropするのかresizeするのかといろんなことを考慮する必要があり、これらをさきほどからある複数の構文で行うとなるともっと複雑になるだろう。</p>
-
-<h2>ngx_small_lightの場合</h2>
-
-<p>一方、ngx_small_lightでは以下のように書ける。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='nginx'><span class='line'><span class="k">small_light</span> <span class="no">on</span><span class="p">;</span>
-</span><span class='line'><span class="k">small_light_pattern_define</span> <span class="s">msize</span> <span class="s">dw=500,dh=500,q=95</span><span class="p">;</span>
-</span><span class='line'><span class="k">small_light_pattern_define</span> <span class="s">ssize</span> <span class="s">dw=120,dh=120,q=100</span><span class="p">;</span>
-</span><span class='line'><span class="k">location</span> <span class="p">~</span> <span class="sr">small_light[^/]*/(.+)$</span> <span class="p">{</span>
-</span><span class='line'>    <span class="kn">set</span> <span class="nv">$file</span> <span class="nv">$1</span><span class="p">;</span>
-</span><span class='line'>    <span class="kn">rewrite</span> <span class="s">^</span> <span class="s">/</span><span class="nv">$file</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>image_filterがパラメータの解析をnginx.confの中でやってるのに対してngx_small_lightはパラメータの解析をngx_small_light自体が行うので、
-nginx.conf自体は非常にシンプルなものとなる。もちろん変換パターンの定義が長くなりすぎてしまう可能性はあるが、
-変数代入やif文による分岐制御、正規表現によるマッチングだらけの設定ファイルよりははるかにマシだ。
-nginx.confの構文はApacheのそれと比べるとかなりプログラマティックで強力だが、あまり頑張りすぎると柔軟な設定ファイルからただのデバッグしづらいプログラムファイルと化す。</p>
-
-<h1>今後の課題</h1>
-
-<p>まだ開発したばかりということもあってngx_small_lightにはmod_small_lightに比べるともの足りない点がいくつかある。
-まず挙げられるのがImageMagick以外の画像変換ライブラリのサポート。具体的にはImlib2とGD。
-Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポートしてるということで候補に挙げている。</p>
-
-<p>次にmod_small_lightがサポートしていないアイコン埋め込みや画像のプロファイル情報を削除するためのパラメータの追加。
-これはImageMagickであればさほど難しくないので近いうちに追加する予定。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/ja/blog/page/3/">&larr; Older</a>
@@ -1119,6 +957,10 @@ Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/ja/blog/2013/09/26/ngx-small-light-0-4-1/">ngx_small_light-0.4.1</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/ja/blog/2013/08/24/mruby-nginx-module-0-1-1/">mruby_nginx_module-0.1.1</a>
       </li>
     
@@ -1132,10 +974,6 @@ Imlib2はmod_small_lightが、GDはnginxのimage_filterモジュールがサポ�
     
       <li class="post">
         <a href="/blog/ja/blog/2013/08/01/mruby-nginx-module4/">mruby_nginx_moduleでアクセス制御</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/ja/blog/2013/07/31/mruby-nginx-module3/">mruby_nginx_module開発日記 その3〜Nginx::Digest〜</a>
       </li>
     
   </ul>
