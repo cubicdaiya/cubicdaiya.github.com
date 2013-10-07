@@ -4,7 +4,7 @@
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
   <link href="http://cubicdaiya.github.io/blog/ja/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.io/blog/ja/"/>
-  <updated>2013-10-08T00:54:02+09:00</updated>
+  <updated>2013-10-08T00:55:47+09:00</updated>
   <id>http://cubicdaiya.github.io/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -36,7 +36,7 @@ RawScore(エラーによる原点を除いたスコア)も散々だったので�
 
 <h2>初期状態で既にエラーが出る</h2>
 
-<p><a href="">公式ブログ</a>にもあるようにPHPの場合は初期状態でも過負荷で必ずベンチマークでエラーが出てしまうのですが、
+<p><a href="http://isucon.net/archives/32853582.html">公式ブログ</a>にもあるようにPHPの場合は初期状態でも過負荷で必ずベンチマークでエラーが出てしまうのですが、
 最後までこのエラーは解消できませんでした。</p>
 
 <p>でも今回はベンチマーク時にエラーが出てもエラーの数が少なければ
@@ -47,7 +47,7 @@ RawScore(エラーによる原点を除いたスコア)も散々だったので�
 
 <h2>スロークエリを探す</h2>
 
-<p>ベンチマークを実行している間にtopを眺めていると明らかにMySQLが詰まっていたので、<a href="">walf443</a>に
+<p>ベンチマークを実行している間にtopを眺めていると明らかにMySQLが詰まっていたので、<a href="https://twitter.com/walf443">@walf443</a>に
 pt-query-digestを動かしてもらってその出力結果から一番重いクエリを書きかえたりインデックスを貼ったりして対応していました。(実際に貼ったインデックスや書き換えたクエリ等については<a href="https://twitter.com/walf443">@walf443</a>の解説を参照)</p>
 
 <h2>PHP5.4 -> PHP5.5 with ZendOpcache and APCu</h2>
