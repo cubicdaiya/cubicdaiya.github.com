@@ -4,7 +4,7 @@
   <title><![CDATA[bokko bokkoにしてやんよ]]></title>
   <link href="http://cubicdaiya.github.io/blog/ja/atom.xml" rel="self"/>
   <link href="http://cubicdaiya.github.io/blog/ja/"/>
-  <updated>2013-09-26T03:34:06+09:00</updated>
+  <updated>2013-10-08T00:51:31+09:00</updated>
   <id>http://cubicdaiya.github.io/blog/ja/</id>
   <author>
     <name><![CDATA[Tatsuhiko Kubo]]></name>
@@ -12,6 +12,110 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[isucon3 「くらげとみかんと江戸幕府」チームで参加してきました]]></title>
+    <link href="http://cubicdaiya.github.io/blog/ja/blog/2013/10/07/isucon3/"/>
+    <updated>2013-10-07T22:40:00+09:00</updated>
+    <id>http://cubicdaiya.github.io/blog/ja/blog/2013/10/07/isucon3</id>
+    <content type="html"><![CDATA[<p>同僚の<a href="https://twitter.com/walf443">@walf443</a>と<a href="https://twitter.com/edvakf">@edvakf</a>とisucon3一日目に参加してきました。</p>
+
+<p>僕がくらげで<a href="https://twitter.com/walf443">@walf443</a>がみかん、そして<a href="https://twitter.com/edvakf">@edvakf</a>が江戸幕府です。</p>
+
+<p>16:30頃の時点でベンチマークが2〜3時間以上通ってなかった上に
+RawScore(エラーによる原点を除いたスコア)も散々だったので完全に通夜状態だったのですが、
+17:00頃から一気に巻き返して最終的には予選一日目5位(19412.5点)で通過(暫定)することができました。</p>
+
+<p>今回は主に僕と<a href="https://twitter.com/edvakf">@edvakf</a>でアプリケーションの修正をやって、
+<a href="https://twitter.com/walf443">@walf443</a>がミドルウェアまわりをやるという役割でスタートし、
+最終的には僕もアプリケーションの修正をやる傍らミドルウェアの置き換え等を行う形になりました。</p>
+
+<p>言語はRubyにするかPHPにするかで意見が割れていたのですが最終的に僕の強い希望でPHPに決まりました。(予選通過(暫定)できて本当に良かったです。。。)</p>
+
+<p>ここからは実際にやったことを主に僕視点で解説していきます。(<a href="https://twitter.com/walf443">@walf443</a>の解説は<a href="http://d.hatena.ne.jp/walf443/20131006/1381072851">こちら</a>)</p>
+
+<h2>初期状態で既にエラーが出る</h2>
+
+<p><a href="">公式ブログ</a>にもあるようにPHPの場合は初期状態でも過負荷で必ずベンチマークでエラーが出てしまうのですが、
+最後までこのエラーは解消できませんでした。</p>
+
+<p>でも今回はベンチマーク時にエラーが出てもエラーの数が少なければ
+ちょっと減点される程度でスコア自体は登録できる仕組みになっていたのでこのエラーはひとまず無視してアプリケーションの修正にとりかかることにしました。</p>
+
+<p>しかし、この時点で既に12:00を過ぎており、一時は「やっぱりRubyにしようか」という話にもなりましたが、
+このタイミングで(エラー出てたけど)ちょうどベンチマークが成功したのでギリギリPHPで行くことになりました。</p>
+
+<h2>スロークエリを探す</h2>
+
+<p>ベンチマークを実行している間にtopを眺めていると明らかにMySQLが詰まっていたので、<a href="">walf443</a>に
+pt-query-digestを動かしてもらってその出力結果から一番重いクエリを書きかえたりインデックスを貼ったりして対応していました。(実際に貼ったインデックスや書き換えたクエリ等については<a href="https://twitter.com/walf443">@walf443</a>の解説を参照)</p>
+
+<h2>PHP5.4 -> PHP5.5 with ZendOpcache and APCu</h2>
+
+<p>もっとも上記の作業は複数人でやるとコンフリクトが起きそうだったので、修正やインデックスの作成はほかの人に任せて
+僕の方ではPHPのバージョンを5.5にあげてZendOpcacheやAPCuの設定をしていました。</p>
+
+<p>PHP5.5をインストールした直後にPDOまわりが動かなくなって焦りましたが、冷静な<a href="https://twitter.com/walf443">@walf443</a>のおかげでなんとか解決。</p>
+
+<h2>APCuでひたすらキャッシュ</h2>
+
+<p>今回は「SELECT count(*) &#8230;」みたいな集計クエリが結構見られたのでこの結果をAPCuでキャッシュしていきました。</p>
+
+<h2>Apacheの前段にNginxを配置</h2>
+
+<p>初期設定では静的ファイル(css, js, img)もpreforkのApacheで返していたので、前段にNginxを配置してそちらで返すようにしました。</p>
+
+<p>なお、gzip圧縮をOnにするとスコアが下がる罠があったそうですが、この時点ではそこまで気が回らなかったのでこの罠にはかからずに済みました。</p>
+
+<p>実はNginxはOpenRestyでインストールしたんだけど、今回は使わなかった。というか使うところまで行けなかった。</p>
+
+<h2>ベンチマークが常に失敗するようになる</h2>
+
+<p>序盤で出遅れつつもRawScoreは少しずつ上がってきていたのですが、中盤からベンチマークが常に失敗する自体に。。。</p>
+
+<p>エラーは元々最初から出ていたのですが、このあたりからエラーの数が臨界点を突破したのか常に失敗する状態になりました。</p>
+
+<p>アプリケーションの修正やミドルウェアの設定は続けていましたが、この状態が何時間も続いたので
+15:00頃は「今日の晩御飯どうしようかな」とか本気で考えていた気がします。</p>
+
+<h2>workloadを上げて対処</h2>
+
+<p>16:30を過ぎた頃、どうせ失敗するであろうベンチマークをtopを眺めていたところ、
+ベンチマークプログラムがCPUを使い切れていないことに気づいたので試しにworkload(ベンチマークの並列度)を上げてみたら
+相変わらずエラーは出るもののベンチマークは常に成功するようになりました。</p>
+
+<p>どうもこのエラーはベンチマークのスコア(=アプリケーションのパフォーマンス)が良くなると出にくくなるようです。</p>
+
+<p>ようやくベンチマークが安定するようになったもののこの時点でスコアはまだ4〜5000点なので予選通過には程遠い状態でした。</p>
+
+<h2>魔のmarkdown</h2>
+
+<p>ベンチマークをかけている間にtopを眺めているとMySQLのCPU使用率が30〜40%まで下がってきたかわりにちょくちょくmarkdownのプロセスが顔を出すようになりました。</p>
+
+<p>これは(PHPの場合は)shell_execで外部プロセスを呼び出し、markdownのテキストをHTMLに変換するという処理になっていたので、
+PHPのmarkdownパーサーに差し替えることで対処しました。</p>
+
+<p>これでスコアが一気に倍の10000点を越え、希望の光が見えてきました。残り一時間。。。</p>
+
+<h2>ラストスパート</h2>
+
+<p>実はこの後何をしたのかよく覚えていませんｗ。引き続き<a href="https://twitter.com/walf443">@walf443</a>がMySQLのパラメータを変更したり、
+<a href="https://twitter.com/edvakf">@edvakf</a>がアプリケーションの修正をやってる間に僕がベンチマークをかけ続けていたらいつの間にかスコアが19412.5点まで上がっていました。</p>
+
+<h2>前回の反省を踏まえて</h2>
+
+<p>前回のisucon#2に参加したときは手当たり次第にボトルネックになりそうなところから手をつけて最適化していたんですが、
+ほとんど外れで事前にボトルネックを分析するの大事だなぁと思っていたので今回はボトルネックの分析により時間をかけました。
+まぁ、実際にやったのはほとんど<a href="https://twitter.com/walf443">@walf443</a>ですが。</p>
+
+<h2>本戦に向けて(暫定)</h2>
+
+<p>最初に書いたようにラスト1時間前まで通夜状態だったので予選一日目5位に滑り込んだ時は大はしゃぎだったのですが、
+やっぱり優勝するならもっとドラスティックな変更(ホットスポットをOpenRestyで書き直すとか)を入れないと駄目だなぁと思いました。</p>
+
+<p>まだ予選通過は暫定ですが、本戦出れたら頑張りたいと思います。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ngx_small_light-0.4.1]]></title>
@@ -1243,84 +1347,6 @@ npmでnode-dtlをインストールしても肝心のnode-dtlをrequireできな
 
 
 <p>いやホントにさ、もっといい方法ないの？</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA['Octopressでサイドバーにgithubのリポジトリ一覧が表示されない件']]></title>
-    <link href="http://cubicdaiya.github.io/blog/ja/blog/2012/06/20/octopress-not-found-github-repos/"/>
-    <updated>2012-06-20T01:12:00+09:00</updated>
-    <id>http://cubicdaiya.github.io/blog/ja/blog/2012/06/20/octopress-not-found-github-repos</id>
-    <content type="html"><![CDATA[<p>githubの古いAPIが使えなくなったのが原因であっちこっちのOctopressのサイドバーで表示されているgithubのリポジトリ一覧がずっと「Status updating…」になるという問題が発生している模様。
-本家にもIssue(<a href="https://github.com/imathis/octopress/issues/620">#620</a>)として上がっていて以下のパッチがGistで提供されている。</p>
-
-<div><script src='https://gist.github.com/2925425.js?file=github.js.diff'></script>
-<noscript><pre><code>diff --git a/source/javascripts/github.js b/source/javascripts/github.js
-index 678775a..bc4c9bd 100644
---- a/source/javascripts/github.js
-+++ b/source/javascripts/github.js
-@@ -3,22 +3,22 @@ var github = (function(){
-     var i = 0, fragment = '', t = $(target)[0];
- 
-     for(i = 0; i &lt; repos.length; i++) {
--      fragment += '&lt;li&gt;&lt;a href=&quot;'+repos[i].url+'&quot;&gt;'+repos[i].name+'&lt;/a&gt;&lt;p&gt;'+repos[i].description+'&lt;/p&gt;&lt;/li&gt;';
-+      fragment += '&lt;li&gt;&lt;a href=&quot;'+repos[i].html_url+'&quot;&gt;'+repos[i].name+'&lt;/a&gt;&lt;p&gt;'+repos[i].description+'&lt;/p&gt;&lt;/li&gt;';
-     }
-     t.innerHTML = fragment;
-   }
-   return {
-     showRepos: function(options){
-       $.ajax({
--          url: &quot;http://github.com/api/v2/json/repos/show/&quot;+options.user+&quot;?callback=?&quot;
-+          url: &quot;https://api.github.com/users/&quot;+options.user+&quot;/repos?callback=?&quot;
-         , type: 'jsonp'
-         , error: function (err) { $(options.target + ' li.loading').addClass('error').text(&quot;Error loading feed&quot;); }
-         , success: function(data) {
-           var repos = [];
--          if (!data || !data.repositories) { return; }
--          for (var i = 0; i &lt; data.repositories.length; i++) {
--            if (options.skip_forks &amp;&amp; data.repositories[i].fork) { continue; }
--            repos.push(data.repositories[i]);
-+          if (!data || !data.data) { return; }
-+          for (var i = 0; i &lt; data.data.length; i++) {
-+            if (options.skip_forks &amp;&amp; data.data[i].fork) { continue; }
-+            repos.push(data.data[i]);
-           }
-           repos.sort(function(a, b) {
-             var aDate = new Date(a.pushed_at).valueOf(),</code></pre></noscript></div>
-
-
-<p>しかし、このパッチだと各リポジトリのリンク先へ飛ぶとJSON(APIのレスポンス)が表示されてしまう。普通は各リポジトリのページへ飛ばしたいはずなのでこうする。(20行目に注目)</p>
-
-<div><script src='https://gist.github.com/2955189.js?file=github.js.patch'></script>
-<noscript><pre><code>--- a/source/javascripts/github.js        2012-06-20 01:31:15.536783517 +0900
-+++ b/source/javascripts/github.js  2012-06-20 01:23:20.044800861 +0900
-@@ -10,15 +10,16 @@
-   return {
-     showRepos: function(options){
-       $.ajax({
--          url: &quot;http://github.com/api/v2/json/repos/show/&quot;+options.user+&quot;?callback=?&quot;
-+          url: &quot;https://api.github.com/users/&quot;+options.user+&quot;/repos?callback=?&quot;
-         , type: 'jsonp'
-         , error: function (err) { $(options.target + ' li.loading').addClass('error').text(&quot;Error loading feed&quot;); }
-         , success: function(data) {
-           var repos = [];
--          if (!data || !data.repositories) { return; }
--          for (var i = 0; i &lt; data.repositories.length; i++) {
--            if (options.skip_forks &amp;&amp; data.repositories[i].fork) { continue; }
--            repos.push(data.repositories[i]);
-+          if (!data || !data.data) { return; }
-+          for (var i = 0; i &lt; data.data.length; i++) {
-+            if (options.skip_forks &amp;&amp; data.data[i].fork) { continue; }
-+            data.data[i].url = data.data[i].svn_url;
-+            repos.push(data.data[i]);
-           }
-           repos.sort(function(a, b) {
-             var aDate = new Date(a.pushed_at).valueOf(),
-</code></pre></noscript></div>
-
-
-<p>これで今まで通りOctopressのサイドバーでgithubのリポジトリ一覧を表示できるようになった。</p>
 ]]></content>
   </entry>
   

@@ -9,8 +9,9 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="一昨年に執筆させていただいた「pixivが明かす段階的サービス拡張」という特集記事が再録された「Webサービス開発徹底攻略」が本日発売されました。
-再録記事は若干修正されている箇所もありますが、基本的には当時の内容そのままの形で収録されています。 また、 &hellip;">
+  <meta name="description" content="php-ext-zopfli 先月末から話題のzopfliを使ってPNG画像を再圧縮するコードを書いてみた。
+ただ、単にPNG画像を再圧縮するだけの関数をCで書いてgithubとかにあげるよりも何かしらのLLのバインディングに組み込む方が実用的だろうと思って
+既にリリースされているphp-ext- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +67,62 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ja/blog/2013/03/21/zopfli-png-recompress/">php-ext-zopfliでPNG画像を再圧縮</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-21T01:46:00+09:00" pubdate data-updated="true">Mar 21<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://bit.ly/10dICrU">php-ext-zopfli</a></p>
+
+<p>先月末から話題の<a href="https://code.google.com/p/zopfli/">zopfli</a>を使ってPNG画像を再圧縮するコードを書いてみた。
+ただ、単にPNG画像を再圧縮するだけの関数をCで書いてgithubとかにあげるよりも何かしらのLLのバインディングに組み込む方が実用的だろうと思って
+既にリリースされている<a href="https://github.com/kjdev/php-ext-zopfli">php-ext-zopfli</a>にzopfli_png_recompressという関数を組み込む形で実装。使い方はこんな感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="nv">$png_image</span> <span class="o">=</span> <span class="nb">file_get_contents</span><span class="p">(</span><span class="s2">&quot;/home/bokko/image.png&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$png_image_recompressed</span> <span class="o">=</span> <span class="nx">zopfli_png_recompress</span><span class="p">(</span><span class="nv">$png_image</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>PNG画像はIDATチャンク(画像の実データ部)がgzip圧縮されているので、この部分を解凍 -> <a href="https://code.google.com/p/zopfli/">zopfli</a>で再圧縮することでサイズをさらに小さくすることができる。
+しかし、<a href="https://code.google.com/p/zopfli/">zopfli</a>はあくまでdeflate互換の圧縮アルゴリズムの実装を提供しているだけなので
+PNG画像を解析してIDATチャンクを取り出し、解凍&amp;再圧縮してチャンクやヘッダを書き換えるするコードは自分で書かなければならない。</p>
+
+<p>というわけでzopfliでPNG画像の再圧縮を行うのが簡単にできるようになった。<a href="http://bit.ly/Z4JtIO">Googleの元の発表</a>にもある通り、
+圧縮にかかるコストがかなり大きいので事前に圧縮した形で配布するような用途以外に使うのは難しいが、zlibと比べて3～8%も小さくできるのは大きい。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -835,111 +892,6 @@ npmでnode-dtlをインストールしても肝心のnode-dtlをrequireできな
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/ja/blog/2012/06/20/octopress-not-found-github-repos/">&#8216;Octopressでサイドバーにgithubのリポジトリ一覧が表示されない件&#8217;</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-20T01:12:00+09:00" pubdate data-updated="true">Jun 20<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>githubの古いAPIが使えなくなったのが原因であっちこっちのOctopressのサイドバーで表示されているgithubのリポジトリ一覧がずっと「Status updating…」になるという問題が発生している模様。
-本家にもIssue(<a href="https://github.com/imathis/octopress/issues/620">#620</a>)として上がっていて以下のパッチがGistで提供されている。</p>
-
-<div><script src='https://gist.github.com/2925425.js?file=github.js.diff'></script>
-<noscript><pre><code>diff --git a/source/javascripts/github.js b/source/javascripts/github.js
-index 678775a..bc4c9bd 100644
---- a/source/javascripts/github.js
-+++ b/source/javascripts/github.js
-@@ -3,22 +3,22 @@ var github = (function(){
-     var i = 0, fragment = '', t = $(target)[0];
- 
-     for(i = 0; i &lt; repos.length; i++) {
--      fragment += '&lt;li&gt;&lt;a href=&quot;'+repos[i].url+'&quot;&gt;'+repos[i].name+'&lt;/a&gt;&lt;p&gt;'+repos[i].description+'&lt;/p&gt;&lt;/li&gt;';
-+      fragment += '&lt;li&gt;&lt;a href=&quot;'+repos[i].html_url+'&quot;&gt;'+repos[i].name+'&lt;/a&gt;&lt;p&gt;'+repos[i].description+'&lt;/p&gt;&lt;/li&gt;';
-     }
-     t.innerHTML = fragment;
-   }
-   return {
-     showRepos: function(options){
-       $.ajax({
--          url: &quot;http://github.com/api/v2/json/repos/show/&quot;+options.user+&quot;?callback=?&quot;
-+          url: &quot;https://api.github.com/users/&quot;+options.user+&quot;/repos?callback=?&quot;
-         , type: 'jsonp'
-         , error: function (err) { $(options.target + ' li.loading').addClass('error').text(&quot;Error loading feed&quot;); }
-         , success: function(data) {
-           var repos = [];
--          if (!data || !data.repositories) { return; }
--          for (var i = 0; i &lt; data.repositories.length; i++) {
--            if (options.skip_forks &amp;&amp; data.repositories[i].fork) { continue; }
--            repos.push(data.repositories[i]);
-+          if (!data || !data.data) { return; }
-+          for (var i = 0; i &lt; data.data.length; i++) {
-+            if (options.skip_forks &amp;&amp; data.data[i].fork) { continue; }
-+            repos.push(data.data[i]);
-           }
-           repos.sort(function(a, b) {
-             var aDate = new Date(a.pushed_at).valueOf(),</code></pre></noscript></div>
-
-
-<p>しかし、このパッチだと各リポジトリのリンク先へ飛ぶとJSON(APIのレスポンス)が表示されてしまう。普通は各リポジトリのページへ飛ばしたいはずなのでこうする。(20行目に注目)</p>
-
-<div><script src='https://gist.github.com/2955189.js?file=github.js.patch'></script>
-<noscript><pre><code>--- a/source/javascripts/github.js        2012-06-20 01:31:15.536783517 +0900
-+++ b/source/javascripts/github.js  2012-06-20 01:23:20.044800861 +0900
-@@ -10,15 +10,16 @@
-   return {
-     showRepos: function(options){
-       $.ajax({
--          url: &quot;http://github.com/api/v2/json/repos/show/&quot;+options.user+&quot;?callback=?&quot;
-+          url: &quot;https://api.github.com/users/&quot;+options.user+&quot;/repos?callback=?&quot;
-         , type: 'jsonp'
-         , error: function (err) { $(options.target + ' li.loading').addClass('error').text(&quot;Error loading feed&quot;); }
-         , success: function(data) {
-           var repos = [];
--          if (!data || !data.repositories) { return; }
--          for (var i = 0; i &lt; data.repositories.length; i++) {
--            if (options.skip_forks &amp;&amp; data.repositories[i].fork) { continue; }
--            repos.push(data.repositories[i]);
-+          if (!data || !data.data) { return; }
-+          for (var i = 0; i &lt; data.data.length; i++) {
-+            if (options.skip_forks &amp;&amp; data.data[i].fork) { continue; }
-+            data.data[i].url = data.data[i].svn_url;
-+            repos.push(data.data[i]);
-           }
-           repos.sort(function(a, b) {
-             var aDate = new Date(a.pushed_at).valueOf(),
-</code></pre></noscript></div>
-
-
-<p>これで今まで通りOctopressのサイドバーでgithubのリポジトリ一覧を表示できるようになった。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/ja/blog/page/3/">&larr; Older</a>
@@ -957,6 +909,10 @@ index 678775a..bc4c9bd 100644
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/ja/blog/2013/10/07/isucon3/">isucon3 「くらげとみかんと江戸幕府」チームで参加してきました</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/ja/blog/2013/09/26/ngx-small-light-0-4-1/">ngx_small_light-0.4.1</a>
       </li>
     
@@ -970,10 +926,6 @@ index 678775a..bc4c9bd 100644
     
       <li class="post">
         <a href="/blog/ja/blog/2013/08/13/ngxmodgen/">ngxmodgen</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/ja/blog/2013/08/01/mruby-nginx-module4/">mruby_nginx_moduleでアクセス制御</a>
       </li>
     
   </ul>

@@ -1,0 +1,353 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>isucon3 「くらげとみかんと江戸幕府」チームで参加してきました - bokko bokkoにしてやんよ</title>
+  <meta name="author" content="Tatsuhiko Kubo">
+
+  
+  <meta name="description" content="同僚の@walf443と@edvakfとisucon3一日目に参加してきました。 僕がくらげで@walf443がみかん、そして@edvakfが江戸幕府です。 16:30頃の時点でベンチマークが2〜3時間以上通ってなかった上に
+RawScore(エラーによる原点を除いたスコア) &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://cubicdaiya.github.io/blog/ja/blog/2013/10/07/isucon3">
+  <link href="/blog/ja/favicon.png" rel="icon">
+  <link href="/blog/ja/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/blog/ja/atom.xml" rel="alternate" title="bokko bokkoにしてやんよ" type="application/atom+xml">
+  <script src="/blog/ja/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/blog/ja/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/blog/ja/">bokko bokkoにしてやんよ</a></h1>
+  
+    <h2>A infrastructure and software engineer's blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/blog/ja/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:cubicdaiya.github.io/blog/ja" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/ja/">Blog</a></li>
+  <li><a href="/blog/ja/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">isucon3 「くらげとみかんと江戸幕府」チームで参加してきました</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-07T22:40:00+09:00" pubdate data-updated="true">Oct 7<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>同僚の<a href="https://twitter.com/walf443">@walf443</a>と<a href="https://twitter.com/edvakf">@edvakf</a>とisucon3一日目に参加してきました。</p>
+
+<p>僕がくらげで<a href="https://twitter.com/walf443">@walf443</a>がみかん、そして<a href="https://twitter.com/edvakf">@edvakf</a>が江戸幕府です。</p>
+
+<p>16:30頃の時点でベンチマークが2〜3時間以上通ってなかった上に
+RawScore(エラーによる原点を除いたスコア)も散々だったので完全に通夜状態だったのですが、
+17:00頃から一気に巻き返して最終的には予選一日目5位(19412.5点)で通過(暫定)することができました。</p>
+
+<p>今回は主に僕と<a href="https://twitter.com/edvakf">@edvakf</a>でアプリケーションの修正をやって、
+<a href="https://twitter.com/walf443">@walf443</a>がミドルウェアまわりをやるという役割でスタートし、
+最終的には僕もアプリケーションの修正をやる傍らミドルウェアの置き換え等を行う形になりました。</p>
+
+<p>言語はRubyにするかPHPにするかで意見が割れていたのですが最終的に僕の強い希望でPHPに決まりました。(予選通過(暫定)できて本当に良かったです。。。)</p>
+
+<p>ここからは実際にやったことを主に僕視点で解説していきます。(<a href="https://twitter.com/walf443">@walf443</a>の解説は<a href="http://d.hatena.ne.jp/walf443/20131006/1381072851">こちら</a>)</p>
+
+<h2>初期状態で既にエラーが出る</h2>
+
+<p><a href="">公式ブログ</a>にもあるようにPHPの場合は初期状態でも過負荷で必ずベンチマークでエラーが出てしまうのですが、
+最後までこのエラーは解消できませんでした。</p>
+
+<p>でも今回はベンチマーク時にエラーが出てもエラーの数が少なければ
+ちょっと減点される程度でスコア自体は登録できる仕組みになっていたのでこのエラーはひとまず無視してアプリケーションの修正にとりかかることにしました。</p>
+
+<p>しかし、この時点で既に12:00を過ぎており、一時は「やっぱりRubyにしようか」という話にもなりましたが、
+このタイミングで(エラー出てたけど)ちょうどベンチマークが成功したのでギリギリPHPで行くことになりました。</p>
+
+<h2>スロークエリを探す</h2>
+
+<p>ベンチマークを実行している間にtopを眺めていると明らかにMySQLが詰まっていたので、<a href="">walf443</a>に
+pt-query-digestを動かしてもらってその出力結果から一番重いクエリを書きかえたりインデックスを貼ったりして対応していました。(実際に貼ったインデックスや書き換えたクエリ等については<a href="https://twitter.com/walf443">@walf443</a>の解説を参照)</p>
+
+<h2>PHP5.4 -> PHP5.5 with ZendOpcache and APCu</h2>
+
+<p>もっとも上記の作業は複数人でやるとコンフリクトが起きそうだったので、修正やインデックスの作成はほかの人に任せて
+僕の方ではPHPのバージョンを5.5にあげてZendOpcacheやAPCuの設定をしていました。</p>
+
+<p>PHP5.5をインストールした直後にPDOまわりが動かなくなって焦りましたが、冷静な<a href="https://twitter.com/walf443">@walf443</a>のおかげでなんとか解決。</p>
+
+<h2>APCuでひたすらキャッシュ</h2>
+
+<p>今回は「SELECT count(*) &#8230;」みたいな集計クエリが結構見られたのでこの結果をAPCuでキャッシュしていきました。</p>
+
+<h2>Apacheの前段にNginxを配置</h2>
+
+<p>初期設定では静的ファイル(css, js, img)もpreforkのApacheで返していたので、前段にNginxを配置してそちらで返すようにしました。</p>
+
+<p>なお、gzip圧縮をOnにするとスコアが下がる罠があったそうですが、この時点ではそこまで気が回らなかったのでこの罠にはかからずに済みました。</p>
+
+<p>実はNginxはOpenRestyでインストールしたんだけど、今回は使わなかった。というか使うところまで行けなかった。</p>
+
+<h2>ベンチマークが常に失敗するようになる</h2>
+
+<p>序盤で出遅れつつもRawScoreは少しずつ上がってきていたのですが、中盤からベンチマークが常に失敗する自体に。。。</p>
+
+<p>エラーは元々最初から出ていたのですが、このあたりからエラーの数が臨界点を突破したのか常に失敗する状態になりました。</p>
+
+<p>アプリケーションの修正やミドルウェアの設定は続けていましたが、この状態が何時間も続いたので
+15:00頃は「今日の晩御飯どうしようかな」とか本気で考えていた気がします。</p>
+
+<h2>workloadを上げて対処</h2>
+
+<p>16:30を過ぎた頃、どうせ失敗するであろうベンチマークをtopを眺めていたところ、
+ベンチマークプログラムがCPUを使い切れていないことに気づいたので試しにworkload(ベンチマークの並列度)を上げてみたら
+相変わらずエラーは出るもののベンチマークは常に成功するようになりました。</p>
+
+<p>どうもこのエラーはベンチマークのスコア(=アプリケーションのパフォーマンス)が良くなると出にくくなるようです。</p>
+
+<p>ようやくベンチマークが安定するようになったもののこの時点でスコアはまだ4〜5000点なので予選通過には程遠い状態でした。</p>
+
+<h2>魔のmarkdown</h2>
+
+<p>ベンチマークをかけている間にtopを眺めているとMySQLのCPU使用率が30〜40%まで下がってきたかわりにちょくちょくmarkdownのプロセスが顔を出すようになりました。</p>
+
+<p>これは(PHPの場合は)shell_execで外部プロセスを呼び出し、markdownのテキストをHTMLに変換するという処理になっていたので、
+PHPのmarkdownパーサーに差し替えることで対処しました。</p>
+
+<p>これでスコアが一気に倍の10000点を越え、希望の光が見えてきました。残り一時間。。。</p>
+
+<h2>ラストスパート</h2>
+
+<p>実はこの後何をしたのかよく覚えていませんｗ。引き続き<a href="https://twitter.com/walf443">@walf443</a>がMySQLのパラメータを変更したり、
+<a href="https://twitter.com/edvakf">@edvakf</a>がアプリケーションの修正をやってる間に僕がベンチマークをかけ続けていたらいつの間にかスコアが19412.5点まで上がっていました。</p>
+
+<h2>前回の反省を踏まえて</h2>
+
+<p>前回のisucon#2に参加したときは手当たり次第にボトルネックになりそうなところから手をつけて最適化していたんですが、
+ほとんど外れで事前にボトルネックを分析するの大事だなぁと思っていたので今回はボトルネックの分析により時間をかけました。
+まぁ、実際にやったのはほとんど<a href="https://twitter.com/walf443">@walf443</a>ですが。</p>
+
+<h2>本戦に向けて(暫定)</h2>
+
+<p>最初に書いたようにラスト1時間前まで通夜状態だったので予選一日目5位に滑り込んだ時は大はしゃぎだったのですが、
+やっぱり優勝するならもっとドラスティックな変更(ホットスポットをOpenRestyで書き直すとか)を入れないと駄目だなぁと思いました。</p>
+
+<p>まだ予選通過は暫定ですが、本戦出れたら頑張りたいと思います。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tatsuhiko Kubo</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-07T22:40:00+09:00" pubdate data-updated="true">Oct 7<span>th</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="/blog/ja//twitter.com/share" class="twitter-share-button" data-url="http://cubicdaiya.github.io/blog/ja/blog/2013/10/07/isucon3/" data-via="cubicdaiya" data-counturl="http://cubicdaiya.github.io/blog/ja/blog/2013/10/07/isucon3/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/ja/blog/2013/09/26/ngx-small-light-0-4-1/" title="Previous Post: ngx_small_light-0.4.1">&laquo; ngx_small_light-0.4.1</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2013/10/07/isucon3/">isucon3 「くらげとみかんと江戸幕府」チームで参加してきました</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2013/09/26/ngx-small-light-0-4-1/">ngx_small_light-0.4.1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2013/08/24/mruby-nginx-module-0-1-1/">mruby_nginx_module-0.1.1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2013/08/17/mruby-nginx-module-0-dot-1-0/">mruby_nginx_module-0.1.0</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/ja/blog/2013/08/13/ngxmodgen/">ngxmodgen</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/cubicdaiya">@cubicdaiya</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'cubicdaiya',
+            count: 5,
+            skip_forks: false,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/blog/ja/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("cubicdaiya", 4, false);
+    });
+  </script>
+  <script src="/blog/ja/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/cubicdaiya" class="twitter-follow-button" data-show-count="false">Follow @cubicdaiya</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tatsuhiko Kubo -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

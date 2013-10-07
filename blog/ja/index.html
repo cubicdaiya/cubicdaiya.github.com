@@ -9,7 +9,8 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="https://github.com/cubicdaiya/ngx_small_light ngx_small_light v0.4.1をリリースしました。変更内容は以下の2つです。 e=imlib2 &amp; ofが使われていない場合にContent- &hellip;">
+  <meta name="description" content="同僚の@walf443と@edvakfとisucon3一日目に参加してきました。 僕がくらげで@walf443がみかん、そして@edvakfが江戸幕府です。 16:30頃の時点でベンチマークが2〜3時間以上通ってなかった上に
+RawScore(エラーによる原点を除いたスコア) &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +66,137 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ja/blog/2013/10/07/isucon3/">isucon3 「くらげとみかんと江戸幕府」チームで参加してきました</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-07T22:40:00+09:00" pubdate data-updated="true">Oct 7<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>同僚の<a href="https://twitter.com/walf443">@walf443</a>と<a href="https://twitter.com/edvakf">@edvakf</a>とisucon3一日目に参加してきました。</p>
+
+<p>僕がくらげで<a href="https://twitter.com/walf443">@walf443</a>がみかん、そして<a href="https://twitter.com/edvakf">@edvakf</a>が江戸幕府です。</p>
+
+<p>16:30頃の時点でベンチマークが2〜3時間以上通ってなかった上に
+RawScore(エラーによる原点を除いたスコア)も散々だったので完全に通夜状態だったのですが、
+17:00頃から一気に巻き返して最終的には予選一日目5位(19412.5点)で通過(暫定)することができました。</p>
+
+<p>今回は主に僕と<a href="https://twitter.com/edvakf">@edvakf</a>でアプリケーションの修正をやって、
+<a href="https://twitter.com/walf443">@walf443</a>がミドルウェアまわりをやるという役割でスタートし、
+最終的には僕もアプリケーションの修正をやる傍らミドルウェアの置き換え等を行う形になりました。</p>
+
+<p>言語はRubyにするかPHPにするかで意見が割れていたのですが最終的に僕の強い希望でPHPに決まりました。(予選通過(暫定)できて本当に良かったです。。。)</p>
+
+<p>ここからは実際にやったことを主に僕視点で解説していきます。(<a href="https://twitter.com/walf443">@walf443</a>の解説は<a href="http://d.hatena.ne.jp/walf443/20131006/1381072851">こちら</a>)</p>
+
+<h2>初期状態で既にエラーが出る</h2>
+
+<p><a href="">公式ブログ</a>にもあるようにPHPの場合は初期状態でも過負荷で必ずベンチマークでエラーが出てしまうのですが、
+最後までこのエラーは解消できませんでした。</p>
+
+<p>でも今回はベンチマーク時にエラーが出てもエラーの数が少なければ
+ちょっと減点される程度でスコア自体は登録できる仕組みになっていたのでこのエラーはひとまず無視してアプリケーションの修正にとりかかることにしました。</p>
+
+<p>しかし、この時点で既に12:00を過ぎており、一時は「やっぱりRubyにしようか」という話にもなりましたが、
+このタイミングで(エラー出てたけど)ちょうどベンチマークが成功したのでギリギリPHPで行くことになりました。</p>
+
+<h2>スロークエリを探す</h2>
+
+<p>ベンチマークを実行している間にtopを眺めていると明らかにMySQLが詰まっていたので、<a href="">walf443</a>に
+pt-query-digestを動かしてもらってその出力結果から一番重いクエリを書きかえたりインデックスを貼ったりして対応していました。(実際に貼ったインデックスや書き換えたクエリ等については<a href="https://twitter.com/walf443">@walf443</a>の解説を参照)</p>
+
+<h2>PHP5.4 -> PHP5.5 with ZendOpcache and APCu</h2>
+
+<p>もっとも上記の作業は複数人でやるとコンフリクトが起きそうだったので、修正やインデックスの作成はほかの人に任せて
+僕の方ではPHPのバージョンを5.5にあげてZendOpcacheやAPCuの設定をしていました。</p>
+
+<p>PHP5.5をインストールした直後にPDOまわりが動かなくなって焦りましたが、冷静な<a href="https://twitter.com/walf443">@walf443</a>のおかげでなんとか解決。</p>
+
+<h2>APCuでひたすらキャッシュ</h2>
+
+<p>今回は「SELECT count(*) &#8230;」みたいな集計クエリが結構見られたのでこの結果をAPCuでキャッシュしていきました。</p>
+
+<h2>Apacheの前段にNginxを配置</h2>
+
+<p>初期設定では静的ファイル(css, js, img)もpreforkのApacheで返していたので、前段にNginxを配置してそちらで返すようにしました。</p>
+
+<p>なお、gzip圧縮をOnにするとスコアが下がる罠があったそうですが、この時点ではそこまで気が回らなかったのでこの罠にはかからずに済みました。</p>
+
+<p>実はNginxはOpenRestyでインストールしたんだけど、今回は使わなかった。というか使うところまで行けなかった。</p>
+
+<h2>ベンチマークが常に失敗するようになる</h2>
+
+<p>序盤で出遅れつつもRawScoreは少しずつ上がってきていたのですが、中盤からベンチマークが常に失敗する自体に。。。</p>
+
+<p>エラーは元々最初から出ていたのですが、このあたりからエラーの数が臨界点を突破したのか常に失敗する状態になりました。</p>
+
+<p>アプリケーションの修正やミドルウェアの設定は続けていましたが、この状態が何時間も続いたので
+15:00頃は「今日の晩御飯どうしようかな」とか本気で考えていた気がします。</p>
+
+<h2>workloadを上げて対処</h2>
+
+<p>16:30を過ぎた頃、どうせ失敗するであろうベンチマークをtopを眺めていたところ、
+ベンチマークプログラムがCPUを使い切れていないことに気づいたので試しにworkload(ベンチマークの並列度)を上げてみたら
+相変わらずエラーは出るもののベンチマークは常に成功するようになりました。</p>
+
+<p>どうもこのエラーはベンチマークのスコア(=アプリケーションのパフォーマンス)が良くなると出にくくなるようです。</p>
+
+<p>ようやくベンチマークが安定するようになったもののこの時点でスコアはまだ4〜5000点なので予選通過には程遠い状態でした。</p>
+
+<h2>魔のmarkdown</h2>
+
+<p>ベンチマークをかけている間にtopを眺めているとMySQLのCPU使用率が30〜40%まで下がってきたかわりにちょくちょくmarkdownのプロセスが顔を出すようになりました。</p>
+
+<p>これは(PHPの場合は)shell_execで外部プロセスを呼び出し、markdownのテキストをHTMLに変換するという処理になっていたので、
+PHPのmarkdownパーサーに差し替えることで対処しました。</p>
+
+<p>これでスコアが一気に倍の10000点を越え、希望の光が見えてきました。残り一時間。。。</p>
+
+<h2>ラストスパート</h2>
+
+<p>実はこの後何をしたのかよく覚えていませんｗ。引き続き<a href="https://twitter.com/walf443">@walf443</a>がMySQLのパラメータを変更したり、
+<a href="https://twitter.com/edvakf">@edvakf</a>がアプリケーションの修正をやってる間に僕がベンチマークをかけ続けていたらいつの間にかスコアが19412.5点まで上がっていました。</p>
+
+<h2>前回の反省を踏まえて</h2>
+
+<p>前回のisucon#2に参加したときは手当たり次第にボトルネックになりそうなところから手をつけて最適化していたんですが、
+ほとんど外れで事前にボトルネックを分析するの大事だなぁと思っていたので今回はボトルネックの分析により時間をかけました。
+まぁ、実際にやったのはほとんど<a href="https://twitter.com/walf443">@walf443</a>ですが。</p>
+
+<h2>本戦に向けて(暫定)</h2>
+
+<p>最初に書いたようにラスト1時間前まで通夜状態だったので予選一日目5位に滑り込んだ時は大はしゃぎだったのですが、
+やっぱり優勝するならもっとドラスティックな変更(ホットスポットをOpenRestyで書き直すとか)を入れないと駄目だなぁと思いました。</p>
+
+<p>まだ予選通過は暫定ですが、本戦出れたら頑張りたいと思います。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -988,62 +1120,6 @@ nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/ja/blog/2013/03/21/zopfli-png-recompress/">php-ext-zopfliでPNG画像を再圧縮</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-21T01:46:00+09:00" pubdate data-updated="true">Mar 21<span>st</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://bit.ly/10dICrU">php-ext-zopfli</a></p>
-
-<p>先月末から話題の<a href="https://code.google.com/p/zopfli/">zopfli</a>を使ってPNG画像を再圧縮するコードを書いてみた。
-ただ、単にPNG画像を再圧縮するだけの関数をCで書いてgithubとかにあげるよりも何かしらのLLのバインディングに組み込む方が実用的だろうと思って
-既にリリースされている<a href="https://github.com/kjdev/php-ext-zopfli">php-ext-zopfli</a>にzopfli_png_recompressという関数を組み込む形で実装。使い方はこんな感じ。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
-</span><span class='line'><span class="nv">$png_image</span> <span class="o">=</span> <span class="nb">file_get_contents</span><span class="p">(</span><span class="s2">&quot;/home/bokko/image.png&quot;</span><span class="p">);</span>
-</span><span class='line'><span class="nv">$png_image_recompressed</span> <span class="o">=</span> <span class="nx">zopfli_png_recompress</span><span class="p">(</span><span class="nv">$png_image</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>PNG画像はIDATチャンク(画像の実データ部)がgzip圧縮されているので、この部分を解凍 -> <a href="https://code.google.com/p/zopfli/">zopfli</a>で再圧縮することでサイズをさらに小さくすることができる。
-しかし、<a href="https://code.google.com/p/zopfli/">zopfli</a>はあくまでdeflate互換の圧縮アルゴリズムの実装を提供しているだけなので
-PNG画像を解析してIDATチャンクを取り出し、解凍&amp;再圧縮してチャンクやヘッダを書き換えるするコードは自分で書かなければならない。</p>
-
-<p>というわけでzopfliでPNG画像の再圧縮を行うのが簡単にできるようになった。<a href="http://bit.ly/Z4JtIO">Googleの元の発表</a>にもある通り、
-圧縮にかかるコストがかなり大きいので事前に圧縮した形で配布するような用途以外に使うのは難しいが、zlibと比べて3～8%も小さくできるのは大きい。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/ja/blog/page/2/">&larr; Older</a>
@@ -1059,6 +1135,10 @@ PNG画像を解析してIDATチャンクを取り出し、解凍&amp;再圧縮�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/ja/blog/2013/10/07/isucon3/">isucon3 「くらげとみかんと江戸幕府」チームで参加してきました</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/ja/blog/2013/09/26/ngx-small-light-0-4-1/">ngx_small_light-0.4.1</a>
       </li>
     
@@ -1072,10 +1152,6 @@ PNG画像を解析してIDATチャンクを取り出し、解凍&amp;再圧縮�
     
       <li class="post">
         <a href="/blog/ja/blog/2013/08/13/ngxmodgen/">ngxmodgen</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/ja/blog/2013/08/01/mruby-nginx-module4/">mruby_nginx_moduleでアクセス制御</a>
       </li>
     
   </ul>
