@@ -9,8 +9,9 @@
   <meta name="author" content="Tatsuhiko Kubo">
 
   
-  <meta name="description" content="同僚の@walf443と@edvakfとisucon予選一日目に参加してきました。 僕がくらげで@walf443がみかん、そして@edvakfが江戸幕府です。 16:30頃の時点でベンチマークが2〜3時間以上通ってなかった上に
-RawScore(エラーによる減点を除いたスコア) &hellip;">
+  <meta name="description" content="元々はてなブログが使いにくくてOctopressに移りましたが、
+最近同僚からすごく使いやすくなったという話を聞いて戻ることにしました。 http://bokko.hatenablog.com/
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +67,45 @@ RawScore(エラーによる減点を除いたスコア) &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ja/blog/2013/10/13/move-blog/">ブログ移転</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-13T16:01:00+09:00" pubdate data-updated="true">Oct 13<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>元々はてなブログが使いにくくてOctopressに移りましたが、
+最近同僚からすごく使いやすくなったという話を聞いて戻ることにしました。</p>
+
+<p>http://bokko.hatenablog.com/</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -887,239 +927,6 @@ nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/ja/blog/2013/07/27/ngx-small-light-0-4-0/">ngx_small_light v0.4.0</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-27T02:39:00+09:00" pubdate data-updated="true">Jul 27<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://github.com/cubicdaiya/ngx_small_light">https://github.com/cubicdaiya/ngx_small_light</a></p>
-
-<p>一昨日になりますが、ngx_small_light v0.4.0をリリースしました。変更内容は以下の３つです。</p>
-
-<ul>
-<li>e=imlib2が指定されている場合にアクセスが集中すると時々Imlib2が画像データのファイル書き出しに失敗する</li>
-<li>e=imlib2,jpeghint=yが指定されている&amp;存在しないリソースにアクセスされた場合にファイルディスクリプタがリークする問題の修正</li>
-<li>angleパラメータの追加</li>
-</ul>
-
-
-<p>バグ修正はまぁ書いてる通りですが、今回の目玉は最後のangleパラメータの追加です。ngx_small_lightには元々画像を回転させる機能がなかったのですが、
-<a href="http://wiki.nginx.org/HttpImageFilterModule">ImageFilter</a>に搭載されていたので対抗意識(?)を燃やして追加してみました。</p>
-
-<p>ngx_small_lightはサムネイルの生成に使う画像変換エンジンをImageMagick、Imlib2、GDの３つから選ぶことができるのですが、画像を回転させる機能を作るにあたってそれぞれの画像変換ライブラリの作法に従って書かなければいけないのでこれが中々大変でした。以下は各画像ライブラリで画像を回転させるコードをngx_small_lightから抜粋したものです。</p>
-
-<h2>ImageMagick</h2>
-
-<p>まずはImageMagick。これが一番簡単でした。インターフェースがシンプルで直感的です。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>if (sz.angle) {
-</span><span class='line'>    PixelWand  *bg_color;
-</span><span class='line'>    bg_color = NewPixelWand();
-</span><span class='line'>    PixelSetRed(bg_color,   sz.cc.r / 255.0);
-</span><span class='line'>    PixelSetGreen(bg_color, sz.cc.g / 255.0);
-</span><span class='line'>    PixelSetBlue(bg_color,  sz.cc.b / 255.0);
-</span><span class='line'>    PixelSetAlpha(bg_color, sz.cc.a / 255.0);
-</span><span class='line'>
-</span><span class='line'>    switch (sz.angle) {
-</span><span class='line'>    case 90:
-</span><span class='line'>    case 180:
-</span><span class='line'>    case 270:
-</span><span class='line'>        MagickRotateImage(ictx-&gt;wand, bg_color, sz.angle);
-</span><span class='line'>        break;
-</span><span class='line'>    }
-</span><span class='line'>
-</span><span class='line'>    DestroyPixelWand(bg_color);
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Imlib2</h2>
-
-<p>続いてImlib2。コード量自体はImageMagickよりも少ないですが、実はこのコードに辿り着くのに一番時間がかかりました。
-当初imlib_create_rotated_imageを使ってやろうとしてうまく行かず数時間ハマったためです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>if (sz.angle == 90 || sz.angle == 180 || sz.angle == 270) {
-</span><span class='line'>    ngx_int_t t;
-</span><span class='line'>    imlib_context_set_image(image_dst);
-</span><span class='line'>    switch(sz.angle) {
-</span><span class='line'>    case 90:
-</span><span class='line'>        imlib_image_orientate(1);
-</span><span class='line'>        break;
-</span><span class='line'>    case 180:
-</span><span class='line'>        imlib_image_orientate(2);
-</span><span class='line'>        break;
-</span><span class='line'>    case 270:
-</span><span class='line'>        imlib_image_orientate(3);
-</span><span class='line'>        break;
-</span><span class='line'>    }
-</span><span class='line'>
-</span><span class='line'>    t     = sz.dw;
-</span><span class='line'>    sz.dw = sz.dh;
-</span><span class='line'>    sz.dh = t;
-</span><span class='line'>
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>GD</h2>
-
-<p>GDはなんかもう「どうしてこうなった」とつぶやかずにはいられなかったです。とりあえずこれを見てくれ。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>if (sz.angle) {
-</span><span class='line'>    ngx_int_t ax, ay, ox, oy, t;
-</span><span class='line'>    src = dst;
-</span><span class='line'>    ax  = ((ngx_int_t)sz.dw % 2 == 0) ? 1 : 0;
-</span><span class='line'>    ay  = ((ngx_int_t)sz.dh % 2 == 0) ? 1 : 0;
-</span><span class='line'>    switch (sz.angle) {
-</span><span class='line'>    case 90:
-</span><span class='line'>    case 270:
-</span><span class='line'>        dst = ngx_http_small_light_gd_new(sz.dh, sz.dw, palette);
-</span><span class='line'>        if (dst == NULL) {
-</span><span class='line'>            gdImageDestroy(src);
-</span><span class='line'>            return NGX_ERROR;
-</span><span class='line'>        }
-</span><span class='line'>
-</span><span class='line'>        if (sz.angle == 90) {
-</span><span class='line'>            ox = sz.dh / 2 - ay;
-</span><span class='line'>            oy = sz.dw / 2 + ax;
-</span><span class='line'>        } else {
-</span><span class='line'>            ox = sz.dh / 2 + ay;
-</span><span class='line'>            oy = sz.dw / 2 - ax;
-</span><span class='line'>        }
-</span><span class='line'>
-</span><span class='line'>        gdImageCopyRotated(dst, src, ox, oy, 0, 0,
-</span><span class='line'>                           sz.dw, sz.dh, -sz.angle);
-</span><span class='line'>        gdImageDestroy(src);
-</span><span class='line'>
-</span><span class='line'>        t     = sz.dw;
-</span><span class='line'>        sz.dw = sz.dh;
-</span><span class='line'>        sz.dh = t;
-</span><span class='line'>        break;
-</span><span class='line'>    case 180:
-</span><span class='line'>        dst = ngx_http_small_light_gd_new(sz.dw, sz.dh, palette);
-</span><span class='line'>        if (dst == NULL) {
-</span><span class='line'>            gdImageDestroy(src);
-</span><span class='line'>            return NGX_ERROR;
-</span><span class='line'>        }
-</span><span class='line'>        gdImageCopyRotated(dst, src, sz.dw / 2 - ax, sz.dh / 2 - ay, 0, 0,
-</span><span class='line'>                           sz.dw + ax, sz.dh + ay, sz.angle);
-</span><span class='line'>        gdImageDestroy(src);
-</span><span class='line'>        break;
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>引数が非常に多い上に回転後の補正処理なんかも行わないといけないのでこれも中々大変です。</p>
-
-<p>とまぁ、そんな感じでngx_small_lightに画像回転の機能を付けた時の話でした。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/ja/blog/page/2/">&larr; Older</a>
@@ -1135,6 +942,10 @@ nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/ja/blog/2013/10/13/move-blog/">ブログ移転</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/ja/blog/2013/10/07/isucon3/">isucon予選に 「くらげとみかんと江戸幕府」チームで参加してきました</a>
       </li>
     
@@ -1148,10 +959,6 @@ nginxの各処理フェーズ(rewrite,access,content,etc)で使用するmrubyの
     
       <li class="post">
         <a href="/blog/ja/blog/2013/08/17/mruby-nginx-module-0-dot-1-0/">mruby_nginx_module-0.1.0</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/ja/blog/2013/08/13/ngxmodgen/">ngxmodgen</a>
       </li>
     
   </ul>
