@@ -83,6 +83,8 @@
             <span class="s2">&quot;slow_query_log_format&quot;</span><span class="o">:</span><span class="s2">&quot;json&quot;</span>
             <span class="s2">&quot;slow_query_log_access_mask&quot;</span><span class="o">:</span><span class="s2">&quot;0666&quot;</span><span class="p">,</span>
             <span class="s2">&quot;try_max&quot;</span><span class="o">:</span><span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;logpath&quot;</span><span class="o">:</span><span class="s2">&quot;/var/log/neoagent.log&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;log_access_mask&quot;</span><span class="o">:</span> <span class="s2">&quot;0644&quot;</span>
         <span class="p">}</span>
     <span class="p">]</span>
 <span class="p">}</span>
@@ -163,6 +165,12 @@
 <p><strong>try_max</strong></p>
 <blockquote>
 <div>number of trials in health checking</div></blockquote>
+<p><strong>logpath</strong></p>
+<blockquote>
+<div>log path for error and so on</div></blockquote>
+<p><strong>log_access_mask</strong></p>
+<blockquote>
+<div>access mask of log path</div></blockquote>
 </div>
 </div>
 </div>
